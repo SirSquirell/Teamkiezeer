@@ -2,6 +2,9 @@ name: Snapshot source pages
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/snapshot.yml"
 
 permissions:
   contents: write
