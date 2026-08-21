@@ -31,8 +31,10 @@ jobs:
           fetch "https://fifauteam.com/best-teams-fc-26/" "best-teams.html"
           fetch "https://fifagamenews.com/sitemap.xml" "fifagamenews-sitemap.xml"
           fetch "https://fifauteam.com/sitemap.xml" "fifauteam-sitemap.xml"
-          fetch "https://fifagamenews.com/robots.txt" "fifagamenews-robots.txt"
-          fetch "https://fifauteam.com/robots.txt" "fifauteam-robots.txt"
+          fetch "https://fifauteam.com/post-sitemap.xml" "fifauteam-post-sitemap1.xml"
+          fetch "https://fifauteam.com/post-sitemap4.xml" "fifauteam-post-sitemap4.xml"
+          fetch "https://fifauteam.com/fc-26-stars-rating/" "fifauteam-stars-guess1.html"
+          fetch "https://fifauteam.com/fc-26-star-ratings/" "fifauteam-stars-guess2.html"
 
       - name: Commit snapshots
         run: |
