@@ -47,7 +47,7 @@ oplaadkabel, je gewone Apple ID. Geen betaald account.
 ## Deel 3 — installeren
 
 9. **Run.** Klik op de **▶**-knop linksboven (of ⌘R). De eerste build duurt
-   1–3 minuten. Daarna staat **Gelijkspel** op je telefoon (het project heet technisch nog Teamkiezeer; het icoon en de naam op je beginscherm zijn Gelijkspel).
+   1–3 minuten. Daarna staat **Even Match** op je telefoon (het project heet technisch nog Teamkiezeer; het icoon en de naam op je beginscherm zijn Even Match).
 10. **App vertrouwen (alleen de eerste keer).** Start de app; zegt iOS
     *"Niet-vertrouwde ontwikkelaar"*? Ga naar **Instellingen → Algemeen →
     VPN en apparaatbeheer** → tik onder *Ontwikkelaarsapp* op je Apple ID →

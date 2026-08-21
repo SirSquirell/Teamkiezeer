@@ -1,8 +1,8 @@
-# Gelijkspel
+# Even Match
 
-*Twee teams, even sterk.*
+*Two teams. Dead even.*
 
-2v2 team picker voor EA FC Kick-Off (repo-naam: Teamkiezeer; de app en site heten **Gelijkspel**). Eén knop: **Draw**. De app kiest twee teams
+2v2 team picker voor EA FC Kick-Off (repo-naam: Teamkiezeer; de app en site heten **Even Match**). Eén knop: **Draw**. De app kiest twee teams
 met identieke sterren, dezelfde soort (club vs. landenteam), en een squad-rating
 verschil binnen de afgesproken marge — met een korte slot-machine ceremony.
 
