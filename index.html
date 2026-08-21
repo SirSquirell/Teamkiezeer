@@ -771,7 +771,7 @@ $("draw").addEventListener("click", () => {
     $("placeholder").innerHTML = `<h2 class="err">${result.error}</h2><p>Verruim de regels of zet meer leagues aan.</p>`;
     return;
   }
-  history.unshift({ aid: result.a.id, bid: result.b.id, an: result.a.name, bn: result.b.name,
+  history.unshift({ ts: Date.now(), aid: result.a.id, bid: result.b.id, an: result.a.name, bn: result.b.name,
                     ar: result.a.squadRating, br: result.b.squadRating,
                     stars: result.a.starRating, delta: result.delta, relax: result.relax.length });
   history = history.slice(0, 50);
@@ -871,8 +871,19 @@ function renderHistory() {
 $("history").addEventListener("click", e => {
   const btn = e.target.closest("[data-delh]");
   if (!btn) return;
-  history.splice(Number(btn.dataset.delh), 1);
+  const removed = history.splice(Number(btn.dataset.delh), 1)[0];
   saveHistory(); renderHistory(); updateHints();
+  // Gekoppeld opruimen: hoort er een gespeelde match of openstaande
+  // eindmatch bij deze draw, dan gaat die ook weg.
+  if (removed && removed.ts) {
+    const before = results.length;
+    results = results.filter(r => r.drawTs !== removed.ts);
+    if (pendingMatch && pendingMatch.drawTs === removed.ts) pendingMatch = null;
+    if (results.length !== before || !pendingMatch) {
+      persistScores(); syncPush();
+      renderStats(); renderPlayed(); renderPending();
+    }
+  }
 });
 
 /* ── Eindmatch, scores en stand ────────────────────────── */
@@ -895,6 +906,7 @@ function chooseFinal() {
   if (!lastSettled) return;
   pendingMatch = {
     ts: Date.now(),
+    drawTs: history[0] && history[0].ts ? history[0].ts : null,
     a: snap(lastSettled.a), b: snap(lastSettled.b),
     stars: lastSettled.a.starRating, delta: lastSettled.delta,
     wmPlays: "a",                                   // afspraak: W/M speelt altijd links
