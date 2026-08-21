@@ -55,7 +55,7 @@ jobs:
       - name: Deploy website with fresh data
         run: |
           mkdir -p site
-          cp web/index.html site/
+          cp -R web/. site/
           cp data/teams.json site/
           touch site/.nojekyll
           cd site

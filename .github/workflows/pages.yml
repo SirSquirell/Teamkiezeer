@@ -24,7 +24,7 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p site
-          cp web/index.html site/
+          cp -R web/. site/
           cp data/teams.json site/
           touch site/.nojekyll
 

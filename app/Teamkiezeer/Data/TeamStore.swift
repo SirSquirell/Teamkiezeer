@@ -37,7 +37,7 @@ final class TeamStore {
     /// raw.githubusercontent op de default branch; de weekly Action commit
     /// daar een verse teams.json.
     static let remoteURL = URL(
-        string: "https://raw.githubusercontent.com/SirSquirell/Teamkiezeer/claude/new-project-welcome-npwul9/data/teams.json"
+        string: "https://raw.githubusercontent.com/SirSquirell/Teamkiezeer/main/data/teams.json"
     )!
 
     private var cacheURL: URL {

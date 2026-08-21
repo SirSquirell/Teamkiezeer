@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0B0B0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Even Match</title>
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%230B0B0F"/><rect x="15" y="22" width="34" height="7.5" rx="3.75" fill="%23C8F73A"/><rect x="15" y="34.5" width="34" height="7.5" rx="3.75" fill="%23C8F73A"/></svg>'>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;900&display=swap">
@@ -58,7 +62,10 @@
   .dataset { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; text-align: right; }
 
   /* ── Kaartenzone ─────────────────────────────────────── */
-  .stage { position: relative; min-height: 348px; display: flex; flex-direction: column; gap: 14px; }
+  /* touch-action + user-select: tap-to-skip en snelle re-rolls mogen geen
+     zoom of tekstselectie triggeren. */
+  .stage { position: relative; min-height: 348px; display: flex; flex-direction: column; gap: 14px;
+           touch-action: manipulation; -webkit-user-select: none; user-select: none; }
   .chips { min-height: 26px; display: flex; justify-content: center; }
   .chip {
     display: none; align-items: center; gap: 6px;
@@ -171,8 +178,10 @@
     font-family: var(--display); font-weight: 900; font-size: 18px; letter-spacing: .02em;
     transition: transform .12s var(--ease-out);
   }
+  .draw { touch-action: manipulation; }
   .draw:active { transform: scale(.97); }
   .draw:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
   /* ── Regels & history ────────────────────────────────── */
   details {
@@ -225,6 +234,73 @@
   .hrow .hd { font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; }
   .hempty { font-size: 12px; color: var(--text-3); padding: 6px 2px; }
 
+  /* ── Eindmatch & score ───────────────────────────────── */
+  .choose { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; min-height: 0; }
+  .choose .pill { border: 1px solid var(--hairline); }
+
+  .pending {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
+    padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .phead { display: flex; justify-content: space-between; align-items: center; }
+  .ptag { font-family: var(--display); font-weight: 900; font-size: 11px; letter-spacing: .1em;
+          color: var(--accent); text-transform: uppercase; }
+  .px { border: 0; background: none; color: var(--text-3); font-size: 15px; cursor: pointer; padding: 2px 6px; }
+  .pgrid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+  .pside { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pside.right { text-align: right; }
+  .pduo { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+  .pclub { font-family: var(--display); font-weight: 700; font-size: 14px;
+           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pscore { display: flex; align-items: center; gap: 6px; }
+  .snum { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .snum input {
+    width: 52px; height: 46px; text-align: center; border-radius: 10px;
+    border: 1px solid var(--hairline); background: var(--raised); color: var(--text);
+    font-family: var(--display); font-weight: 900; font-size: 24px; font-variant-numeric: tabular-nums;
+  }
+  .snum input:focus-visible { outline: 2px solid var(--accent); }
+  .snum input::-webkit-inner-spin-button, .snum input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .snum input { -moz-appearance: textfield; appearance: textfield; }
+  .sbtns { display: flex; gap: 4px; }
+  .sbtns button {
+    width: 25px; height: 22px; border: 0; border-radius: 6px; cursor: pointer;
+    background: var(--raised); color: var(--text); font-size: 14px; font-weight: 800; line-height: 1;
+    touch-action: manipulation;
+  }
+  .colon { font-family: var(--display); font-weight: 900; font-size: 20px; color: var(--text-3); }
+  .psave {
+    border: 0; border-radius: 12px; height: 42px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+    font-family: var(--display); font-weight: 900; font-size: 14px; letter-spacing: .02em;
+    touch-action: manipulation;
+  }
+  .psave:active { transform: scale(.98); }
+
+  /* ── Stand ───────────────────────────────────────────── */
+  .h2h { display: flex; align-items: baseline; justify-content: center; gap: 14px; padding: 6px 0 2px; }
+  .h2h .duo { font-family: var(--display); font-weight: 700; font-size: 13px; color: var(--text-2);
+              text-transform: uppercase; letter-spacing: .05em; }
+  .h2h .num { font-family: var(--display); font-weight: 900; font-size: 30px; font-variant-numeric: tabular-nums; }
+  .h2h .num.win { color: var(--accent); }
+  .h2h .dr { font-family: var(--display); font-weight: 700; font-size: 16px; color: var(--text-3); }
+  .form { display: flex; gap: 5px; justify-content: center; padding-bottom: 6px; }
+  .form b { width: 9px; height: 9px; border-radius: 50%; }
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tile { background: var(--raised); border-radius: 12px; padding: 10px 12px; min-width: 0; }
+  .tile .tl { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-3); }
+  .tile .tv { font-family: var(--display); font-weight: 800; font-size: 15px; margin-top: 3px;
+              font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tile .ts { font-size: 11px; color: var(--text-2); margin-top: 1px; }
+  .stand-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stand-actions .pill { border: 1px solid var(--hairline); }
+  .duo-edit { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .duo-edit input, .sync input {
+    width: 100%; border-radius: 10px; border: 1px solid var(--hairline); background: var(--raised);
+    color: var(--text); padding: 8px 10px; font-size: 13px; font-family: var(--body);
+  }
+  .duo-edit input:focus-visible, .sync input:focus-visible { outline: 2px solid var(--accent); }
+
   footer { font-size: 11px; color: var(--text-3); text-align: center; line-height: 1.6; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -261,9 +337,72 @@
       <div class="track"><div class="fill" id="fill"></div></div>
       <div class="mrow"><span id="mA"></span><span class="mdelta" id="mD"></span><span id="mB"></span></div>
     </div>
+    <div class="choose" id="chooseRow" hidden>
+      <button class="pill" id="chooseWM"></button>
+      <button class="pill" id="chooseJJ"></button>
+    </div>
+  </div>
+
+  <div class="pending" id="pending" hidden>
+    <div class="phead">
+      <span class="ptag">⚑ Eindmatch</span>
+      <button class="px" id="pendingX" aria-label="Eindmatch verwijderen">✕</button>
+    </div>
+    <div class="pgrid">
+      <div class="pside">
+        <span class="pduo" id="pDuoA"></span>
+        <span class="pclub" id="pClubA"></span>
+      </div>
+      <div class="pscore">
+        <div class="snum">
+          <input id="sA" type="number" inputmode="numeric" min="0" max="99" value="0">
+          <span class="sbtns"><button data-s="sA:-1">−</button><button data-s="sA:1">+</button></span>
+        </div>
+        <span class="colon">:</span>
+        <div class="snum">
+          <input id="sB" type="number" inputmode="numeric" min="0" max="99" value="0">
+          <span class="sbtns"><button data-s="sB:-1">−</button><button data-s="sB:1">+</button></span>
+        </div>
+      </div>
+      <div class="pside right">
+        <span class="pduo" id="pDuoB"></span>
+        <span class="pclub" id="pClubB"></span>
+      </div>
+    </div>
+    <button class="psave" id="pSave">Score opslaan</button>
   </div>
 
   <button class="draw" id="draw">Draw</button>
+
+  <details>
+    <summary>Stand <span class="hint" id="statshint"></span></summary>
+    <div class="rules-body">
+      <div id="statsbody"></div>
+      <div>
+        <div class="rlabel">Duo-namen</div>
+        <div class="duo-edit">
+          <input id="duoWM" maxlength="12" placeholder="Duo 1">
+          <input id="duoJJ" maxlength="12" placeholder="Duo 2">
+        </div>
+      </div>
+      <div>
+        <div class="rlabel">Stand delen tussen apparaten</div>
+        <div class="stand-actions">
+          <button class="pill" id="expBtn">Kopieer stand</button>
+          <button class="pill" id="impBtn">Importeer stand</button>
+          <button class="pill" id="wipeBtn">Wis alles</button>
+        </div>
+      </div>
+      <div class="sync">
+        <div class="rlabel">Sync-URL (optioneel)</div>
+        <input id="syncUrl" placeholder="https://jouw-domein/evenmatch.json">
+        <div class="ts" style="font-size:11px;color:var(--text-3);margin-top:5px">
+          Elke endpoint die één JSON-blob kan GET/PUT-en werkt. Bij het openen
+          wordt de laatste stand opgehaald; elke opgeslagen score pusht ernaartoe.
+        </div>
+      </div>
+    </div>
+  </details>
 
   <details id="rules">
     <summary>Regels <span class="hint" id="ruleshint"></span></summary>
@@ -462,6 +601,10 @@ function countUp(gen, result, A, B) {
   });
 }
 function showMeter(result) {
+  lastSettled = result;
+  $("chooseWM").textContent = duos.wm + " speelt " + result.a.name;
+  $("chooseJJ").textContent = duos.jj + " speelt " + result.a.name;
+  $("chooseRow").hidden = false;
   const color = result.delta < 2 ? "var(--good)" : result.delta <= 4 ? "var(--warn)" : "var(--bad)";
   $("fill").style.background = color;
   $("fill").style.width = Math.max(8, Math.min(100, result.delta / 8 * 100)) + "%";
@@ -481,6 +624,7 @@ async function ceremony(result, pool) {
   $("vs").classList.remove("show");
   $("meter").classList.remove("show");
   $("chip").classList.remove("show");
+  $("chooseRow").hidden = true;
 
   // re-roll: kaarten verlaten zoals ze kwamen (lift + fade, 180ms)
   if (A.classList.contains("in")) {
@@ -639,6 +783,203 @@ function renderHistory() {
   }).join("");
 }
 
+/* ── Eindmatch, scores en stand ────────────────────────── */
+let lastSettled = null;
+let duos = store.get("duos", { wm: "W/M", jj: "J/J" });
+let pendingMatch = store.get("pendingMatch", null);
+let results = store.get("results", []);            // nieuwste eerst
+let syncUrl = store.get("syncUrl", "");
+
+const snap = t => ({ id: t.id, name: t.name, stars: t.starRating, rating: t.squadRating });
+
+function persistScores() {
+  store.set("duos", duos);
+  store.set("pendingMatch", pendingMatch);
+  store.set("results", results.slice(0, 500));
+  store.set("syncUrl", syncUrl);
+}
+
+function chooseFinal(wmPlays) {
+  if (!lastSettled) return;
+  pendingMatch = {
+    ts: Date.now(),
+    a: snap(lastSettled.a), b: snap(lastSettled.b),
+    stars: lastSettled.a.starRating, delta: lastSettled.delta,
+    wmPlays,                                        // 'a' of 'b': welk team speelt W/M
+  };
+  persistScores();
+  $("chooseRow").hidden = true;
+  renderPending();
+}
+$("chooseWM").addEventListener("click", e => { e.stopPropagation(); chooseFinal("a"); });
+$("chooseJJ").addEventListener("click", e => { e.stopPropagation(); chooseFinal("b"); });
+
+function renderPending() {
+  const bar = $("pending");
+  if (!pendingMatch) { bar.hidden = true; return; }
+  bar.hidden = false;
+  const wmA = pendingMatch.wmPlays === "a";
+  $("pDuoA").textContent = wmA ? duos.wm : duos.jj;
+  $("pDuoB").textContent = wmA ? duos.jj : duos.wm;
+  $("pClubA").textContent = pendingMatch.a.name;
+  $("pClubB").textContent = pendingMatch.b.name;
+  $("sA").value = 0;
+  $("sB").value = 0;
+}
+$("pendingX").addEventListener("click", () => { pendingMatch = null; persistScores(); renderPending(); });
+document.querySelectorAll("[data-s]").forEach(b => {
+  b.addEventListener("click", () => {
+    const [id, d] = b.dataset.s.split(":");
+    const input = $(id);
+    input.value = Math.max(0, Math.min(99, (parseInt(input.value, 10) || 0) + Number(d)));
+  });
+});
+$("pSave").addEventListener("click", () => {
+  if (!pendingMatch) return;
+  const a = Math.max(0, parseInt($("sA").value, 10) || 0);
+  const b = Math.max(0, parseInt($("sB").value, 10) || 0);
+  results.unshift({ ...pendingMatch, score: { a, b }, playedAt: Date.now() });
+  pendingMatch = null;
+  persistScores(); syncPush();
+  renderPending(); renderStats();
+});
+
+/* Rapportage. Alles vanuit W/M-perspectief berekend en gespiegeld getoond. */
+function computeStats() {
+  const s = {
+    n: results.length, wmW: 0, dr: 0, jjW: 0, wmG: 0, jjG: 0,
+    perDuo: { wm: {}, jj: {} }, perStar: {}, biggest: null, cleanWM: 0, cleanJJ: 0,
+  };
+  for (const m of results) {
+    const wmA = m.wmPlays === "a";
+    const wmGoals = wmA ? m.score.a : m.score.b;
+    const jjGoals = wmA ? m.score.b : m.score.a;
+    s.wmG += wmGoals; s.jjG += jjGoals;
+    const outcome = wmGoals > jjGoals ? "wm" : jjGoals > wmGoals ? "jj" : "dr";
+    if (outcome === "wm") s.wmW++; else if (outcome === "jj") s.jjW++; else s.dr++;
+    if (jjGoals === 0) s.cleanWM++;
+    if (wmGoals === 0) s.cleanJJ++;
+
+    const wmClub = wmA ? m.a : m.b, jjClub = wmA ? m.b : m.a;
+    for (const [duo, club, won] of [["wm", wmClub, outcome === "wm"], ["jj", jjClub, outcome === "jj"]]) {
+      const e = s.perDuo[duo][club.id] ||= { name: club.name, n: 0, w: 0 };
+      e.n++; if (won) e.w++;
+    }
+    const st = s.perStar[m.stars] ||= { n: 0, wm: 0, jj: 0 };
+    st.n++; if (outcome === "wm") st.wm++; else if (outcome === "jj") st.jj++;
+
+    const margin = Math.abs(wmGoals - jjGoals);
+    if (margin > 0 && (!s.biggest || margin > s.biggest.margin)) {
+      s.biggest = { margin, text: `${m.a.name} ${m.score.a}–${m.score.b} ${m.b.name}` };
+    }
+  }
+  return s;
+}
+const topBy = (obj, score) => Object.values(obj).sort((x, y) => score(y) - score(x))[0];
+
+function renderStats() {
+  const body = $("statsbody");
+  $("statshint").textContent = results.length ? results.length + " gespeeld" : "";
+  if (!results.length) {
+    body.innerHTML = '<div class="hempty">Nog geen gespeelde eindmatches. Kies na een draw wie welk team speelt en vul later de score in.</div>';
+    return;
+  }
+  const s = computeStats();
+  const saldo = s.wmG - s.jjG;
+  const form = results.slice(0, 5).reverse().map(m => {
+    const wmA = m.wmPlays === "a";
+    const w = wmA ? m.score.a : m.score.b, j = wmA ? m.score.b : m.score.a;
+    const color = w > j ? "var(--accent)" : j > w ? "var(--bad)" : "var(--text-3)";
+    return `<b style="background:${color}"></b>`;
+  }).join("");
+
+  const favWM = topBy(s.perDuo.wm, e => e.n), favJJ = topBy(s.perDuo.jj, e => e.n);
+  const bestWM = topBy(Object.fromEntries(Object.entries(s.perDuo.wm).filter(([, e]) => e.n >= 2)), e => e.w / e.n);
+  const bestJJ = topBy(Object.fromEntries(Object.entries(s.perDuo.jj).filter(([, e]) => e.n >= 2)), e => e.w / e.n);
+  const favStar = Object.entries(s.perStar).sort((x, y) => y[1].n - x[1].n)[0];
+
+  const tile = (label, value, sub = "") =>
+    `<div class="tile"><div class="tl">${label}</div><div class="tv">${value}</div>${sub ? `<div class="ts">${sub}</div>` : ""}</div>`;
+
+  body.innerHTML = `
+    <div class="h2h">
+      <span class="duo">${duos.wm}</span>
+      <span class="num ${s.wmW > s.jjW ? "win" : ""}">${s.wmW}</span>
+      <span class="dr">${s.dr}</span>
+      <span class="num ${s.jjW > s.wmW ? "win" : ""}">${s.jjW}</span>
+      <span class="duo">${duos.jj}</span>
+    </div>
+    <div class="form">${form}</div>
+    <div class="tiles">
+      ${tile("Doelsaldo " + duos.wm, (saldo > 0 ? "+" : "") + saldo, s.wmG + " voor · " + s.jjG + " tegen")}
+      ${tile("Gem. goals p/match", ((s.wmG + s.jjG) / s.n).toFixed(1), s.n + " matches")}
+      ${tile("Favo team " + duos.wm, favWM ? favWM.name : "—", favWM ? favWM.n + "× gespeeld, " + favWM.w + "× gewonnen" : "")}
+      ${tile("Favo team " + duos.jj, favJJ ? favJJ.name : "—", favJJ ? favJJ.n + "× gespeeld, " + favJJ.w + "× gewonnen" : "")}
+      ${tile("Beste club " + duos.wm, bestWM ? bestWM.name : "—", bestWM ? Math.round(bestWM.w / bestWM.n * 100) + "% winst (" + bestWM.n + "×)" : "min. 2× gespeeld")}
+      ${tile("Beste club " + duos.jj, bestJJ ? bestJJ.name : "—", bestJJ ? Math.round(bestJJ.w / bestJJ.n * 100) + "% winst (" + bestJJ.n + "×)" : "min. 2× gespeeld")}
+      ${tile("Favo sterrating", favStar ? Number(favStar[0]).toLocaleString("nl") + "★" : "—",
+             favStar ? `${favStar[1].n}× · ${duos.wm} ${favStar[1].wm}–${favStar[1].jj} ${duos.jj}` : "")}
+      ${tile("Grootste zege", s.biggest ? s.biggest.text : "—")}
+      ${tile("Clean sheets", `${s.cleanWM} · ${s.cleanJJ}`, duos.wm + " · " + duos.jj)}
+      ${tile("Vorm (oud → nieuw)", "", "groen = " + duos.wm + ", rood = " + duos.jj)}
+    </div>`;
+}
+
+/* Duo-namen, delen en sync */
+function renderDuoInputs() { $("duoWM").value = duos.wm; $("duoJJ").value = duos.jj; $("syncUrl").value = syncUrl; }
+$("duoWM").addEventListener("change", () => { duos.wm = $("duoWM").value.trim() || "W/M"; persistScores(); renderStats(); renderPending(); });
+$("duoJJ").addEventListener("change", () => { duos.jj = $("duoJJ").value.trim() || "J/J"; persistScores(); renderStats(); renderPending(); });
+$("syncUrl").addEventListener("change", () => { syncUrl = $("syncUrl").value.trim(); persistScores(); syncPull(); });
+
+$("expBtn").addEventListener("click", async () => {
+  const blob = JSON.stringify({ duos, results });
+  try { await navigator.clipboard.writeText(blob); $("expBtn").textContent = "Gekopieerd ✓"; }
+  catch { prompt("Kopieer deze stand:", blob); }
+  setTimeout(() => { $("expBtn").textContent = "Kopieer stand"; }, 1500);
+});
+$("impBtn").addEventListener("click", () => {
+  const raw = prompt("Plak hier een eerder gekopieerde stand (vervangt de huidige):");
+  if (!raw) return;
+  try {
+    const doc = JSON.parse(raw);
+    if (!Array.isArray(doc.results)) throw new Error();
+    results = doc.results; if (doc.duos) duos = doc.duos;
+    persistScores(); renderStats(); renderDuoInputs(); renderPending();
+  } catch { alert("Dat was geen geldige stand."); }
+});
+$("wipeBtn").addEventListener("click", () => {
+  if (!confirm("Alle gespeelde matches en de stand wissen?")) return;
+  results = []; pendingMatch = null;
+  persistScores(); syncPush(); renderStats(); renderPending();
+});
+
+/* Optionele sync: elke endpoint die één JSON-blob GET/PUT serveert werkt.
+   Bij openen wordt de laatste stand opgehaald; elke score-save pusht. */
+async function syncPull() {
+  if (!syncUrl) return;
+  try {
+    const r = await fetch(syncUrl, { cache: "no-cache" });
+    if (!r.ok) return;
+    const remote = await r.json();
+    if (remote && Array.isArray(remote.results)) {
+      if (remote.results.length >= results.length) {
+        results = remote.results;
+        if (remote.duos) duos = remote.duos;
+        persistScores(); renderStats(); renderDuoInputs();
+      } else {
+        syncPush();                                  // lokaal is verder: push
+      }
+    }
+  } catch { /* offline of endpoint down: lokaal blijft leidend */ }
+}
+function syncPush() {
+  if (!syncUrl) return;
+  fetch(syncUrl, {
+    method: "PUT", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ duos, results, updated: new Date().toISOString() }),
+  }).catch(() => {});
+}
+
 async function boot() {
   try {
     const resp = await fetch("teams.json", { cache: "no-cache" });
@@ -653,6 +994,7 @@ async function boot() {
   rules = store.get("rules", null) || { ...rules, whitelist: defaultWhitelist };
   $("dataset").textContent = DATA.game + " · " + DATA.teams.length + " teams · " + DATA.generatedAt.slice(0, 10);
   renderStarChips(); renderKindChips(); renderLeagues(); syncSteppers(); renderHistory();
+  renderPending(); renderStats(); renderDuoInputs(); syncPull();
 }
 boot();
 </script>
