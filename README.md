@@ -24,3 +24,28 @@ Puur voor eigen gebruik, nooit voor de App Store.
 De GitHub Action draait de scraper wekelijks en commit `data/teams.json` alleen
 bij een non-empty diff. De app haalt dat bestand bij launch op via
 raw.githubusercontent, met cache- en bundled-fallback zodat alles offline werkt.
+
+## Bouwen (app)
+
+1. Open `app/Teamkiezeer.xcodeproj` in Xcode 16+.
+2. Zet je eigen team onder Signing & Capabilities (personal team is genoeg).
+3. Run op een iPhone met iOS 17+.
+
+De engine-tests draaien ook zonder Mac: `swift test` in `app/TeamkiezeerKit`
+(gebeurt automatisch in CI op elke push).
+
+Vernieuw af en toe de ingebouwde offline-snapshot:
+
+```
+cp data/teams.json app/Teamkiezeer/Resources/bundled-teams.json
+```
+
+## Onderhoud
+
+- Nieuwe league op de bronpagina? De build faalt bewust; voeg de league toe
+  aan `pipeline/leagues.json`.
+- Naam-mismatch tussen de twee bronpagina's? Vul `pipeline/aliases.json`
+  (de build logt elke unmatched naam).
+- Landenteams: handmatig bijwerken in `data/national-teams.json`.
+- FC 27 in september: pas de twee bron-URL's aan in `pipeline/build_teams.py`
+  en het `game`-veld; ververs daarna de snapshots voor de tests.

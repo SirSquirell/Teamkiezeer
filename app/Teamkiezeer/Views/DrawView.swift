@@ -60,11 +60,14 @@ struct DrawView: View {
                     cyclingCard(team: b, settled: ceremony.bSettled, pulse: ceremony.bPulse)
                         .offset(y: ceremony.cardsVisible ? 0 : -24)
                         .opacity(ceremony.cardsVisible ? 1 : 0)
-                        // 60ms stagger tussen de twee kaarten bij binnenkomst.
+                        // 60ms stagger tussen de twee kaarten bij binnenkomst;
+                        // onder reduced motion beweegt hier niets.
                         .animation(
-                            ceremony.cardsVisible
-                                ? .spring(duration: 0.4, bounce: 0.15).delay(0.06)
-                                : .easeOut(duration: 0.18),
+                            reduceMotion
+                                ? nil
+                                : ceremony.cardsVisible
+                                    ? .spring(duration: 0.4, bounce: 0.15).delay(0.06)
+                                    : .easeOut(duration: 0.18),
                             value: ceremony.cardsVisible
                         )
                 }
@@ -306,7 +309,9 @@ struct PressableButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
             .animation(.snappy(duration: 0.12), value: configuration.isPressed)
             .onChange(of: configuration.isPressed) { _, pressed in
-                if pressed { Haptics.shared.buttonDown() }
+                if pressed {
+                    MainActor.assumeIsolated { Haptics.shared.buttonDown() }
+                }
             }
     }
 }
