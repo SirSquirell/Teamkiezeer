@@ -263,7 +263,10 @@
     background: var(--raised); color: var(--text);
     font-family: var(--display); font-weight: 700; font-size: 13px; touch-action: manipulation;
   }
-  .pending .pscore, .pending .psave { display: none; }
+  .pending .pscore, .pending .psave, .pending .chair { display: none; }
+  .pending.scoring .chair { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .chair-cap { font-size: 12px; font-weight: 600; color: var(--text-2); }
+  .chair-cap.need { color: var(--bad); }
   .pending.scoring .pscore { display: flex; }
   .pending.scoring .psave { display: block; }
   .pending.scoring .pvs, .pending.scoring .pactions { display: none; }
@@ -308,6 +311,9 @@
   .tile .tv { font-family: var(--display); font-weight: 800; font-size: 15px; margin-top: 3px;
               font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .tile .ts { font-size: 11px; color: var(--text-2); margin-top: 1px; }
+  .tile.wide { grid-column: 1 / -1; }
+  .mars { display: flex; gap: 4px; align-items: flex-end; height: 40px; margin-top: 6px; }
+  .mars i { flex: 1; max-width: 18px; border-radius: 3px 3px 0 0; min-height: 4px; }
   .stand-actions { display: flex; flex-wrap: wrap; gap: 6px; }
   .stand-actions .pill { border: 1px solid var(--hairline); }
   .duo-edit { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -354,11 +360,8 @@
       <div class="mrow"><span id="mA"></span><span class="mdelta" id="mD"></span><span id="mB"></span></div>
     </div>
     <div class="choose" id="chooseRow" hidden>
+      <button class="pill" id="chooseBtn">⚑ Kies als eindmatch</button>
       <div class="choose-cap" id="chooseCap"></div>
-      <div class="choose-btns">
-        <button class="pill" id="chooseWM"></button>
-        <button class="pill" id="chooseJJ"></button>
-      </div>
     </div>
   </div>
 
@@ -393,12 +396,19 @@
     <div class="pactions">
       <button class="popen" id="pOpen">Gespeeld? Score invullen</button>
     </div>
+    <div class="chair" id="chairRow">
+      <span class="chair-cap" id="chairCap">Wie zat op 't stoeltje?</span>
+      <div class="choose-btns">
+        <button class="pill" id="chairWM"></button>
+        <button class="pill" id="chairJJ"></button>
+      </div>
+    </div>
     <button class="psave" id="pSave">Score opslaan</button>
   </div>
 
   <button class="draw" id="draw">Draw</button>
 
-  <details>
+  <details open>
     <summary>Stand <span class="hint" id="statshint"></span></summary>
     <div class="rules-body">
       <div id="statsbody"></div>
@@ -428,7 +438,7 @@
     </div>
   </details>
 
-  <details id="rules">
+  <details id="rules" open>
     <summary>Regels <span class="hint" id="ruleshint"></span></summary>
     <div class="rules-body">
       <div>
@@ -626,9 +636,8 @@ function countUp(gen, result, A, B) {
 }
 function showMeter(result) {
   lastSettled = result;
-  $("chooseCap").textContent = "Deze spelen? Wie pakt " + result.a.name + "?";
-  $("chooseWM").textContent = duos.wm;
-  $("chooseJJ").textContent = duos.jj;
+  $("chooseCap").textContent = duos.wm + " speelt links (" + result.a.name + "), " +
+    duos.jj + " rechts (" + result.b.name + ")";
   $("chooseRow").hidden = false;
   const color = result.delta < 2 ? "var(--good)" : result.delta <= 4 ? "var(--warn)" : "var(--bad)";
   $("fill").style.background = color;
@@ -824,20 +833,19 @@ function persistScores() {
   store.set("syncUrl", syncUrl);
 }
 
-function chooseFinal(wmPlays) {
+function chooseFinal() {
   if (!lastSettled) return;
   pendingMatch = {
     ts: Date.now(),
     a: snap(lastSettled.a), b: snap(lastSettled.b),
     stars: lastSettled.a.starRating, delta: lastSettled.delta,
-    wmPlays,                                        // 'a' of 'b': welk team speelt W/M
+    wmPlays: "a",                                   // afspraak: W/M speelt altijd links
   };
   persistScores();
   $("chooseRow").hidden = true;
   renderPending();
 }
-$("chooseWM").addEventListener("click", e => { e.stopPropagation(); chooseFinal("a"); });
-$("chooseJJ").addEventListener("click", e => { e.stopPropagation(); chooseFinal("b"); });
+$("chooseBtn").addEventListener("click", e => { e.stopPropagation(); chooseFinal(); });
 
 function renderPending() {
   const bar = $("pending");
@@ -851,7 +859,22 @@ function renderPending() {
   $("pClubB").textContent = pendingMatch.b.name;
   $("sA").value = 0;
   $("sB").value = 0;
+  chair = null;
+  $("chairWM").textContent = duos.wm;
+  $("chairJJ").textContent = duos.jj;
+  $("chairWM").setAttribute("aria-pressed", "false");
+  $("chairJJ").setAttribute("aria-pressed", "false");
+  $("chairCap").classList.remove("need");
 }
+let chair = null;
+function pickChair(who) {
+  chair = who;
+  $("chairWM").setAttribute("aria-pressed", String(who === "wm"));
+  $("chairJJ").setAttribute("aria-pressed", String(who === "jj"));
+  $("chairCap").classList.remove("need");
+}
+$("chairWM").addEventListener("click", () => pickChair("wm"));
+$("chairJJ").addEventListener("click", () => pickChair("jj"));
 $("pOpen").addEventListener("click", () => { $("pending").classList.add("scoring"); });
 $("pendingX").addEventListener("click", () => { pendingMatch = null; persistScores(); renderPending(); });
 document.querySelectorAll("[data-s]").forEach(b => {
@@ -863,9 +886,10 @@ document.querySelectorAll("[data-s]").forEach(b => {
 });
 $("pSave").addEventListener("click", () => {
   if (!pendingMatch) return;
+  if (!chair) { $("chairCap").classList.add("need"); return; }
   const a = Math.max(0, parseInt($("sA").value, 10) || 0);
   const b = Math.max(0, parseInt($("sB").value, 10) || 0);
-  results.unshift({ ...pendingMatch, score: { a, b }, playedAt: Date.now() });
+  results.unshift({ ...pendingMatch, score: { a, b }, chair, playedAt: Date.now() });
   pendingMatch = null;
   persistScores(); syncPush();
   renderPending(); renderStats();
@@ -876,6 +900,7 @@ function computeStats() {
   const s = {
     n: results.length, wmW: 0, dr: 0, jjW: 0, wmG: 0, jjG: 0,
     perDuo: { wm: {}, jj: {} }, perStar: {}, biggest: null, cleanWM: 0, cleanJJ: 0,
+    chairWM: 0, chairJJ: 0, chairWins: 0, chairN: 0,
   };
   for (const m of results) {
     const wmA = m.wmPlays === "a";
@@ -895,6 +920,12 @@ function computeStats() {
     const st = s.perStar[m.stars] ||= { n: 0, wm: 0, jj: 0 };
     st.n++; if (outcome === "wm") st.wm++; else if (outcome === "jj") st.jj++;
 
+    if (m.chair) {
+      s.chairN++;
+      if (m.chair === "wm") s.chairWM++; else s.chairJJ++;
+      if (m.chair === outcome) s.chairWins++;
+    }
+
     const margin = Math.abs(wmGoals - jjGoals);
     if (margin > 0 && (!s.biggest || margin > s.biggest.margin)) {
       s.biggest = { margin, text: `${m.a.name} ${m.score.a}–${m.score.b} ${m.b.name}` };
@@ -907,17 +938,30 @@ const topBy = (obj, score) => Object.values(obj).sort((x, y) => score(y) - score
 function renderStats() {
   const body = $("statsbody");
   $("statshint").textContent = results.length ? results.length + " gespeeld" : "";
-  if (!results.length) {
-    body.innerHTML = '<div class="hempty">Nog geen gespeelde eindmatches. Kies na een draw wie welk team speelt en vul later de score in.</div>';
-    return;
-  }
-  const s = computeStats();
+  // Ook zonder data staat het dashboard er (skeleton met nullen), zodat
+  // meteen zichtbaar is wat er gaat groeien.
+  const s = results.length ? computeStats() : {
+    n: 0, wmW: 0, dr: 0, jjW: 0, wmG: 0, jjG: 0,
+    perDuo: { wm: {}, jj: {} }, perStar: {}, biggest: null, cleanWM: 0, cleanJJ: 0,
+  };
   const saldo = s.wmG - s.jjG;
-  const form = results.slice(0, 5).reverse().map(m => {
+  const form = results.length
+    ? results.slice(0, 5).reverse().map(m => {
+        const wmA = m.wmPlays === "a";
+        const w = wmA ? m.score.a : m.score.b, j = wmA ? m.score.b : m.score.a;
+        const color = w > j ? "var(--accent)" : j > w ? "var(--bad)" : "var(--text-3)";
+        return `<b style="background:${color}"></b>`;
+      }).join("")
+    : '<b style="background:var(--raised)"></b>'.repeat(5);
+
+  // Marge-grafiek: laatste 10 matches, staafhoogte = doelpuntenverschil,
+  // kleur = winnaar. Gelijkspel = laag grijs stompje.
+  const bars = results.slice(0, 10).reverse().map(m => {
     const wmA = m.wmPlays === "a";
     const w = wmA ? m.score.a : m.score.b, j = wmA ? m.score.b : m.score.a;
+    const margin = Math.min(5, Math.abs(w - j));
     const color = w > j ? "var(--accent)" : j > w ? "var(--bad)" : "var(--text-3)";
-    return `<b style="background:${color}"></b>`;
+    return `<i style="background:${color};height:${8 + margin * 18}%" title="${m.a.name} ${m.score.a}–${m.score.b} ${m.b.name}"></i>`;
   }).join("");
 
   const favWM = topBy(s.perDuo.wm, e => e.n), favJJ = topBy(s.perDuo.jj, e => e.n);
@@ -948,8 +992,11 @@ function renderStats() {
              favStar ? `${favStar[1].n}× · ${duos.wm} ${favStar[1].wm}–${favStar[1].jj} ${duos.jj}` : "")}
       ${tile("Grootste zege", s.biggest ? s.biggest.text : "—")}
       ${tile("Clean sheets", `${s.cleanWM} · ${s.cleanJJ}`, duos.wm + " · " + duos.jj)}
-      ${tile("Vorm (oud → nieuw)", "", "groen = " + duos.wm + ", rood = " + duos.jj)}
-    </div>`;
+      ${tile("'t Stoeltje", s.chairN ? `${s.chairWM}× ${duos.wm} · ${s.chairJJ}× ${duos.jj}` : "—",
+             s.chairN ? Math.round(s.chairWins / s.chairN * 100) + "% winst vanaf 't stoeltje" : "wordt bijgehouden per score")}
+      ${results.length ? `<div class="tile wide"><div class="tl">Marges — laatste 10 (groen = ${duos.wm}, rood = ${duos.jj})</div><div class="mars">${bars}</div></div>` : ""}
+    </div>
+    ${results.length ? "" : '<div class="hempty" style="margin-top:8px">Nog geen scores — dit dashboard vult zich zodra je na een eindmatch de score opslaat.</div>'}`;
 }
 
 /* Duo-namen, delen en sync */
