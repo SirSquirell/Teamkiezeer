@@ -15,4 +15,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run TeamkiezeerKit tests
         working-directory: app/TeamkiezeerKit
-        run: swift test 2>&1 | tail -40
+        run: swift test

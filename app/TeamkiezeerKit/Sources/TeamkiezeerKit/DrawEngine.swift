@@ -69,19 +69,19 @@ public enum DrawEngine {
     /// Eén poging op een vaste stand van de ladder: kies een (soort, sterren)-
     /// bucket gewogen naar grootte uit de buckets die minstens één geldig paar
     /// hebben, en daarbinnen uniform een geldig paar.
+    private struct BucketKey: Hashable, Comparable {
+        let kind: Team.Kind
+        let stars: Double
+        static func < (l: BucketKey, r: BucketKey) -> Bool {
+            (l.kind.rawValue, l.stars) < (r.kind.rawValue, r.stars)
+        }
+    }
+
     private static func drawAttempt(
         pool: [Team],
         maxDelta: Int,
         rng: inout some RandomNumberGenerator
     ) -> (a: Team, b: Team)? {
-
-        struct BucketKey: Hashable, Comparable {
-            let kind: Team.Kind
-            let stars: Double
-            static func < (l: BucketKey, r: BucketKey) -> Bool {
-                (l.kind.rawValue, l.stars) < (r.kind.rawValue, r.stars)
-            }
-        }
 
         var buckets: [BucketKey: [Team]] = [:]
         for team in pool {
