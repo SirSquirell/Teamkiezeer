@@ -27,14 +27,10 @@ jobs:
             echo "$code $size $url -> $out" | tee -a pipeline/snapshots/fetch-log.txt
           }
           : > pipeline/snapshots/fetch-log.txt
+          rm -f pipeline/snapshots/*sitemap*.xml pipeline/snapshots/*-guess*.html pipeline/snapshots/*robots*
           fetch "https://fifagamenews.com/fc-26-team-star-ratings/" "stars.html"
           fetch "https://fifauteam.com/best-teams-fc-26/" "best-teams.html"
-          fetch "https://fifagamenews.com/sitemap.xml" "fifagamenews-sitemap.xml"
-          fetch "https://fifauteam.com/sitemap.xml" "fifauteam-sitemap.xml"
-          fetch "https://fifauteam.com/post-sitemap.xml" "fifauteam-post-sitemap1.xml"
-          fetch "https://fifauteam.com/post-sitemap4.xml" "fifauteam-post-sitemap4.xml"
-          fetch "https://fifauteam.com/fc-26-stars-rating/" "fifauteam-stars-guess1.html"
-          fetch "https://fifauteam.com/fc-26-star-ratings/" "fifauteam-stars-guess2.html"
+          fetch "https://fifauteam.com/fc-26-leagues-clubs-national-teams/" "leagues-clubs.html"
 
       - name: Commit snapshots
         run: |

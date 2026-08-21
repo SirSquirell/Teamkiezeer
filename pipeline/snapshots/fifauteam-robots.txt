@@ -1,6 +1,0 @@
-User-agent: *
-
-Sitemap: https://fifauteam.com/sitemap.xml
-
-User-agent: SemrushBot-CT
-Disallow: 
