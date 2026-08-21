@@ -1,6 +1,8 @@
 200 601542 https://fifagamenews.com/fc-26-team-star-ratings/ -> stars.html
-200 936482 https://fifauteam.com/best-teams-fc-26/ -> best-teams.html
+200 936455 https://fifauteam.com/best-teams-fc-26/ -> best-teams.html
 200 804 https://fifagamenews.com/sitemap.xml -> fifagamenews-sitemap.xml
 200 1015 https://fifauteam.com/sitemap.xml -> fifauteam-sitemap.xml
-200 157 https://fifagamenews.com/robots.txt -> fifagamenews-robots.txt
-200 100 https://fifauteam.com/robots.txt -> fifauteam-robots.txt
+200 1757238 https://fifauteam.com/post-sitemap.xml -> fifauteam-post-sitemap1.xml
+200 40473433 https://fifauteam.com/post-sitemap4.xml -> fifauteam-post-sitemap4.xml
+404 355968 https://fifauteam.com/fc-26-stars-rating/ -> fifauteam-stars-guess1.html
+404 355968 https://fifauteam.com/fc-26-star-ratings/ -> fifauteam-stars-guess2.html
