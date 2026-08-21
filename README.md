@@ -14,6 +14,7 @@ Puur voor eigen gebruik, nooit voor de App Store.
 
 ```
 /pipeline      Python scraper, draait wekelijks in GitHub Actions
+index.html     de webapp — GitHub Pages serveert de repo-root van main
 /app           Xcode project (SwiftUI, iOS 17+)
 /data          gegenereerde teams.json + handmatige national-teams.json
 ```
@@ -57,6 +58,7 @@ cp data/teams.json app/Teamkiezeer/Resources/bundled-teams.json
 
 ## Onderhoud
 
+- Eigen hosting via FTP (incl. gedeelde scores): zie docs/eigen-hosting.md.
 - Nieuwe league op de bronpagina? De build faalt bewust; voeg de league toe
   aan `pipeline/leagues.json`.
 - Naam-mismatch tussen de twee bronpagina's? Vul `pipeline/aliases.json`

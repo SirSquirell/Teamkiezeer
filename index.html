@@ -981,11 +981,23 @@ function syncPush() {
 }
 
 async function boot() {
-  try {
-    const resp = await fetch("teams.json", { cache: "no-cache" });
-    if (!resp.ok) throw new Error("HTTP " + resp.status);
-    DATA = await resp.json();
-  } catch {
+  // Data: eerst de altijd-verse bron op GitHub (weekly scrape), daarna een
+  // lokale kopie naast deze pagina — zo werkt de app ook op eigen hosting
+  // (FTP-upload) zonder dat je ooit data hoeft bij te werken.
+  const sources = [
+    "https://raw.githubusercontent.com/SirSquirell/Teamkiezeer/main/data/teams.json",
+    "data/teams.json",
+    "teams.json",
+  ];
+  for (const src of sources) {
+    try {
+      const resp = await fetch(src, { cache: "no-cache" });
+      if (!resp.ok) continue;
+      DATA = await resp.json();
+      break;
+    } catch { /* volgende bron */ }
+  }
+  if (!DATA.teams.length) {
     $("placeholder").innerHTML =
       '<h2 class="err">Data laden mislukt</h2><p>Controleer je verbinding en herlaad de pagina.</p>';
     return;
