@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0B0B0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Even Match</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%230B0B0F"/><rect x="15" y="22" width="34" height="7.5" rx="3.75" fill="%23C8F73A"/><rect x="15" y="34.5" width="34" height="7.5" rx="3.75" fill="%23C8F73A"/></svg>'>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;900&display=swap">
+<style>
+  /* Bewust één visuele wereld: near-black, één volt-accent — identiek aan de iOS-app.
+     Alles expliciet geverfd zodat de pagina op elke host-achtergrond klopt. */
+  :root {
+    --bg: #0B0B0F;
+    --surface: #15151B;
+    --raised: #1C1C24;
+    --hairline: rgba(255,255,255,.07);
+    --text: #F5F5F7;
+    --text-2: #9A9AA3;
+    --text-3: #5F5F6A;
+    --accent: #C8F73A;
+    --accent-ink: #131608;
+    --star: #F2C14E;
+    --good: #4ADE80;
+    --warn: #FBBF24;
+    --bad: #F87171;
+    --display: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --enter: cubic-bezier(0.22, 1.12, 0.36, 1);   /* bounce ≈ .15: net voelbaar */
+    --settle: cubic-bezier(0.3, 1.25, 0.5, 1);    /* bounce ≈ .25 voor de landing */
+    --pop: cubic-bezier(0.34, 1.45, 0.64, 1);     /* alleen de VS-badge mag stuiteren */
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); }
+  body {
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 60px;
+  }
+  .app { width: 100%; max-width: 430px; display: flex; flex-direction: column; gap: 18px; }
+
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 9px; }
+  /* Het merkteken: twee gelijke balken. Gelijk spel, letterlijk. */
+  .mark { width: 26px; height: 26px; border-radius: 7px; background: #0F0F14;
+          border: 1px solid var(--hairline);
+          display: flex; flex-direction: column; justify-content: center; gap: 4px; align-items: center; }
+  .mark i { display: block; width: 14px; height: 3.5px; border-radius: 2px; background: var(--accent); }
+  .wordmark {
+    font-family: var(--display); font-weight: 900; font-size: 22px;
+    letter-spacing: -0.03em; text-transform: uppercase;
+  }
+  .wordmark em { font-style: normal; color: var(--accent); }
+  .dataset { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; text-align: right; }
+
+  /* ── Kaartenzone ─────────────────────────────────────── */
+  /* touch-action + user-select: tap-to-skip en snelle re-rolls mogen geen
+     zoom of tekstselectie triggeren. */
+  .stage { position: relative; min-height: 348px; display: flex; flex-direction: column; gap: 14px;
+           touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  .chips { min-height: 26px; display: flex; justify-content: center; }
+  .chip {
+    display: none; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: var(--warn);
+    background: rgba(251,191,36,.12); border-radius: 999px; padding: 4px 12px;
+  }
+  .chip.show { display: inline-flex; }
+
+  .cards { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    padding: 20px 10px 18px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    opacity: 0; transform: translateY(-24px);
+    transition: transform .4s var(--enter), opacity .4s var(--ease-out);
+  }
+  .card.in { opacity: 1; transform: translateY(0); }
+  .card.b { transition-delay: .06s; }           /* 60ms stagger op de entree */
+  .card.out { opacity: 0; transform: translateY(-24px); transition: transform .18s ease-out, opacity .18s ease-out; transition-delay: 0s; }
+  .card.settle { animation: settle .45s var(--settle); }
+  @keyframes settle { from { transform: scale(1.06); } to { transform: scale(1); } }
+
+  /* Alleen crest + naam cyclen. Twee gestapelde lagen wisselen met een 90ms
+     crossfade; de rest van de kaart staat stil in een rustige pending-staat,
+     dus geen flitsende cijfers en geen hoogte-jitter. */
+  .cycler { position: relative; height: 138px; width: 100%; }
+  .layer {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    opacity: 1; transition: opacity 90ms linear;
+  }
+  .layer.off { opacity: 0; }
+
+  .crest {
+    width: 84px; height: 84px; border-radius: 19px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-weight: 900; font-size: 27px; letter-spacing: .02em;
+    border: 1px solid rgba(255,255,255,.08);
+    position: relative; overflow: hidden;
+  }
+  .crest img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: contain; }
+  .crest.loaded { background: var(--raised) !important; }
+  .crest.loaded .ini { visibility: hidden; }
+  .tname {
+    height: 40px; display: flex; align-items: center; justify-content: center;
+    padding: 0 2px;
+  }
+  .tname .nm {
+    font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;
+    text-align: center; line-height: 1.2; text-wrap: balance;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .tleague {
+    height: 13px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  }
+  /* De sokkels (dimme sterren) staan er altijd; alleen de gouden vulling
+     animeert links → rechts bij de reveal. */
+  .stars { display: flex; gap: 3px; height: 14px; }
+  .st { position: relative; width: 14px; height: 14px; }
+  .st svg { position: absolute; inset: 0; }
+  .st .dim path { fill: rgba(255,255,255,.14); }
+  .st .lit { overflow: hidden; opacity: 0; transform: scale(.6);
+             transition: opacity .2s var(--ease-out), transform .2s var(--settle); }
+  .st.on .lit { opacity: 1; transform: scale(1); }
+  .st .lit path { fill: var(--star); }
+  .rating {
+    font-family: var(--display); font-weight: 900; font-size: 32px;
+    font-variant-numeric: tabular-nums; line-height: 1; height: 32px;
+    transition: opacity .2s ease-out;
+  }
+  .rating.dim { opacity: 0; }
+
+  .vs {
+    position: absolute; left: 50%; top: 42%; translate: -50% -50%;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--accent); color: var(--accent-ink);
+    font-family: var(--display); font-weight: 900; font-size: 14px; letter-spacing: .06em;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+    opacity: 0; transform: scale(.9);
+    transition: opacity .5s var(--pop), transform .5s var(--pop);
+  }
+  .vs.show { opacity: 1; transform: scale(1); }
+
+  .meter { opacity: 0; transition: opacity .3s ease-out; padding: 0 4px; display: flex; flex-direction: column; gap: 7px; }
+  .meter.show { opacity: 1; }
+  .track { height: 6px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+  .fill { height: 100%; border-radius: 999px; width: 20%;
+    transform: scaleX(0); transform-origin: left; transition: transform .3s ease-out; }
+  .meter.show .fill { transform: scaleX(1); }
+  .mrow { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600;
+          color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .mdelta { font-weight: 800; }
+
+  .placeholder {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 0 32px;
+  }
+  .placeholder h2 { font-family: var(--display); font-weight: 700; font-size: 17px; color: var(--text-2); }
+  .placeholder p { font-size: 13px; color: var(--text-3); line-height: 1.5; }
+  .placeholder .err { color: var(--bad); }
+
+  /* ── Draw-knop ───────────────────────────────────────── */
+  .draw {
+    width: 100%; height: 56px; border: 0; border-radius: 17px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+    font-family: var(--display); font-weight: 900; font-size: 18px; letter-spacing: .02em;
+    transition: transform .12s var(--ease-out);
+  }
+  .draw { touch-action: manipulation; }
+  .draw:active { transform: scale(.97); }
+  .draw:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+  /* ── Regels & history ────────────────────────────────── */
+  details {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
+    padding: 14px 16px;
+  }
+  summary {
+    cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--display); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--text-2);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary .hint { font-family: var(--body); font-weight: 500; font-size: 11px; color: var(--text-3);
+                  text-transform: none; letter-spacing: 0; }
+  .rules-body { display: flex; flex-direction: column; gap: 16px; padding-top: 14px; }
+  .rlabel { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; }
+
+  .chiprow { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    border: 0; cursor: pointer; border-radius: 999px; padding: 6px 12px;
+    background: var(--raised); color: var(--text-2);
+    font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: var(--body);
+  }
+  .pill[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .pill:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+  .steppers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stepper { background: var(--raised); border-radius: 12px; padding: 10px 12px;
+             display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .stepper .lab { font-size: 12px; color: var(--text-2); font-weight: 600; }
+  .stepper .ctl { display: flex; align-items: center; gap: 10px; }
+  .stepper button {
+    width: 26px; height: 26px; border-radius: 8px; border: 0; cursor: pointer;
+    background: var(--surface); color: var(--text); font-size: 15px; font-weight: 700; line-height: 1;
+  }
+  .stepper .val { font-variant-numeric: tabular-nums; font-weight: 800; min-width: 20px; text-align: center; }
+
+  .leagues { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; }
+  .lg { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); padding: 4px 0; cursor: pointer; }
+  .lg input { accent-color: var(--accent); width: 15px; height: 15px; }
+  .lg .cc { font-size: 10px; color: var(--text-3); font-weight: 600; }
+
+  .history { display: flex; flex-direction: column; gap: 0; }
+  .hrow { display: flex; align-items: baseline; gap: 8px; padding: 8px 2px; border-top: 1px solid var(--hairline);
+          font-size: 13px; }
+  .hrow:first-child { border-top: 0; }
+  .hrow .hn { font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hrow .hn.right { text-align: right; }
+  .hrow .hs { font-variant-numeric: tabular-nums; color: var(--text-2); font-weight: 700; font-size: 12px; }
+  .hrow .hd { font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .hempty { font-size: 12px; color: var(--text-3); padding: 6px 2px; }
+
+  /* ── Eindmatch & score ───────────────────────────────── */
+  .choose { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; min-height: 0; }
+  .choose .pill { border: 1px solid var(--hairline); }
+
+  .pending {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
+    padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .phead { display: flex; justify-content: space-between; align-items: center; }
+  .ptag { font-family: var(--display); font-weight: 900; font-size: 11px; letter-spacing: .1em;
+          color: var(--accent); text-transform: uppercase; }
+  .px { border: 0; background: none; color: var(--text-3); font-size: 15px; cursor: pointer; padding: 2px 6px; }
+  .pgrid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+  .pside { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pside.right { text-align: right; }
+  .pduo { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+  .pclub { font-family: var(--display); font-weight: 700; font-size: 14px;
+           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pscore { display: flex; align-items: center; gap: 6px; }
+  .snum { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .snum input {
+    width: 52px; height: 46px; text-align: center; border-radius: 10px;
+    border: 1px solid var(--hairline); background: var(--raised); color: var(--text);
+    font-family: var(--display); font-weight: 900; font-size: 24px; font-variant-numeric: tabular-nums;
+  }
+  .snum input:focus-visible { outline: 2px solid var(--accent); }
+  .snum input::-webkit-inner-spin-button, .snum input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .snum input { -moz-appearance: textfield; appearance: textfield; }
+  .sbtns { display: flex; gap: 4px; }
+  .sbtns button {
+    width: 25px; height: 22px; border: 0; border-radius: 6px; cursor: pointer;
+    background: var(--raised); color: var(--text); font-size: 14px; font-weight: 800; line-height: 1;
+    touch-action: manipulation;
+  }
+  .colon { font-family: var(--display); font-weight: 900; font-size: 20px; color: var(--text-3); }
+  .psave {
+    border: 0; border-radius: 12px; height: 42px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+    font-family: var(--display); font-weight: 900; font-size: 14px; letter-spacing: .02em;
+    touch-action: manipulation;
+  }
+  .psave:active { transform: scale(.98); }
+
+  /* ── Stand ───────────────────────────────────────────── */
+  .h2h { display: flex; align-items: baseline; justify-content: center; gap: 14px; padding: 6px 0 2px; }
+  .h2h .duo { font-family: var(--display); font-weight: 700; font-size: 13px; color: var(--text-2);
+              text-transform: uppercase; letter-spacing: .05em; }
+  .h2h .num { font-family: var(--display); font-weight: 900; font-size: 30px; font-variant-numeric: tabular-nums; }
+  .h2h .num.win { color: var(--accent); }
+  .h2h .dr { font-family: var(--display); font-weight: 700; font-size: 16px; color: var(--text-3); }
+  .form { display: flex; gap: 5px; justify-content: center; padding-bottom: 6px; }
+  .form b { width: 9px; height: 9px; border-radius: 50%; }
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tile { background: var(--raised); border-radius: 12px; padding: 10px 12px; min-width: 0; }
+  .tile .tl { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-3); }
+  .tile .tv { font-family: var(--display); font-weight: 800; font-size: 15px; margin-top: 3px;
+              font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tile .ts { font-size: 11px; color: var(--text-2); margin-top: 1px; }
+  .stand-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stand-actions .pill { border: 1px solid var(--hairline); }
+  .duo-edit { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .duo-edit input, .sync input {
+    width: 100%; border-radius: 10px; border: 1px solid var(--hairline); background: var(--raised);
+    color: var(--text); padding: 8px 10px; font-size: 13px; font-family: var(--body);
+  }
+  .duo-edit input:focus-visible, .sync input:focus-visible { outline: 2px solid var(--accent); }
+
+  footer { font-size: 11px; color: var(--text-3); text-align: center; line-height: 1.6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .card.b { transition: opacity .2s ease; transform: none; }
+    .card.out { transform: none; }
+    .card.settle { animation: none; }
+    .vs { transition: opacity .2s ease; transform: none; }
+    .st { transition: opacity .2s ease; transform: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <span class="mark" aria-hidden="true"><i></i><i></i></span>
+      <div class="wordmark">Even<em>Match</em></div>
+    </div>
+    <div class="dataset" id="dataset"></div>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="placeholder" id="placeholder">
+      <h2>Klaar voor de loting</h2>
+      <p>Twee teams, identieke sterren, eerlijk rating-verschil. Druk op Draw.</p>
+    </div>
+    <div class="chips"><span class="chip" id="chip">⚠ <span id="chiptext"></span></span></div>
+    <div class="cards" id="cards" hidden>
+      <div class="card a" id="cardA"></div>
+      <div class="card b" id="cardB"></div>
+      <div class="vs" id="vs">VS</div>
+    </div>
+    <div class="meter" id="meter">
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="mrow"><span id="mA"></span><span class="mdelta" id="mD"></span><span id="mB"></span></div>
+    </div>
+    <div class="choose" id="chooseRow" hidden>
+      <button class="pill" id="chooseWM"></button>
+      <button class="pill" id="chooseJJ"></button>
+    </div>
+  </div>
+
+  <div class="pending" id="pending" hidden>
+    <div class="phead">
+      <span class="ptag">⚑ Eindmatch</span>
+      <button class="px" id="pendingX" aria-label="Eindmatch verwijderen">✕</button>
+    </div>
+    <div class="pgrid">
+      <div class="pside">
+        <span class="pduo" id="pDuoA"></span>
+        <span class="pclub" id="pClubA"></span>
+      </div>
+      <div class="pscore">
+        <div class="snum">
+          <input id="sA" type="number" inputmode="numeric" min="0" max="99" value="0">
+          <span class="sbtns"><button data-s="sA:-1">−</button><button data-s="sA:1">+</button></span>
+        </div>
+        <span class="colon">:</span>
+        <div class="snum">
+          <input id="sB" type="number" inputmode="numeric" min="0" max="99" value="0">
+          <span class="sbtns"><button data-s="sB:-1">−</button><button data-s="sB:1">+</button></span>
+        </div>
+      </div>
+      <div class="pside right">
+        <span class="pduo" id="pDuoB"></span>
+        <span class="pclub" id="pClubB"></span>
+      </div>
+    </div>
+    <button class="psave" id="pSave">Score opslaan</button>
+  </div>
+
+  <button class="draw" id="draw">Draw</button>
+
+  <details>
+    <summary>Stand <span class="hint" id="statshint"></span></summary>
+    <div class="rules-body">
+      <div id="statsbody"></div>
+      <div>
+        <div class="rlabel">Duo-namen</div>
+        <div class="duo-edit">
+          <input id="duoWM" maxlength="12" placeholder="Duo 1">
+          <input id="duoJJ" maxlength="12" placeholder="Duo 2">
+        </div>
+      </div>
+      <div>
+        <div class="rlabel">Stand delen tussen apparaten</div>
+        <div class="stand-actions">
+          <button class="pill" id="expBtn">Kopieer stand</button>
+          <button class="pill" id="impBtn">Importeer stand</button>
+          <button class="pill" id="wipeBtn">Wis alles</button>
+        </div>
+      </div>
+      <div class="sync">
+        <div class="rlabel">Sync-URL (optioneel)</div>
+        <input id="syncUrl" placeholder="https://jouw-domein/evenmatch.json">
+        <div class="ts" style="font-size:11px;color:var(--text-3);margin-top:5px">
+          Elke endpoint die één JSON-blob kan GET/PUT-en werkt. Bij het openen
+          wordt de laatste stand opgehaald; elke opgeslagen score pusht ernaartoe.
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details id="rules">
+    <summary>Regels <span class="hint" id="ruleshint"></span></summary>
+    <div class="rules-body">
+      <div>
+        <div class="rlabel">Sterren</div>
+        <div class="chiprow" id="starchips"></div>
+      </div>
+      <div class="steppers">
+        <div class="stepper"><span class="lab">Max Δ</span>
+          <span class="ctl"><button data-step="delta:-1">−</button><span class="val" id="vDelta"></span><button data-step="delta:1">+</button></span></div>
+        <div class="stepper"><span class="lab">Cooldown</span>
+          <span class="ctl"><button data-step="cool:-1">−</button><span class="val" id="vCool"></span><button data-step="cool:1">+</button></span></div>
+      </div>
+      <div>
+        <div class="rlabel">Teams</div>
+        <div class="chiprow" id="kindchips"></div>
+      </div>
+      <div>
+        <div class="rlabel">Leagues</div>
+        <div class="leagues" id="leaguelist"></div>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>History <span class="hint" id="histhint"></span></summary>
+    <div class="history" id="history"></div>
+  </details>
+
+  <footer>Data ververst wekelijks automatisch. Tip op je telefoon: deel-knop →<br>
+    "Zet op beginscherm", dan staat 'ie tussen je apps.</footer>
+</div>
+
+<script>
+let DATA = { game: "", generatedAt: "", leagues: [], teams: [] };
+let defaultWhitelist = [];
+
+/* ── State ─────────────────────────────────────────────── */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let rules = {
+  maxDelta: 2, cooldown: 6, pinned: null, kind: "clubs", womens: false,
+  whitelist: [],
+};
+let history = store.get("history", []);          // nieuwste eerst: {a,b,ar,br,stars,delta,relax}
+const saveRules = () => store.set("rules", rules);
+const saveHistory = () => store.set("history", history.slice(0, 50));
+
+/* ── Engine (zelfde ladder als TeamkiezeerKit) ─────────── */
+function poolFilter(t) {
+  if (t.squadRating == null) return false;
+  if (t.womens && !rules.womens) return false;
+  if (rules.kind === "clubs" && t.kind !== "club") return false;
+  if (rules.kind === "nats" && t.kind !== "national") return false;
+  if (t.kind === "club" && !rules.whitelist.includes(t.leagueId)) return false;
+  if (rules.pinned != null && t.starRating !== rules.pinned) return false;
+  return true;
+}
+function attempt(pool, maxDelta) {
+  const buckets = new Map();
+  for (const t of pool) {
+    const key = t.kind + "|" + t.starRating;
+    if (!buckets.has(key)) buckets.set(key, []);
+    buckets.get(key).push(t);
+  }
+  const viable = [];
+  for (const teams of buckets.values()) {
+    if (teams.length < 2) continue;
+    const pairs = [];
+    for (let i = 0; i < teams.length - 1; i++)
+      for (let j = i + 1; j < teams.length; j++)
+        if (Math.abs(teams[i].squadRating - teams[j].squadRating) <= maxDelta)
+          pairs.push([teams[i], teams[j]]);
+    if (pairs.length) viable.push({ teams, pairs });
+  }
+  if (!viable.length) return null;
+  const total = viable.reduce((s, b) => s + b.teams.length, 0);   // gewogen naar bucketgrootte
+  let pick = Math.floor(Math.random() * total);
+  let bucket = viable[0];
+  for (const b of viable) { if (pick < b.teams.length) { bucket = b; break; } pick -= b.teams.length; }
+  let pair = bucket.pairs[Math.floor(Math.random() * bucket.pairs.length)];
+  if (Math.random() < 0.5) pair = [pair[1], pair[0]];
+  return pair;
+}
+function draw() {
+  const base = DATA.teams.filter(poolFilter);
+  if (!base.length) return { error: "De pool is leeg met deze filters." };
+  const recentIds = new Set(history.slice(0, rules.cooldown).flatMap(h => [h.aid, h.bid]));
+  const relax = [];
+  for (let stage = 0; stage <= 4; stage++) {
+    const delta = rules.maxDelta + Math.min(stage, 3);
+    if (stage >= 1 && stage <= 3) relax.push("delta verruimd naar " + delta);
+    if (stage === 4) relax.push("cooldown losgelaten");
+    const pool = stage < 4 ? base.filter(t => !recentIds.has(t.id)) : base;
+    const pair = attempt(pool, delta);
+    if (pair) return { a: pair[0], b: pair[1], delta: Math.abs(pair[0].squadRating - pair[1].squadRating), relax };
+  }
+  const star = rules.pinned != null ? rules.pinned.toLocaleString("nl") + "★ " : "";
+  return { error: "Geen eerlijk paar op " + star + "met jouw filters." };
+}
+
+/* ── Kaart-rendering ───────────────────────────────────── */
+const SKIP_WORDS = new Set(["fc","cf","afc","ac","as","sc","de","ss","cd","1."]);
+function initials(name) {
+  const words = name.split(" ");
+  const kept = words.filter(w => !SKIP_WORDS.has(w.toLowerCase()));
+  return (kept.length ? kept : words).slice(0, 3).map(w => w[0]).join("").toUpperCase();
+}
+const STAR_PATH = "M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z";
+function starSvg(cls) {
+  return `<svg class="${cls}" viewBox="0 0 24 24" width="14" height="14"><path d="${STAR_PATH}"/></svg>`;
+}
+function crestHTML(t) {
+  const bg = t.primaryColor || "#3A3A46";
+  const fg = t.secondaryColor || "#FFFFFF";
+  const img = t.crestURL
+    ? `<img src="${t.crestURL}" alt="" onload="this.parentElement.classList.add('loaded')" onerror="this.remove()">`
+    : "";
+  return `<div class="crest" style="background:${bg};color:${fg}"><span class="ini">${initials(t.name)}</span>${img}</div>`;
+}
+/* Alleen dit deel cyclet: crest + naam. */
+function identityHTML(t) {
+  return `${crestHTML(t)}<div class="tname"><span class="nm">${t.name}</span></div>`;
+}
+function starsHTML(t, on) {
+  return [0,1,2,3,4].map(i => {
+    const frac = t.starRating - i >= 1 ? 1 : (t.starRating - i >= 0.5 ? 0.5 : 0);
+    return `<span class="st${i < on ? " on" : ""}">${starSvg("dim")}
+      <span class="lit" style="position:absolute;inset:0;width:${frac * 100}%;display:${frac ? "block" : "none"}">${starSvg("")}</span></span>`;
+  }).join("");
+}
+function leagueLabel(t) {
+  return t.kind === "national" ? (t.womens ? "Landenteam · Vrouwen" : "Landenteam")
+                               : (t.leagueName || "Onbekende league");
+}
+/* Vast skelet: alles buiten de cycler staat stil in een pending-staat,
+   dus geen flitsende ratings en geen hoogte-jitter. */
+function buildSkeleton(card) {
+  card.classList.remove("settle");
+  card.innerHTML = `<div class="cycler"><div class="layer"></div><div class="layer off"></div></div>
+    <div class="tleague">· · ·</div>
+    <div class="stars">${starsHTML({ starRating: 0 }, 0)}</div>
+    <div class="rating dim">0</div>`;
+}
+function showCandidate(card, t) {
+  const [l0, l1] = card.querySelectorAll(".layer");
+  const back = l0.classList.contains("off") ? l0 : l1;
+  const front = back === l0 ? l1 : l0;
+  back.innerHTML = identityHTML(t);
+  front.classList.add("off");
+  back.classList.remove("off");
+}
+function settleCard(card, t) {
+  showCandidate(card, t);
+  card.querySelector(".tleague").textContent = leagueLabel(t);
+  card.querySelector(".stars").innerHTML = starsHTML(t, 0);
+  card.classList.add("settle");
+}
+
+/* ── Ceremonie (beat-tabel uit de brief) ───────────────── */
+const $ = id => document.getElementById(id);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+let running = false, skip = false, generation = 0;
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+function jumpToSettled(result) {
+  for (const [card, t] of [[$("cardA"), result.a], [$("cardB"), result.b]]) {
+    card.classList.add("in"); card.classList.remove("out", "settle");
+    buildSkeleton(card);
+    card.querySelector(".layer").innerHTML = identityHTML(t);
+    card.querySelector(".tleague").textContent = leagueLabel(t);
+    card.querySelector(".stars").innerHTML = starsHTML(t, 5);
+    const r = card.querySelector(".rating");
+    r.textContent = t.squadRating;
+    r.classList.remove("dim");
+  }
+  $("vs").classList.add("show");
+  showMeter(result);
+  running = false;
+}
+/* Count-up van 0 naar de squad rating in 500ms, linear, tabular digits. */
+function countUp(gen, result, A, B) {
+  const start = performance.now();
+  return new Promise(done => {
+    const tick = () => {
+      if (gen !== generation) return done();
+      const t = Math.min(1, (performance.now() - start) / 500);
+      A.querySelector(".rating").textContent = Math.round(result.a.squadRating * t);
+      B.querySelector(".rating").textContent = Math.round(result.b.squadRating * t);
+      t < 1 ? requestAnimationFrame(tick) : done();
+    };
+    requestAnimationFrame(tick);
+  });
+}
+function showMeter(result) {
+  lastSettled = result;
+  $("chooseWM").textContent = duos.wm + " speelt " + result.a.name;
+  $("chooseJJ").textContent = duos.jj + " speelt " + result.a.name;
+  $("chooseRow").hidden = false;
+  const color = result.delta < 2 ? "var(--good)" : result.delta <= 4 ? "var(--warn)" : "var(--bad)";
+  $("fill").style.background = color;
+  $("fill").style.width = Math.max(8, Math.min(100, result.delta / 8 * 100)) + "%";
+  $("mA").textContent = result.a.squadRating;
+  $("mB").textContent = result.b.squadRating;
+  $("mD").textContent = "Δ " + result.delta;
+  $("mD").style.color = color;
+  $("meter").classList.add("show");
+  const chip = $("chip");
+  if (result.relax.length) { $("chiptext").textContent = result.relax.join(" · "); chip.classList.add("show"); }
+}
+async function ceremony(result, pool) {
+  const gen = ++generation;
+  running = true; skip = false;
+  const A = $("cardA"), B = $("cardB");
+  $("placeholder").hidden = true;
+  $("vs").classList.remove("show");
+  $("meter").classList.remove("show");
+  $("chip").classList.remove("show");
+  $("chooseRow").hidden = true;
+
+  // re-roll: kaarten verlaten zoals ze kwamen (lift + fade, 180ms)
+  if (A.classList.contains("in")) {
+    A.classList.add("out"); B.classList.add("out");
+    await wait(190); if (gen !== generation) return;
+    A.classList.remove("in", "out", "settle"); B.classList.remove(...["in","out","settle"]);
+    void A.offsetHeight;                                    // reflow zodat de entree opnieuw animeert
+  }
+  $("cards").hidden = false;
+  const rand = () => pool[Math.floor(Math.random() * pool.length)] || result.a;
+  const check = () => { if (skip || gen !== generation) { if (gen === generation) jumpToSettled(result); return true; } return false; };
+
+  buildSkeleton(A); buildSkeleton(B);
+
+  if (reduceMotion.matches) {                               // reduced motion: 200ms crossfade,
+    A.classList.add("in"); B.classList.add("in");           // haptiekloos web: count-up blijft
+    settleCard(A, result.a); settleCard(B, result.b);
+    A.classList.remove("settle"); B.classList.remove("settle");
+    document.querySelectorAll("#cards .st").forEach(s => s.classList.add("on"));
+    A.querySelector(".rating").classList.remove("dim");
+    B.querySelector(".rating").classList.remove("dim");
+    await wait(200); if (check()) return;
+    await countUp(gen, result, A, B);
+    $("vs").classList.add("show"); showMeter(result);
+    running = false; return;
+  }
+
+  showCandidate(A, rand());
+  showCandidate(B, rand());
+  A.classList.add("in"); B.classList.add("in");             // drop-in vanaf -24px, 60ms stagger via CSS
+
+  await wait(150); if (check()) return;
+  let elapsed = 150;                                        // cycling: elke 55ms door de échte pool,
+  while (elapsed < 900) {                                   // alleen crest + naam wisselen
+    showCandidate(A, rand());
+    showCandidate(B, rand());
+    await wait(55); if (check()) return;
+    elapsed += 55;
+  }
+  let p = 0;                                                // deceleratie: 55ms → 260ms, sterke ease-out
+  while (p < 1) {
+    p = Math.min(1, p + 0.34);
+    const eased = 1 - Math.pow(1 - p, 4);
+    showCandidate(A, rand());
+    showCandidate(B, rand());
+    await wait(55 + (260 - 55) * eased); if (check()) return;
+  }
+  settleCard(A, result.a);                                  // A settelt: scale 1.06 → 1.0
+  await wait(300); if (check()) return;                     // 300ms stilte = de spanning
+  settleCard(B, result.b);
+  await wait(60); if (check()) return;
+
+  A.querySelector(".rating").classList.remove("dim");       // sterren vullen + count-up
+  B.querySelector(".rating").classList.remove("dim");
+  countUp(gen, result, A, B);
+  for (let i = 0; i < 5; i++) {
+    document.querySelectorAll("#cardA .st")[i].classList.add("on");
+    document.querySelectorAll("#cardB .st")[i].classList.add("on");
+    await wait(60); if (check()) return;
+  }
+  $("vs").classList.add("show");                            // "match is set"
+  await wait(100); if (check()) return;
+  showMeter(result);
+  running = false;
+}
+
+/* ── UI-koppelingen ────────────────────────────────────── */
+$("draw").addEventListener("click", () => {
+  if (running) { skip = true; return; }
+  const result = draw();
+  if (result.error) {
+    generation++;
+    $("cards").hidden = true; $("meter").classList.remove("show"); $("chip").classList.remove("show");
+    $("placeholder").hidden = false;
+    $("placeholder").innerHTML = `<h2 class="err">${result.error}</h2><p>Verruim de regels of zet meer leagues aan.</p>`;
+    return;
+  }
+  history.unshift({ aid: result.a.id, bid: result.b.id, an: result.a.name, bn: result.b.name,
+                    ar: result.a.squadRating, br: result.b.squadRating,
+                    stars: result.a.starRating, delta: result.delta, relax: result.relax.length });
+  history = history.slice(0, 50);
+  saveHistory(); renderHistory();
+  ceremony(result, DATA.teams.filter(poolFilter));
+});
+$("stage").addEventListener("click", () => { if (running) skip = true; });
+
+function renderStarChips() {
+  const wrap = $("starchips"); wrap.innerHTML = "";
+  const mk = (label, val) => {
+    const b = document.createElement("button");
+    b.className = "pill"; b.textContent = label;
+    b.setAttribute("aria-pressed", String(rules.pinned === val));
+    b.onclick = () => { rules.pinned = val; saveRules(); renderStarChips(); };
+    wrap.appendChild(b);
+  };
+  mk("Verras ons", null);
+  for (let s = 5.0; s >= 0.5; s -= 0.5) mk(s.toLocaleString("nl") + "★", s);
+}
+function renderKindChips() {
+  const wrap = $("kindchips"); wrap.innerHTML = "";
+  for (const [val, label] of [["clubs","Clubs"],["nats","Landen"],["mixed","Mix"]]) {
+    const b = document.createElement("button");
+    b.className = "pill"; b.textContent = label;
+    b.setAttribute("aria-pressed", String(rules.kind === val));
+    b.onclick = () => { rules.kind = val; saveRules(); renderKindChips(); };
+    wrap.appendChild(b);
+  }
+  const w = document.createElement("button");
+  w.className = "pill"; w.textContent = "Vrouwenteams " + (rules.womens ? "aan" : "uit");
+  w.setAttribute("aria-pressed", String(rules.womens));
+  w.onclick = () => { rules.womens = !rules.womens; saveRules(); renderKindChips(); renderLeagues(); };
+  wrap.appendChild(w);
+}
+function renderLeagues() {
+  const wrap = $("leaguelist"); wrap.innerHTML = "";
+  const visible = DATA.leagues.filter(l => rules.womens || !l.womens)
+    .sort((a, b) => (b.defaultWhitelist - a.defaultWhitelist) || a.name.localeCompare(b.name));
+  for (const l of visible) {
+    const lab = document.createElement("label"); lab.className = "lg";
+    const cb = document.createElement("input"); cb.type = "checkbox";
+    cb.checked = rules.whitelist.includes(l.id);
+    cb.onchange = () => {
+      rules.whitelist = cb.checked ? [...rules.whitelist, l.id] : rules.whitelist.filter(x => x !== l.id);
+      saveRules(); updateHints();
+    };
+    lab.append(cb, Object.assign(document.createElement("span"), { textContent: l.name }),
+               Object.assign(document.createElement("span"), { className: "cc", textContent: l.countryCode }));
+    wrap.appendChild(lab);
+  }
+  updateHints();
+}
+document.querySelectorAll("[data-step]").forEach(b => {
+  b.addEventListener("click", () => {
+    const [key, d] = b.dataset.step.split(":");
+    if (key === "delta") rules.maxDelta = Math.max(0, Math.min(10, rules.maxDelta + Number(d)));
+    else rules.cooldown = Math.max(0, Math.min(20, rules.cooldown + Number(d)));
+    saveRules(); syncSteppers();
+  });
+});
+function syncSteppers() { $("vDelta").textContent = rules.maxDelta; $("vCool").textContent = rules.cooldown; updateHints(); }
+function updateHints() {
+  const n = DATA.teams.filter(poolFilter).length;
+  $("ruleshint").textContent = n + " teams in de pool";
+}
+function renderHistory() {
+  const wrap = $("history");
+  $("histhint").textContent = history.length ? history.length + " draws" : "";
+  if (!history.length) { wrap.innerHTML = '<div class="hempty">Nog geen draws.</div>'; return; }
+  wrap.innerHTML = history.slice(0, 10).map(h => {
+    const color = h.delta < 2 ? "var(--good)" : h.delta <= 4 ? "var(--warn)" : "var(--bad)";
+    return `<div class="hrow"><span class="hn">${h.an}</span>
+      <span class="hs">${h.ar}–${h.br}</span>
+      <span class="hd" style="color:${color}">Δ${h.delta}${h.relax ? " ⚠" : ""}</span>
+      <span class="hs">${h.stars.toLocaleString("nl")}★</span>
+      <span class="hn right">${h.bn}</span></div>`;
+  }).join("");
+}
+
+/* ── Eindmatch, scores en stand ────────────────────────── */
+let lastSettled = null;
+let duos = store.get("duos", { wm: "W/M", jj: "J/J" });
+let pendingMatch = store.get("pendingMatch", null);
+let results = store.get("results", []);            // nieuwste eerst
+let syncUrl = store.get("syncUrl", "");
+
+const snap = t => ({ id: t.id, name: t.name, stars: t.starRating, rating: t.squadRating });
+
+function persistScores() {
+  store.set("duos", duos);
+  store.set("pendingMatch", pendingMatch);
+  store.set("results", results.slice(0, 500));
+  store.set("syncUrl", syncUrl);
+}
+
+function chooseFinal(wmPlays) {
+  if (!lastSettled) return;
+  pendingMatch = {
+    ts: Date.now(),
+    a: snap(lastSettled.a), b: snap(lastSettled.b),
+    stars: lastSettled.a.starRating, delta: lastSettled.delta,
+    wmPlays,                                        // 'a' of 'b': welk team speelt W/M
+  };
+  persistScores();
+  $("chooseRow").hidden = true;
+  renderPending();
+}
+$("chooseWM").addEventListener("click", e => { e.stopPropagation(); chooseFinal("a"); });
+$("chooseJJ").addEventListener("click", e => { e.stopPropagation(); chooseFinal("b"); });
+
+function renderPending() {
+  const bar = $("pending");
+  if (!pendingMatch) { bar.hidden = true; return; }
+  bar.hidden = false;
+  const wmA = pendingMatch.wmPlays === "a";
+  $("pDuoA").textContent = wmA ? duos.wm : duos.jj;
+  $("pDuoB").textContent = wmA ? duos.jj : duos.wm;
+  $("pClubA").textContent = pendingMatch.a.name;
+  $("pClubB").textContent = pendingMatch.b.name;
+  $("sA").value = 0;
+  $("sB").value = 0;
+}
+$("pendingX").addEventListener("click", () => { pendingMatch = null; persistScores(); renderPending(); });
+document.querySelectorAll("[data-s]").forEach(b => {
+  b.addEventListener("click", () => {
+    const [id, d] = b.dataset.s.split(":");
+    const input = $(id);
+    input.value = Math.max(0, Math.min(99, (parseInt(input.value, 10) || 0) + Number(d)));
+  });
+});
+$("pSave").addEventListener("click", () => {
+  if (!pendingMatch) return;
+  const a = Math.max(0, parseInt($("sA").value, 10) || 0);
+  const b = Math.max(0, parseInt($("sB").value, 10) || 0);
+  results.unshift({ ...pendingMatch, score: { a, b }, playedAt: Date.now() });
+  pendingMatch = null;
+  persistScores(); syncPush();
+  renderPending(); renderStats();
+});
+
+/* Rapportage. Alles vanuit W/M-perspectief berekend en gespiegeld getoond. */
+function computeStats() {
+  const s = {
+    n: results.length, wmW: 0, dr: 0, jjW: 0, wmG: 0, jjG: 0,
+    perDuo: { wm: {}, jj: {} }, perStar: {}, biggest: null, cleanWM: 0, cleanJJ: 0,
+  };
+  for (const m of results) {
+    const wmA = m.wmPlays === "a";
+    const wmGoals = wmA ? m.score.a : m.score.b;
+    const jjGoals = wmA ? m.score.b : m.score.a;
+    s.wmG += wmGoals; s.jjG += jjGoals;
+    const outcome = wmGoals > jjGoals ? "wm" : jjGoals > wmGoals ? "jj" : "dr";
+    if (outcome === "wm") s.wmW++; else if (outcome === "jj") s.jjW++; else s.dr++;
+    if (jjGoals === 0) s.cleanWM++;
+    if (wmGoals === 0) s.cleanJJ++;
+
+    const wmClub = wmA ? m.a : m.b, jjClub = wmA ? m.b : m.a;
+    for (const [duo, club, won] of [["wm", wmClub, outcome === "wm"], ["jj", jjClub, outcome === "jj"]]) {
+      const e = s.perDuo[duo][club.id] ||= { name: club.name, n: 0, w: 0 };
+      e.n++; if (won) e.w++;
+    }
+    const st = s.perStar[m.stars] ||= { n: 0, wm: 0, jj: 0 };
+    st.n++; if (outcome === "wm") st.wm++; else if (outcome === "jj") st.jj++;
+
+    const margin = Math.abs(wmGoals - jjGoals);
+    if (margin > 0 && (!s.biggest || margin > s.biggest.margin)) {
+      s.biggest = { margin, text: `${m.a.name} ${m.score.a}–${m.score.b} ${m.b.name}` };
+    }
+  }
+  return s;
+}
+const topBy = (obj, score) => Object.values(obj).sort((x, y) => score(y) - score(x))[0];
+
+function renderStats() {
+  const body = $("statsbody");
+  $("statshint").textContent = results.length ? results.length + " gespeeld" : "";
+  if (!results.length) {
+    body.innerHTML = '<div class="hempty">Nog geen gespeelde eindmatches. Kies na een draw wie welk team speelt en vul later de score in.</div>';
+    return;
+  }
+  const s = computeStats();
+  const saldo = s.wmG - s.jjG;
+  const form = results.slice(0, 5).reverse().map(m => {
+    const wmA = m.wmPlays === "a";
+    const w = wmA ? m.score.a : m.score.b, j = wmA ? m.score.b : m.score.a;
+    const color = w > j ? "var(--accent)" : j > w ? "var(--bad)" : "var(--text-3)";
+    return `<b style="background:${color}"></b>`;
+  }).join("");
+
+  const favWM = topBy(s.perDuo.wm, e => e.n), favJJ = topBy(s.perDuo.jj, e => e.n);
+  const bestWM = topBy(Object.fromEntries(Object.entries(s.perDuo.wm).filter(([, e]) => e.n >= 2)), e => e.w / e.n);
+  const bestJJ = topBy(Object.fromEntries(Object.entries(s.perDuo.jj).filter(([, e]) => e.n >= 2)), e => e.w / e.n);
+  const favStar = Object.entries(s.perStar).sort((x, y) => y[1].n - x[1].n)[0];
+
+  const tile = (label, value, sub = "") =>
+    `<div class="tile"><div class="tl">${label}</div><div class="tv">${value}</div>${sub ? `<div class="ts">${sub}</div>` : ""}</div>`;
+
+  body.innerHTML = `
+    <div class="h2h">
+      <span class="duo">${duos.wm}</span>
+      <span class="num ${s.wmW > s.jjW ? "win" : ""}">${s.wmW}</span>
+      <span class="dr">${s.dr}</span>
+      <span class="num ${s.jjW > s.wmW ? "win" : ""}">${s.jjW}</span>
+      <span class="duo">${duos.jj}</span>
+    </div>
+    <div class="form">${form}</div>
+    <div class="tiles">
+      ${tile("Doelsaldo " + duos.wm, (saldo > 0 ? "+" : "") + saldo, s.wmG + " voor · " + s.jjG + " tegen")}
+      ${tile("Gem. goals p/match", ((s.wmG + s.jjG) / s.n).toFixed(1), s.n + " matches")}
+      ${tile("Favo team " + duos.wm, favWM ? favWM.name : "—", favWM ? favWM.n + "× gespeeld, " + favWM.w + "× gewonnen" : "")}
+      ${tile("Favo team " + duos.jj, favJJ ? favJJ.name : "—", favJJ ? favJJ.n + "× gespeeld, " + favJJ.w + "× gewonnen" : "")}
+      ${tile("Beste club " + duos.wm, bestWM ? bestWM.name : "—", bestWM ? Math.round(bestWM.w / bestWM.n * 100) + "% winst (" + bestWM.n + "×)" : "min. 2× gespeeld")}
+      ${tile("Beste club " + duos.jj, bestJJ ? bestJJ.name : "—", bestJJ ? Math.round(bestJJ.w / bestJJ.n * 100) + "% winst (" + bestJJ.n + "×)" : "min. 2× gespeeld")}
+      ${tile("Favo sterrating", favStar ? Number(favStar[0]).toLocaleString("nl") + "★" : "—",
+             favStar ? `${favStar[1].n}× · ${duos.wm} ${favStar[1].wm}–${favStar[1].jj} ${duos.jj}` : "")}
+      ${tile("Grootste zege", s.biggest ? s.biggest.text : "—")}
+      ${tile("Clean sheets", `${s.cleanWM} · ${s.cleanJJ}`, duos.wm + " · " + duos.jj)}
+      ${tile("Vorm (oud → nieuw)", "", "groen = " + duos.wm + ", rood = " + duos.jj)}
+    </div>`;
+}
+
+/* Duo-namen, delen en sync */
+function renderDuoInputs() { $("duoWM").value = duos.wm; $("duoJJ").value = duos.jj; $("syncUrl").value = syncUrl; }
+$("duoWM").addEventListener("change", () => { duos.wm = $("duoWM").value.trim() || "W/M"; persistScores(); renderStats(); renderPending(); });
+$("duoJJ").addEventListener("change", () => { duos.jj = $("duoJJ").value.trim() || "J/J"; persistScores(); renderStats(); renderPending(); });
+$("syncUrl").addEventListener("change", () => { syncUrl = $("syncUrl").value.trim(); persistScores(); syncPull(); });
+
+$("expBtn").addEventListener("click", async () => {
+  const blob = JSON.stringify({ duos, results });
+  try { await navigator.clipboard.writeText(blob); $("expBtn").textContent = "Gekopieerd ✓"; }
+  catch { prompt("Kopieer deze stand:", blob); }
+  setTimeout(() => { $("expBtn").textContent = "Kopieer stand"; }, 1500);
+});
+$("impBtn").addEventListener("click", () => {
+  const raw = prompt("Plak hier een eerder gekopieerde stand (vervangt de huidige):");
+  if (!raw) return;
+  try {
+    const doc = JSON.parse(raw);
+    if (!Array.isArray(doc.results)) throw new Error();
+    results = doc.results; if (doc.duos) duos = doc.duos;
+    persistScores(); renderStats(); renderDuoInputs(); renderPending();
+  } catch { alert("Dat was geen geldige stand."); }
+});
+$("wipeBtn").addEventListener("click", () => {
+  if (!confirm("Alle gespeelde matches en de stand wissen?")) return;
+  results = []; pendingMatch = null;
+  persistScores(); syncPush(); renderStats(); renderPending();
+});
+
+/* Optionele sync: elke endpoint die één JSON-blob GET/PUT serveert werkt.
+   Bij openen wordt de laatste stand opgehaald; elke score-save pusht. */
+async function syncPull() {
+  if (!syncUrl) return;
+  try {
+    const r = await fetch(syncUrl, { cache: "no-cache" });
+    if (!r.ok) return;
+    const remote = await r.json();
+    if (remote && Array.isArray(remote.results)) {
+      if (remote.results.length >= results.length) {
+        results = remote.results;
+        if (remote.duos) duos = remote.duos;
+        persistScores(); renderStats(); renderDuoInputs();
+      } else {
+        syncPush();                                  // lokaal is verder: push
+      }
+    }
+  } catch { /* offline of endpoint down: lokaal blijft leidend */ }
+}
+function syncPush() {
+  if (!syncUrl) return;
+  fetch(syncUrl, {
+    method: "PUT", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ duos, results, updated: new Date().toISOString() }),
+  }).catch(() => {});
+}
+
+async function boot() {
+  try {
+    const resp = await fetch("teams.json", { cache: "no-cache" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    DATA = await resp.json();
+  } catch {
+    $("placeholder").innerHTML =
+      '<h2 class="err">Data laden mislukt</h2><p>Controleer je verbinding en herlaad de pagina.</p>';
+    return;
+  }
+  defaultWhitelist = DATA.leagues.filter(l => l.defaultWhitelist).map(l => l.id);
+  rules = store.get("rules", null) || { ...rules, whitelist: defaultWhitelist };
+  $("dataset").textContent = DATA.game + " · " + DATA.teams.length + " teams · " + DATA.generatedAt.slice(0, 10);
+  renderStarChips(); renderKindChips(); renderLeagues(); syncSteppers(); renderHistory();
+  renderPending(); renderStats(); renderDuoInputs(); syncPull();
+}
+boot();
+</script>
+</body>
+</html>
