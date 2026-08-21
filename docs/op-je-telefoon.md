@@ -4,7 +4,7 @@
 
 **Dit is de route voor niet-developers.** Stuur de link, klaar:
 
-> **https://sirsquirell.github.io/Teamkiezeer/**
+> **https://evenmatch.prulwerk.nl**
 
 - Werkt op elke telefoon, tablet en computer; niets te installeren, verloopt
   nooit, en de teamdata ververst automatisch na elke weekly scrape.
