@@ -41,6 +41,14 @@ De engine-tests draaien ook zonder Mac: `swift test` in `app/TeamkiezeerKit`
 Op je iPhone zetten (gratis Apple ID, TestFlight of sideload via de
 CI-gebouwde IPA): zie [docs/op-je-telefoon.md](docs/op-je-telefoon.md).
 
+### Mac-app (dmg)
+
+Elke app-wijziging bouwt CI ook een Mac-versie (Mac Catalyst):
+Actions → **Build IPA** → laatste run → artifact **EvenMatch-dmg**.
+De app is niet gesigneerd, dus de eerste keer openen gaat via
+rechtermuisklik op "Even Match.app" → **Open** → nogmaals *Open*
+(of System Settings → Privacy & Security → *Open Anyway*).
+
 Vernieuw af en toe de ingebouwde offline-snapshot:
 
 ```

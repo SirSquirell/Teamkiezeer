@@ -40,3 +40,36 @@ jobs:
           name: Teamkiezeer-unsigned-ipa
           path: Teamkiezeer-unsigned.ipa
           retention-days: 30
+
+  dmg:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (Mac Catalyst, unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project app/Teamkiezeer.xcodeproj \
+            -scheme Teamkiezeer \
+            -configuration Release \
+            -destination 'generic/platform=macOS,variant=Mac Catalyst' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build | tail -60
+
+      - name: Package DMG
+        run: |
+          APP=$(find build/Build/Products -maxdepth 2 -name "Teamkiezeer.app" -type d | head -1)
+          test -d "$APP"
+          mkdir -p dmgroot
+          cp -R "$APP" "dmgroot/Even Match.app"
+          ln -s /Applications dmgroot/Applications
+          hdiutil create -volname "Even Match" -srcfolder dmgroot -ov -format UDZO EvenMatch.dmg
+          ls -la EvenMatch.dmg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EvenMatch-dmg
+          path: EvenMatch.dmg
+          retention-days: 30
