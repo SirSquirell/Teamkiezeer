@@ -304,6 +304,9 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool, out_path: Pa
     matched = sum(1 for t in teams if t["leagueId"])
     log(f"RESULTAAT: {len(teams)} teams, {matched} met league")
 
+    from audit import run_audit
+    run_audit(teams, log)
+
     payload = {
         "schemaVersion": 1,
         "game": "FC 26",
