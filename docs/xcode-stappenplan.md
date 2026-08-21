@@ -47,7 +47,7 @@ oplaadkabel, je gewone Apple ID. Geen betaald account.
 ## Deel 3 — installeren
 
 9. **Run.** Klik op de **▶**-knop linksboven (of ⌘R). De eerste build duurt
-   1–3 minuten. Daarna staat Teamkiezeer op je telefoon.
+   1–3 minuten. Daarna staat **Gelijkspel** op je telefoon (het project heet technisch nog Teamkiezeer; het icoon en de naam op je beginscherm zijn Gelijkspel).
 10. **App vertrouwen (alleen de eerste keer).** Start de app; zegt iOS
     *"Niet-vertrouwde ontwikkelaar"*? Ga naar **Instellingen → Algemeen →
     VPN en apparaatbeheer** → tik onder *Ontwikkelaarsapp* op je Apple ID →
@@ -68,7 +68,7 @@ oplaadkabel, je gewone Apple ID. Geen betaald account.
 
 | Melding / probleem | Oplossing |
 | --- | --- |
-| "Could not launch Teamkiezeer" | Stap 10 (vertrouwen) nog doen |
+| "Could not launch" | Stap 10 (vertrouwen) nog doen |
 | Rode fout over *bundle identifier* | Stap 5: maak de identifier uniek |
 | iPhone verschijnt niet in het menu | Telefoon ontgrendelen, andere kabel/poort proberen |
 | "Preparing device" blijft lang staan | Gewoon laten staan; eerste keer kan minuten duren |

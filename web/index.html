@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0B0B0F">
-<title>Teamkiezeer</title>
+<title>Gelijkspel</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%230B0B0F"/><rect x="15" y="22" width="34" height="7.5" rx="3.75" fill="%23C8F73A"/><rect x="15" y="34.5" width="34" height="7.5" rx="3.75" fill="%23C8F73A"/></svg>'>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;900&display=swap">
 <style>
   /* Bewust één visuele wereld: near-black, één volt-accent — identiek aan de iOS-app.
@@ -42,7 +43,13 @@
   }
   .app { width: 100%; max-width: 430px; display: flex; flex-direction: column; gap: 18px; }
 
-  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 9px; }
+  /* Het merkteken: twee gelijke balken. Gelijk spel, letterlijk. */
+  .mark { width: 26px; height: 26px; border-radius: 7px; background: #0F0F14;
+          border: 1px solid var(--hairline);
+          display: flex; flex-direction: column; justify-content: center; gap: 4px; align-items: center; }
+  .mark i { display: block; width: 14px; height: 3.5px; border-radius: 2px; background: var(--accent); }
   .wordmark {
     font-family: var(--display); font-weight: 900; font-size: 22px;
     letter-spacing: -0.03em; text-transform: uppercase;
@@ -232,7 +239,10 @@
 <body>
 <div class="app">
   <header>
-    <div class="wordmark">Team<em>kiezeer</em></div>
+    <div class="brand">
+      <span class="mark" aria-hidden="true"><i></i><i></i></span>
+      <div class="wordmark">Gelijk<em>spel</em></div>
+    </div>
     <div class="dataset" id="dataset"></div>
   </header>
 

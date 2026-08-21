@@ -1,6 +1,8 @@
-# Teamkiezeer
+# Gelijkspel
 
-2v2 team picker voor EA FC Kick-Off. Eén knop: **Draw**. De app kiest twee teams
+*Twee teams, even sterk.*
+
+2v2 team picker voor EA FC Kick-Off (repo-naam: Teamkiezeer; de app en site heten **Gelijkspel**). Eén knop: **Draw**. De app kiest twee teams
 met identieke sterren, dezelfde soort (club vs. landenteam), en een squad-rating
 verschil binnen de afgesproken marge — met een korte slot-machine ceremony.
 

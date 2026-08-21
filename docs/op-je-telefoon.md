@@ -1,4 +1,4 @@
-# Teamkiezeer op je telefoon krijgen
+# Gelijkspel op je telefoon krijgen
 
 ## Route 0 — de website (voor iedereen, geen installatie)
 
@@ -9,7 +9,7 @@
 - Werkt op elke telefoon, tablet en computer; niets te installeren, verloopt
   nooit, en de teamdata ververst automatisch na elke weekly scrape.
 - Voelt 'm als app: Safari/Chrome → deelknop → **"Zet op beginscherm"**.
-  Dan staat er gewoon een Teamkiezeer-icoon tussen de apps.
+  Dan staat er gewoon een Gelijkspel-icoon tussen de apps.
 - Regels en history worden per toestel onthouden.
 
 De routes hieronder zijn alleen voor de **native iOS-app** (haptics, de
