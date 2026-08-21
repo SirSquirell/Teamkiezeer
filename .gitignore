@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Xcode
+app/**/xcuserdata/
+app/**/*.xcuserstate
+DerivedData/
+.build/
+*.swiftpm/xcuserdata/
+
+# OS
+.DS_Store
