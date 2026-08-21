@@ -86,7 +86,8 @@ struct DrawView: View {
             TeamCardView(
                 team: team,
                 starsFilled: settled ? ceremony.starsFilled : 0,
-                countProgress: settled ? countProgress(now: timeline.date) : 0
+                countProgress: settled ? countProgress(now: timeline.date) : 0,
+                revealed: settled
             )
         }
         .id(team.id)

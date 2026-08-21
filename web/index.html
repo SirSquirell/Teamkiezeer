@@ -26,7 +26,9 @@
     --display: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
     --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-    --pop: cubic-bezier(0.34, 1.45, 0.64, 1);
+    --enter: cubic-bezier(0.22, 1.12, 0.36, 1);   /* bounce ≈ .15: net voelbaar */
+    --settle: cubic-bezier(0.3, 1.25, 0.5, 1);    /* bounce ≈ .25 voor de landing */
+    --pop: cubic-bezier(0.34, 1.45, 0.64, 1);     /* alleen de VS-badge mag stuiteren */
   }
   * { box-sizing: border-box; margin: 0; }
   html, body { background: var(--bg); }
@@ -66,17 +68,24 @@
     padding: 20px 10px 18px;
     display: flex; flex-direction: column; align-items: center; gap: 12px;
     opacity: 0; transform: translateY(-24px);
-    transition: transform .4s var(--pop), opacity .4s var(--ease-out);
+    transition: transform .4s var(--enter), opacity .4s var(--ease-out);
   }
   .card.in { opacity: 1; transform: translateY(0); }
   .card.b { transition-delay: .06s; }           /* 60ms stagger op de entree */
   .card.out { opacity: 0; transform: translateY(-24px); transition: transform .18s ease-out, opacity .18s ease-out; transition-delay: 0s; }
-  .card.settle { animation: settle .45s var(--pop); }
+  .card.settle { animation: settle .45s var(--settle); }
   @keyframes settle { from { transform: scale(1.06); } to { transform: scale(1); } }
 
-  .card .content { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;
-    transition: opacity 90ms linear, filter 90ms linear; }
-  .card .content.swap { opacity: .15; filter: blur(2px); }
+  /* Alleen crest + naam cyclen. Twee gestapelde lagen wisselen met een 90ms
+     crossfade; de rest van de kaart staat stil in een rustige pending-staat,
+     dus geen flitsende cijfers en geen hoogte-jitter. */
+  .cycler { position: relative; height: 138px; width: 100%; }
+  .layer {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    opacity: 1; transition: opacity 90ms linear;
+  }
+  .layer.off { opacity: 0; }
 
   .crest {
     width: 84px; height: 84px; border-radius: 19px;
@@ -89,27 +98,34 @@
   .crest.loaded { background: var(--raised) !important; }
   .crest.loaded .ini { visibility: hidden; }
   .tname {
-    font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -0.02em;
-    text-align: center; line-height: 1.15; min-height: 40px;
-    display: flex; align-items: center; justify-content: center;
-    text-wrap: balance;
+    height: 40px; display: flex; align-items: center; justify-content: center;
+    padding: 0 2px;
+  }
+  .tname .nm {
+    font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;
+    text-align: center; line-height: 1.2; text-wrap: balance;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
   .tleague {
-    font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--text-3); white-space: nowrap;
+    height: 13px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
   }
+  /* De sokkels (dimme sterren) staan er altijd; alleen de gouden vulling
+     animeert links → rechts bij de reveal. */
   .stars { display: flex; gap: 3px; height: 14px; }
-  .st { position: relative; width: 14px; height: 14px; opacity: 0; transform: scale(.6);
-        transition: opacity .2s var(--ease-out), transform .2s var(--pop); }
-  .st.on { opacity: 1; transform: scale(1); }
+  .st { position: relative; width: 14px; height: 14px; }
   .st svg { position: absolute; inset: 0; }
   .st .dim path { fill: rgba(255,255,255,.14); }
-  .st .lit { overflow: hidden; }
+  .st .lit { overflow: hidden; opacity: 0; transform: scale(.6);
+             transition: opacity .2s var(--ease-out), transform .2s var(--settle); }
+  .st.on .lit { opacity: 1; transform: scale(1); }
   .st .lit path { fill: var(--star); }
   .rating {
     font-family: var(--display); font-weight: 900; font-size: 32px;
-    font-variant-numeric: tabular-nums; line-height: 1;
+    font-variant-numeric: tabular-nums; line-height: 1; height: 32px;
+    transition: opacity .2s ease-out;
   }
+  .rating.dim { opacity: 0; }
 
   .vs {
     position: absolute; left: 50%; top: 42%; translate: -50% -50%;
@@ -227,8 +243,8 @@
     </div>
     <div class="chips"><span class="chip" id="chip">⚠ <span id="chiptext"></span></span></div>
     <div class="cards" id="cards" hidden>
-      <div class="card a" id="cardA"><div class="content"></div></div>
-      <div class="card b" id="cardB"><div class="content"></div></div>
+      <div class="card a" id="cardA"></div>
+      <div class="card b" id="cardB"></div>
       <div class="vs" id="vs">VS</div>
     </div>
     <div class="meter" id="meter">
@@ -353,24 +369,51 @@ const STAR_PATH = "M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L
 function starSvg(cls) {
   return `<svg class="${cls}" viewBox="0 0 24 24" width="14" height="14"><path d="${STAR_PATH}"/></svg>`;
 }
-function cardHTML(t, { starsOn = 0, rating = null } = {}) {
-  const stars = [0,1,2,3,4].map(i => {
-    const frac = Math.max(0, Math.min(1, t.starRating - i >= 1 ? 1 : (t.starRating - i >= 0.5 ? 0.5 : 0)));
-    return `<span class="st${i < starsOn ? " on" : ""}">${starSvg("dim")}
-      <span class="lit" style="position:absolute;inset:0;width:${frac * 100}%;overflow:hidden;display:${frac ? "block" : "none"}">${starSvg("")}</span></span>`;
-  }).join("");
-  const league = t.kind === "national" ? (t.womens ? "Landenteam · Vrouwen" : "Landenteam")
-                                       : (t.leagueName || "Onbekende league");
+function crestHTML(t) {
   const bg = t.primaryColor || "#3A3A46";
   const fg = t.secondaryColor || "#FFFFFF";
   const img = t.crestURL
     ? `<img src="${t.crestURL}" alt="" onload="this.parentElement.classList.add('loaded')" onerror="this.remove()">`
     : "";
-  return `<div class="crest" style="background:${bg};color:${fg}"><span class="ini">${initials(t.name)}</span>${img}</div>
-    <div class="tname">${t.name}</div>
-    <div class="tleague">${league}</div>
-    <div class="stars">${stars}</div>
-    <div class="rating">${rating == null ? t.squadRating : rating}</div>`;
+  return `<div class="crest" style="background:${bg};color:${fg}"><span class="ini">${initials(t.name)}</span>${img}</div>`;
+}
+/* Alleen dit deel cyclet: crest + naam. */
+function identityHTML(t) {
+  return `${crestHTML(t)}<div class="tname"><span class="nm">${t.name}</span></div>`;
+}
+function starsHTML(t, on) {
+  return [0,1,2,3,4].map(i => {
+    const frac = t.starRating - i >= 1 ? 1 : (t.starRating - i >= 0.5 ? 0.5 : 0);
+    return `<span class="st${i < on ? " on" : ""}">${starSvg("dim")}
+      <span class="lit" style="position:absolute;inset:0;width:${frac * 100}%;display:${frac ? "block" : "none"}">${starSvg("")}</span></span>`;
+  }).join("");
+}
+function leagueLabel(t) {
+  return t.kind === "national" ? (t.womens ? "Landenteam · Vrouwen" : "Landenteam")
+                               : (t.leagueName || "Onbekende league");
+}
+/* Vast skelet: alles buiten de cycler staat stil in een pending-staat,
+   dus geen flitsende ratings en geen hoogte-jitter. */
+function buildSkeleton(card) {
+  card.classList.remove("settle");
+  card.innerHTML = `<div class="cycler"><div class="layer"></div><div class="layer off"></div></div>
+    <div class="tleague">· · ·</div>
+    <div class="stars">${starsHTML({ starRating: 0 }, 0)}</div>
+    <div class="rating dim">0</div>`;
+}
+function showCandidate(card, t) {
+  const [l0, l1] = card.querySelectorAll(".layer");
+  const back = l0.classList.contains("off") ? l0 : l1;
+  const front = back === l0 ? l1 : l0;
+  back.innerHTML = identityHTML(t);
+  front.classList.add("off");
+  back.classList.remove("off");
+}
+function settleCard(card, t) {
+  showCandidate(card, t);
+  card.querySelector(".tleague").textContent = leagueLabel(t);
+  card.querySelector(".stars").innerHTML = starsHTML(t, 0);
+  card.classList.add("settle");
 }
 
 /* ── Ceremonie (beat-tabel uit de brief) ───────────────── */
@@ -379,22 +422,34 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let running = false, skip = false, generation = 0;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
-function setContent(card, html, crossfade) {
-  const c = card.querySelector(".content");
-  if (!crossfade) { c.innerHTML = html; return; }
-  c.classList.add("swap");
-  setTimeout(() => { c.innerHTML = html; c.classList.remove("swap"); }, 45);
-}
 function jumpToSettled(result) {
   for (const [card, t] of [[$("cardA"), result.a], [$("cardB"), result.b]]) {
     card.classList.add("in"); card.classList.remove("out", "settle");
-    const c = card.querySelector(".content");
-    c.classList.remove("swap");
-    c.innerHTML = cardHTML(t, { starsOn: 5 });
+    buildSkeleton(card);
+    card.querySelector(".layer").innerHTML = identityHTML(t);
+    card.querySelector(".tleague").textContent = leagueLabel(t);
+    card.querySelector(".stars").innerHTML = starsHTML(t, 5);
+    const r = card.querySelector(".rating");
+    r.textContent = t.squadRating;
+    r.classList.remove("dim");
   }
   $("vs").classList.add("show");
   showMeter(result);
   running = false;
+}
+/* Count-up van 0 naar de squad rating in 500ms, linear, tabular digits. */
+function countUp(gen, result, A, B) {
+  const start = performance.now();
+  return new Promise(done => {
+    const tick = () => {
+      if (gen !== generation) return done();
+      const t = Math.min(1, (performance.now() - start) / 500);
+      A.querySelector(".rating").textContent = Math.round(result.a.squadRating * t);
+      B.querySelector(".rating").textContent = Math.round(result.b.squadRating * t);
+      t < 1 ? requestAnimationFrame(tick) : done();
+    };
+    requestAnimationFrame(tick);
+  });
 }
 function showMeter(result) {
   const color = result.delta < 2 ? "var(--good)" : result.delta <= 4 ? "var(--warn)" : "var(--bad)";
@@ -428,24 +483,30 @@ async function ceremony(result, pool) {
   const rand = () => pool[Math.floor(Math.random() * pool.length)] || result.a;
   const check = () => { if (skip || gen !== generation) { if (gen === generation) jumpToSettled(result); return true; } return false; };
 
-  if (reduceMotion.matches) {                               // reduced motion: 200ms crossfade, klaar
-    setContent(A, cardHTML(result.a, { starsOn: 5 }), false);
-    setContent(B, cardHTML(result.b, { starsOn: 5 }), false);
-    A.classList.add("in"); B.classList.add("in");
+  buildSkeleton(A); buildSkeleton(B);
+
+  if (reduceMotion.matches) {                               // reduced motion: 200ms crossfade,
+    A.classList.add("in"); B.classList.add("in");           // haptiekloos web: count-up blijft
+    settleCard(A, result.a); settleCard(B, result.b);
+    A.classList.remove("settle"); B.classList.remove("settle");
+    document.querySelectorAll("#cards .st").forEach(s => s.classList.add("on"));
+    A.querySelector(".rating").classList.remove("dim");
+    B.querySelector(".rating").classList.remove("dim");
     await wait(200); if (check()) return;
+    await countUp(gen, result, A, B);
     $("vs").classList.add("show"); showMeter(result);
     running = false; return;
   }
 
-  setContent(A, cardHTML(rand()), false);
-  setContent(B, cardHTML(rand()), false);
+  showCandidate(A, rand());
+  showCandidate(B, rand());
   A.classList.add("in"); B.classList.add("in");             // drop-in vanaf -24px, 60ms stagger via CSS
 
   await wait(150); if (check()) return;
-  let elapsed = 150;                                        // cycling: elke 55ms door de échte pool
-  while (elapsed < 900) {
-    setContent(A, cardHTML(rand()), true);
-    setContent(B, cardHTML(rand()), true);
+  let elapsed = 150;                                        // cycling: elke 55ms door de échte pool,
+  while (elapsed < 900) {                                   // alleen crest + naam wisselen
+    showCandidate(A, rand());
+    showCandidate(B, rand());
     await wait(55); if (check()) return;
     elapsed += 55;
   }
@@ -453,26 +514,18 @@ async function ceremony(result, pool) {
   while (p < 1) {
     p = Math.min(1, p + 0.34);
     const eased = 1 - Math.pow(1 - p, 4);
-    setContent(A, cardHTML(rand()), true);
-    setContent(B, cardHTML(rand()), true);
+    showCandidate(A, rand());
+    showCandidate(B, rand());
     await wait(55 + (260 - 55) * eased); if (check()) return;
   }
-  setContent(A, cardHTML(result.a, { rating: 0 }), true);   // A settelt: scale 1.06 → 1.0
-  A.classList.add("settle");
+  settleCard(A, result.a);                                  // A settelt: scale 1.06 → 1.0
   await wait(300); if (check()) return;                     // 300ms stilte = de spanning
-  setContent(B, cardHTML(result.b, { rating: 0 }), true);
-  B.classList.add("settle");
+  settleCard(B, result.b);
   await wait(60); if (check()) return;
 
-  const countStart = performance.now();                     // sterren + count-up (500ms linear)
-  const tick = () => {
-    if (gen !== generation) return;
-    const t = Math.min(1, (performance.now() - countStart) / 500);
-    A.querySelector(".rating").textContent = Math.round(result.a.squadRating * t);
-    B.querySelector(".rating").textContent = Math.round(result.b.squadRating * t);
-    if (t < 1) requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
+  A.querySelector(".rating").classList.remove("dim");       // sterren vullen + count-up
+  B.querySelector(".rating").classList.remove("dim");
+  countUp(gen, result, A, B);
   for (let i = 0; i < 5; i++) {
     document.querySelectorAll("#cardA .st")[i].classList.add("on");
     document.querySelectorAll("#cardB .st")[i].classList.add("on");

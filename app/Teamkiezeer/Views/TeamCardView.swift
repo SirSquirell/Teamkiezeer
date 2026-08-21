@@ -9,6 +9,9 @@ struct TeamCardView: View {
     var starsFilled: Int = 5
     /// 0...1 voortgang van de ratings-count-up; 1 = definitieve waarden.
     var countProgress: Double = 1
+    /// Tijdens de cycling wisselen alleen crest + naam; league en rating
+    /// blijven in een rustige pending-staat tot de kaart settelt.
+    var revealed: Bool = true
 
     var body: some View {
         VStack(spacing: 14) {
@@ -21,9 +24,10 @@ struct TeamCardView: View {
                     .foregroundStyle(Theme.textPrimary)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
-                    .frame(minHeight: 50, alignment: .center)
+                    .minimumScaleFactor(0.8)
+                    .frame(height: 50, alignment: .center)
 
-                Text(subtitle)
+                Text(revealed ? subtitle : "· · ·")
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.8)
                     .textCase(.uppercase)
@@ -37,6 +41,7 @@ struct TeamCardView: View {
                 .font(.bigNumber)
                 .monospacedDigit()
                 .foregroundStyle(Theme.textPrimary)
+                .opacity(revealed ? 1 : 0)
                 .accessibilityLabel("Squad rating \(team.squadRating ?? 0)")
 
             // ATT/MID/DEF alleen als de dataset ze levert (optioneel in v1).
