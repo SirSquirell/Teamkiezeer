@@ -26,6 +26,8 @@ aan een Mac.
 
 ## Route 1 — Mac + kabel, gratis Apple ID (start hier)
 
+**Klik-voor-klik-versie zonder voorkennis: [xcode-stappenplan.md](xcode-stappenplan.md).**
+
 Kosten: niks. Nadeel: de app verloopt na **7 dagen** en moet dan opnieuw
 vanuit Xcode geïnstalleerd worden (gewoon nogmaals op Run drukken).
 
