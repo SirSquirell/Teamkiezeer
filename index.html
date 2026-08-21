@@ -36,6 +36,7 @@
     --pop: cubic-bezier(0.34, 1.45, 0.64, 1);     /* alleen de VS-badge mag stuiteren */
   }
   * { box-sizing: border-box; margin: 0; }
+  [hidden] { display: none !important; }
   html, body { background: var(--bg); }
   body {
     color: var(--text);
@@ -235,8 +236,10 @@
   .hempty { font-size: 12px; color: var(--text-3); padding: 6px 2px; }
 
   /* ── Eindmatch & score ───────────────────────────────── */
-  .choose { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; min-height: 0; }
-  .choose .pill { border: 1px solid var(--hairline); }
+  .choose { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .choose-cap { font-size: 12px; font-weight: 600; color: var(--text-2); }
+  .choose-btns { display: flex; gap: 8px; }
+  .choose .pill { border: 1px solid var(--hairline); font-size: 14px; padding: 8px 18px; }
 
   .pending {
     background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
@@ -252,7 +255,20 @@
   .pduo { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
   .pclub { font-family: var(--display); font-weight: 700; font-size: 14px;
            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .pscore { display: flex; align-items: center; gap: 6px; }
+  .pvs { font-family: var(--display); font-weight: 900; font-size: 13px; color: var(--text-3); }
+  .pstatus { font-size: 11px; color: var(--text-3); }
+  .pactions { display: flex; gap: 8px; }
+  .popen {
+    flex: 1; border: 1px solid var(--hairline); border-radius: 12px; height: 40px; cursor: pointer;
+    background: var(--raised); color: var(--text);
+    font-family: var(--display); font-weight: 700; font-size: 13px; touch-action: manipulation;
+  }
+  .pending .pscore, .pending .psave { display: none; }
+  .pending.scoring .pscore { display: flex; }
+  .pending.scoring .psave { display: block; }
+  .pending.scoring .pvs, .pending.scoring .pactions { display: none; }
+  .pscore { align-items: center; gap: 6px; }
+  .pending.scoring .pscore { display: flex; }
   .snum { display: flex; flex-direction: column; align-items: center; gap: 3px; }
   .snum input {
     width: 52px; height: 46px; text-align: center; border-radius: 10px;
@@ -338,14 +354,18 @@
       <div class="mrow"><span id="mA"></span><span class="mdelta" id="mD"></span><span id="mB"></span></div>
     </div>
     <div class="choose" id="chooseRow" hidden>
-      <button class="pill" id="chooseWM"></button>
-      <button class="pill" id="chooseJJ"></button>
+      <div class="choose-cap" id="chooseCap"></div>
+      <div class="choose-btns">
+        <button class="pill" id="chooseWM"></button>
+        <button class="pill" id="chooseJJ"></button>
+      </div>
     </div>
   </div>
 
   <div class="pending" id="pending" hidden>
     <div class="phead">
       <span class="ptag">⚑ Eindmatch</span>
+      <span class="pstatus" id="pStatus">nog niet gespeeld</span>
       <button class="px" id="pendingX" aria-label="Eindmatch verwijderen">✕</button>
     </div>
     <div class="pgrid">
@@ -353,6 +373,7 @@
         <span class="pduo" id="pDuoA"></span>
         <span class="pclub" id="pClubA"></span>
       </div>
+      <span class="pvs">vs</span>
       <div class="pscore">
         <div class="snum">
           <input id="sA" type="number" inputmode="numeric" min="0" max="99" value="0">
@@ -368,6 +389,9 @@
         <span class="pduo" id="pDuoB"></span>
         <span class="pclub" id="pClubB"></span>
       </div>
+    </div>
+    <div class="pactions">
+      <button class="popen" id="pOpen">Gespeeld? Score invullen</button>
     </div>
     <button class="psave" id="pSave">Score opslaan</button>
   </div>
@@ -602,8 +626,9 @@ function countUp(gen, result, A, B) {
 }
 function showMeter(result) {
   lastSettled = result;
-  $("chooseWM").textContent = duos.wm + " speelt " + result.a.name;
-  $("chooseJJ").textContent = duos.jj + " speelt " + result.a.name;
+  $("chooseCap").textContent = "Deze spelen? Wie pakt " + result.a.name + "?";
+  $("chooseWM").textContent = duos.wm;
+  $("chooseJJ").textContent = duos.jj;
   $("chooseRow").hidden = false;
   const color = result.delta < 2 ? "var(--good)" : result.delta <= 4 ? "var(--warn)" : "var(--bad)";
   $("fill").style.background = color;
@@ -818,6 +843,7 @@ function renderPending() {
   const bar = $("pending");
   if (!pendingMatch) { bar.hidden = true; return; }
   bar.hidden = false;
+  bar.classList.remove("scoring");
   const wmA = pendingMatch.wmPlays === "a";
   $("pDuoA").textContent = wmA ? duos.wm : duos.jj;
   $("pDuoB").textContent = wmA ? duos.jj : duos.wm;
@@ -826,6 +852,7 @@ function renderPending() {
   $("sA").value = 0;
   $("sB").value = 0;
 }
+$("pOpen").addEventListener("click", () => { $("pending").classList.add("scoring"); });
 $("pendingX").addEventListener("click", () => { pendingMatch = null; persistScores(); renderPending(); });
 document.querySelectorAll("[data-s]").forEach(b => {
   b.addEventListener("click", () => {
