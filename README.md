@@ -6,6 +6,8 @@ verschil binnen de afgesproken marge — met een korte slot-machine ceremony.
 
 Puur voor eigen gebruik, nooit voor de App Store.
 
+**Direct gebruiken (niets installeren):** https://sirsquirell.github.io/Teamkiezeer/
+
 ## Layout
 
 ```

@@ -1,9 +1,28 @@
-# Teamkiezeer op je iPhone krijgen
+# Teamkiezeer op je telefoon krijgen
+
+## Route 0 — de website (voor iedereen, geen installatie)
+
+**Dit is de route voor niet-developers.** Stuur de link, klaar:
+
+> **https://sirsquirell.github.io/Teamkiezeer/**
+
+- Werkt op elke telefoon, tablet en computer; niets te installeren, verloopt
+  nooit, en de teamdata ververst automatisch na elke weekly scrape.
+- Voelt 'm als app: Safari/Chrome → deelknop → **"Zet op beginscherm"**.
+  Dan staat er gewoon een Teamkiezeer-icoon tussen de apps.
+- Regels en history worden per toestel onthouden.
+
+De routes hieronder zijn alleen voor de **native iOS-app** (haptics, de
+mooiste ervaring) en zijn allemaal developer-achtig — die doe je hooguit
+voor jezelf, niet voor je medespelers.
+
+---
 
 De app gaat nooit naar de App Store, dus installeren = zelf signeren. Drie
 routes, van simpel naar comfortabel. Voor alle drie geldt eenmalig op de
 iPhone: **Instellingen → Privacy & beveiliging → Ontwikkelaarsmodus** aan
-(toestel herstart).
+(toestel herstart). "Kabel" betekent hier steeds: iPhone met een USB-kabel
+aan een Mac.
 
 ## Route 1 — Mac + kabel, gratis Apple ID (start hier)
 
