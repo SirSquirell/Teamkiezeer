@@ -34,6 +34,9 @@ raw.githubusercontent, met cache- en bundled-fallback zodat alles offline werkt.
 De engine-tests draaien ook zonder Mac: `swift test` in `app/TeamkiezeerKit`
 (gebeurt automatisch in CI op elke push).
 
+Op je iPhone zetten (gratis Apple ID, TestFlight of sideload via de
+CI-gebouwde IPA): zie [docs/op-je-telefoon.md](docs/op-je-telefoon.md).
+
 Vernieuw af en toe de ingebouwde offline-snapshot:
 
 ```

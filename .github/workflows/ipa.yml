@@ -1,0 +1,42 @@
+name: Build IPA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "app/**"
+      - ".github/workflows/ipa.yml"
+
+jobs:
+  ipa:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (unsigned, device)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project app/Teamkiezeer.xcodeproj \
+            -scheme Teamkiezeer \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build | tail -60
+
+      - name: Package IPA
+        run: |
+          APP=build/Build/Products/Release-iphoneos/Teamkiezeer.app
+          test -d "$APP"
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qry Teamkiezeer-unsigned.ipa Payload
+          ls -la Teamkiezeer-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Teamkiezeer-unsigned-ipa
+          path: Teamkiezeer-unsigned.ipa
+          retention-days: 30
