@@ -1,0 +1,51 @@
+name: Build teams.json
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  push:
+    paths:
+      - "pipeline/**"
+      - "data/national-teams.json"
+      - ".github/workflows/data.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Run pipeline tests (against committed snapshots)
+        run: python -m pytest pipeline/tests -q
+
+      - name: Build teams.json (live scrape)
+        run: python pipeline/build_teams.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/teams.json
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen in data/teams.json"
+          else
+            git commit -m "Update teams.json from weekly scrape"
+            git push
+          fi

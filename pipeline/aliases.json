@@ -1,0 +1,4 @@
+{
+  "_note": "Handmatige override map: genormaliseerde naam op de sterrenpagina -> genormaliseerde naam op de league-pagina. Alleen nodig waar exact + fuzzy matching faalt; de build logt alle unmatched namen zodat dit bestand gericht gevuld kan worden.",
+  "aliases": {}
+}
