@@ -323,6 +323,32 @@
   }
   .duo-edit input:focus-visible, .sync input:focus-visible { outline: 2px solid var(--accent); }
 
+  .standbtn {
+    width: 100%; border: 1px solid var(--hairline); border-radius: 16px; cursor: pointer;
+    background: var(--surface); color: var(--text-2); padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--display); font-weight: 700; font-size: 13px;
+    letter-spacing: .06em; text-transform: uppercase; touch-action: manipulation;
+  }
+  .standbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(5,5,8,.72);
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 24px 16px; overflow-y: auto;
+  }
+  .sheet {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 20px;
+    width: 100%; max-width: 430px; padding: 16px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; }
+  .sheet-title { font-family: var(--display); font-weight: 900; font-size: 17px;
+                 letter-spacing: -.02em; text-transform: uppercase; }
+  .hx { border: 0; background: none; color: var(--text-3); cursor: pointer;
+        font-size: 12px; padding: 2px 6px; touch-action: manipulation; }
+  .hx:hover { color: var(--bad); }
+
   footer { font-size: 11px; color: var(--text-3); text-align: center; line-height: 1.6; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -408,35 +434,7 @@
 
   <button class="draw" id="draw">Draw</button>
 
-  <details open>
-    <summary>Stand <span class="hint" id="statshint"></span></summary>
-    <div class="rules-body">
-      <div id="statsbody"></div>
-      <div>
-        <div class="rlabel">Duo-namen</div>
-        <div class="duo-edit">
-          <input id="duoWM" maxlength="12" placeholder="Duo 1">
-          <input id="duoJJ" maxlength="12" placeholder="Duo 2">
-        </div>
-      </div>
-      <div>
-        <div class="rlabel">Stand delen tussen apparaten</div>
-        <div class="stand-actions">
-          <button class="pill" id="expBtn">Kopieer stand</button>
-          <button class="pill" id="impBtn">Importeer stand</button>
-          <button class="pill" id="wipeBtn">Wis alles</button>
-        </div>
-      </div>
-      <div class="sync">
-        <div class="rlabel">Sync-URL (optioneel)</div>
-        <input id="syncUrl" placeholder="https://jouw-domein/evenmatch.json">
-        <div class="ts" style="font-size:11px;color:var(--text-3);margin-top:5px">
-          Elke endpoint die één JSON-blob kan GET/PUT-en werkt. Bij het openen
-          wordt de laatste stand opgehaald; elke opgeslagen score pusht ernaartoe.
-        </div>
-      </div>
-    </div>
-  </details>
+  <button class="standbtn" id="standBtn">Stand <span class="hint" id="statshint"></span></button>
 
   <details id="rules" open>
     <summary>Regels <span class="hint" id="ruleshint"></span></summary>
@@ -471,6 +469,43 @@
     "Zet op beginscherm", dan staat 'ie tussen je apps.</footer>
 </div>
 
+<div class="overlay" id="standOverlay" hidden>
+  <div class="sheet" role="dialog" aria-label="Stand">
+    <div class="sheet-head">
+      <span class="sheet-title">Stand</span>
+      <button class="px" id="standX" aria-label="Sluiten">✕</button>
+    </div>
+      <div id="statsbody"></div>
+      <div>
+        <div class="rlabel">Gespeelde matches</div>
+        <div class="history" id="playedlist"></div>
+      </div>
+      <div>
+        <div class="rlabel">Duo-namen</div>
+        <div class="duo-edit">
+          <input id="duoWM" maxlength="12" placeholder="Duo 1">
+          <input id="duoJJ" maxlength="12" placeholder="Duo 2">
+        </div>
+      </div>
+      <div>
+        <div class="rlabel">Stand delen tussen apparaten</div>
+        <div class="stand-actions">
+          <button class="pill" id="expBtn">Kopieer stand</button>
+          <button class="pill" id="impBtn">Importeer stand</button>
+          <button class="pill" id="wipeBtn">Wis alles</button>
+        </div>
+      </div>
+      <div class="sync">
+        <div class="rlabel">Sync-URL (optioneel)</div>
+        <input id="syncUrl" placeholder="https://jouw-domein/evenmatch/sync.php">
+        <div class="ts" style="font-size:11px;color:var(--text-3);margin-top:5px">
+          Elke endpoint die één JSON-blob kan GET/PUT-en werkt. Bij het openen
+          wordt de laatste stand opgehaald; elke opgeslagen score pusht ernaartoe.
+        </div>
+      </div>
+  </div>
+</div>
+
 <script>
 let DATA = { game: "", generatedAt: "", leagues: [], teams: [] };
 let defaultWhitelist = [];
@@ -485,7 +520,7 @@ let rules = {
   whitelist: [],
 };
 let history = store.get("history", []);          // nieuwste eerst: {a,b,ar,br,stars,delta,relax}
-const saveRules = () => store.set("rules", rules);
+const saveRules = () => store.set("rules2", rules);
 const saveHistory = () => store.set("history", history.slice(0, 50));
 
 /* ── Engine (zelfde ladder als TeamkiezeerKit) ─────────── */
@@ -774,6 +809,22 @@ function renderKindChips() {
 }
 function renderLeagues() {
   const wrap = $("leaguelist"); wrap.innerHTML = "";
+
+  // Snelkeuzes bovenaan: alles aan (de standaard) of alleen de topcompetities.
+  const quick = document.createElement("div");
+  quick.className = "stand-actions";
+  quick.style.gridColumn = "1 / -1";
+  for (const [label, ids] of [
+    ["Alles aan", () => DATA.leagues.map(l => l.id)],
+    ["Alleen topcompetities", () => DATA.leagues.filter(l => l.defaultWhitelist).map(l => l.id)],
+  ]) {
+    const b = document.createElement("button");
+    b.className = "pill"; b.textContent = label;
+    b.onclick = () => { rules.whitelist = ids(); saveRules(); renderLeagues(); };
+    quick.appendChild(b);
+  }
+  wrap.appendChild(quick);
+
   const visible = DATA.leagues.filter(l => rules.womens || !l.womens)
     .sort((a, b) => (b.defaultWhitelist - a.defaultWhitelist) || a.name.localeCompare(b.name));
   for (const l of visible) {
@@ -807,15 +858,22 @@ function renderHistory() {
   const wrap = $("history");
   $("histhint").textContent = history.length ? history.length + " draws" : "";
   if (!history.length) { wrap.innerHTML = '<div class="hempty">Nog geen draws.</div>'; return; }
-  wrap.innerHTML = history.slice(0, 10).map(h => {
+  wrap.innerHTML = history.slice(0, 10).map((h, i) => {
     const color = h.delta < 2 ? "var(--good)" : h.delta <= 4 ? "var(--warn)" : "var(--bad)";
     return `<div class="hrow"><span class="hn">${h.an}</span>
       <span class="hs">${h.ar}–${h.br}</span>
       <span class="hd" style="color:${color}">Δ${h.delta}${h.relax ? " ⚠" : ""}</span>
       <span class="hs">${h.stars.toLocaleString("nl")}★</span>
-      <span class="hn right">${h.bn}</span></div>`;
+      <span class="hn right">${h.bn}</span>
+      <button class="hx" data-delh="${i}" aria-label="Verwijder uit history">✕</button></div>`;
   }).join("");
 }
+$("history").addEventListener("click", e => {
+  const btn = e.target.closest("[data-delh]");
+  if (!btn) return;
+  history.splice(Number(btn.dataset.delh), 1);
+  saveHistory(); renderHistory(); updateHints();
+});
 
 /* ── Eindmatch, scores en stand ────────────────────────── */
 let lastSettled = null;
@@ -999,6 +1057,39 @@ function renderStats() {
     ${results.length ? "" : '<div class="hempty" style="margin-top:8px">Nog geen scores — dit dashboard vult zich zodra je na een eindmatch de score opslaat.</div>'}`;
 }
 
+/* Stand-popup */
+$("standBtn").addEventListener("click", () => {
+  renderStats(); renderPlayed();
+  $("standOverlay").hidden = false;
+});
+$("standX").addEventListener("click", () => { $("standOverlay").hidden = true; });
+$("standOverlay").addEventListener("click", e => {
+  if (e.target === $("standOverlay")) $("standOverlay").hidden = true;
+});
+
+/* Gespeelde matches: lijst met per-item verwijderen */
+function renderPlayed() {
+  const wrap = $("playedlist");
+  if (!results.length) { wrap.innerHTML = '<div class="hempty">Nog geen gespeelde matches.</div>'; return; }
+  wrap.innerHTML = results.slice(0, 30).map((m, i) => {
+    const chairTag = m.chair ? ` · 🪑 ${m.chair === "wm" ? duos.wm : duos.jj}` : "";
+    return `<div class="hrow">
+      <span class="hn">${m.a.name}</span>
+      <span class="hs">${m.score.a}–${m.score.b}</span>
+      <span class="hn right">${m.b.name}</span>
+      <span class="hs">${Number(m.stars).toLocaleString("nl")}★${chairTag}</span>
+      <button class="hx" data-del="${i}" aria-label="Verwijder deze match">✕</button>
+    </div>`;
+  }).join("");
+}
+$("playedlist").addEventListener("click", e => {
+  const btn = e.target.closest("[data-del]");
+  if (!btn) return;
+  results.splice(Number(btn.dataset.del), 1);
+  persistScores(); syncPush();
+  renderStats(); renderPlayed();
+});
+
 /* Duo-namen, delen en sync */
 function renderDuoInputs() { $("duoWM").value = duos.wm; $("duoJJ").value = duos.jj; $("syncUrl").value = syncUrl; }
 $("duoWM").addEventListener("change", () => { duos.wm = $("duoWM").value.trim() || "W/M"; persistScores(); renderStats(); renderPending(); });
@@ -1077,7 +1168,7 @@ async function boot() {
     return;
   }
   defaultWhitelist = DATA.leagues.filter(l => l.defaultWhitelist).map(l => l.id);
-  rules = store.get("rules", null) || { ...rules, whitelist: defaultWhitelist };
+  rules = store.get("rules2", null) || { ...rules, whitelist: DATA.leagues.map(l => l.id) };
   $("dataset").textContent = DATA.game + " · " + DATA.teams.length + " teams · " + DATA.generatedAt.slice(0, 10);
   renderStarChips(); renderKindChips(); renderLeagues(); syncSteppers(); renderHistory();
   renderPending(); renderStats(); renderDuoInputs(); syncPull();
