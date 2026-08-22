@@ -82,7 +82,7 @@
 
 *{box-sizing:border-box; margin:0}
 [hidden]{display:none !important}
-html{background:var(--ink-0)}
+html{background:var(--ink-0); overscroll-behavior-y:none}
 body{
   background:var(--ink-0); color:var(--tx-1);
   font-family:var(--f-ui); font-size:15px; line-height:1.5;
@@ -439,7 +439,7 @@ main{display:flex; flex-direction:column; gap:var(--s-4); flex:1; justify-conten
 .grabber i{display:block; width:40px; height:4px; border-radius:2px; background:var(--edge)}
 .shead{
   display:flex; align-items:center; justify-content:space-between; gap:var(--s-3);
-  padding:var(--s-2) var(--s-4) var(--s-3); flex:0 0 auto;
+  padding:var(--s-2) var(--s-4) var(--s-3); flex:0 0 auto; touch-action:none;
 }
 .shead h2{font-size:20px; font-weight:600; letter-spacing:-.02em}
 .sbody{
@@ -827,7 +827,7 @@ body.scoring .draw{
   <div class="scrim for-rail" id="scrimStand" hidden></div>
   <aside class="sheet rail" id="sheetStand" role="dialog" aria-modal="true" aria-labelledby="ttlStand" hidden>
     <div class="grabber" data-grab="sheetStand"><i></i></div>
-    <div class="shead">
+    <div class="shead" data-grab="sheetStand">
       <h2 id="ttlStand">Stand</h2>
       <button class="icon" data-close="sheetStand" aria-label="Sluiten" style="width:40px;height:40px">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -909,7 +909,7 @@ body.scoring .draw{
 <div class="scrim" id="scrimFilters" hidden></div>
 <aside class="sheet" id="sheetFilters" role="dialog" aria-modal="true" aria-labelledby="ttlFilters" hidden>
   <div class="grabber" data-grab="sheetFilters"><i></i></div>
-  <div class="shead">
+  <div class="shead" data-grab="sheetFilters">
     <h2 id="ttlFilters">Filters</h2>
     <button class="icon" data-close="sheetFilters" aria-label="Sluiten" style="width:40px;height:40px">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -1761,6 +1761,7 @@ document.querySelectorAll("[data-grab]").forEach(g => {
   let y0 = 0, t0 = 0, last = 0, vel = 0, dragging = false;
   g.addEventListener("pointerdown", e => {
     if (isRail() && sheet.id === "sheetStand") return;
+    if (e.target.closest("button")) return;
     g.setPointerCapture(e.pointerId);
     dragging = true; y0 = e.clientY; last = e.clientY; t0 = performance.now(); vel = 0;
     sheet.style.transition = "none";
