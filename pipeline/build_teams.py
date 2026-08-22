@@ -259,6 +259,34 @@ def dominant_colors(teams, skip: bool):
     log(f"KLEUR: {done} teams van een fallback-kleur voorzien")
 
 
+def apply_overrides(teams, path: Path | None = None):
+    """Pas handmatige correcties uit pipeline/overrides.json toe (sterren zijn
+    leidend, squadRating mag ook). Draait vóór de audit zodat gecorrigeerde
+    waarden dezelfde invarianten moeten halen als gescrapete."""
+    path = path or ROOT / "pipeline" / "overrides.json"
+    if not path.exists():
+        return
+    rows = json.loads(path.read_text(encoding="utf-8"))["overrides"]
+    by_id = {t["id"]: t for t in teams}
+    for o in rows:
+        team = by_id.get(o["id"])
+        if team is None:
+            log(f"OVERRIDE WARN: '{o['id']}' niet in dataset — team weg of id gewijzigd; "
+                "regel bijwerken of verwijderen")
+            continue
+        for field in ("starRating", "squadRating"):
+            want = o.get(field)
+            if want is None:
+                continue
+            if team[field] == want:
+                log(f"OVERRIDE OVERBODIG: {o['id']} {field} is al {want} — "
+                    "bron is bijgetrokken, regel kan uit overrides.json")
+            else:
+                log(f"OVERRIDE: {o['id']} {field} {team[field]} -> {want} "
+                    f"({o.get('reason', 'geen reden opgegeven')})")
+                team[field] = want
+
+
 def load_national_teams():
     path = ROOT / "data" / "national-teams.json"
     if not path.exists():
@@ -300,6 +328,7 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool, out_path: Pa
     upgrade_crests(teams, skip_crest_check)
     dominant_colors(teams, skip_colors)
     teams += load_national_teams()
+    apply_overrides(teams)
 
     matched = sum(1 for t in teams if t["leagueId"])
     log(f"RESULTAAT: {len(teams)} teams, {matched} met league")

@@ -68,6 +68,28 @@ def test_known_duplicate_leagues_are_copies(leagues):
     assert roster("NWSL") == roster("WOMEN'S SUPER LEAGUE")
 
 
+def test_overrides_applied_warned_and_flagged_obsolete(tmp_path, capsys):
+    from build_teams import apply_overrides
+
+    teams = [
+        {"id": "eng.arsenal", "starRating": 5.0, "squadRating": 84},
+        {"id": "ned.ajax", "starRating": 4.0, "squadRating": 77},
+    ]
+    ov = tmp_path / "overrides.json"
+    ov.write_text(json.dumps({"overrides": [
+        {"id": "ned.ajax", "starRating": 4.5, "reason": "in-game check"},
+        {"id": "eng.arsenal", "starRating": 5.0},
+        {"id": "weg.team", "starRating": 3.0},
+    ]}), encoding="utf-8")
+    apply_overrides(teams, ov)
+    out = capsys.readouterr().out
+    assert teams[1]["starRating"] == 4.5
+    assert teams[1]["squadRating"] == 77, "squadRating zonder override blijft staan"
+    assert teams[0]["starRating"] == 5.0
+    assert "OVERRIDE OVERBODIG: eng.arsenal" in out
+    assert "OVERRIDE WARN: 'weg.team'" in out
+
+
 def test_full_build_offline(tmp_path):
     from build_teams import build
 

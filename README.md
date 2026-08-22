@@ -58,6 +58,16 @@ cp data/teams.json app/Teamkiezeer/Resources/bundled-teams.json
 
 ## Onderhoud
 
+- **Versiebeheer**: versienummers en historie staan in [CHANGELOG.md](CHANGELOG.md).
+  De webapp toont zijn versie onderin de Filters-sheet; de iOS-app volgt via
+  `MARKETING_VERSION`. Releasen = beide bumpen + changelog-regel + push naar main.
+- **Klopt een ster (of squad rating) niet?** Meld het; de correctie komt in
+  `pipeline/overrides.json` en overleeft daarmee elke weekly scrape — dat
+  bestand is de database voor foutmeldingen. Twijfel over de juiste waarde?
+  De Action **Build teams.json** handmatig draaien scrapet de live bronnen en
+  de audit logt elke bron-inconsistentie (ster vs. rating-bucket). Sterren
+  zijn leidend; de squad rating staat gewoon op de kaarten. De build meldt
+  het zodra de bron is bijgetrokken en een override weg kan.
 - Eigen hosting via FTP (incl. gedeelde scores): zie docs/eigen-hosting.md.
 - Nieuwe league op de bronpagina? De build faalt bewust; voeg de league toe
   aan `pipeline/leagues.json`.

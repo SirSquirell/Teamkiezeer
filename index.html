@@ -990,6 +990,8 @@ const store = {
   del(k){ try{ localStorage.removeItem(k); }catch{} },
 };
 
+const APP_VERSION = "0.02.0";   // bump bij elke release; historie in CHANGELOG.md
+
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
 const defaults = () => ({ maxDelta:2, cooldown:6, pinned:4, kind:"mixed", womens:false,
                           whitelist:[...DEFAULT_WHITELIST], haptics:true });
@@ -1817,7 +1819,9 @@ function renderMeta(){
     `<span class="date"> · ${(DATA.generatedAt || "").slice(0,10)}</span>`;
 }
 renderMeta();
-$("footer").textContent = "Dataset ververst wekelijks. Rolls van vanavond worden niet bewaard.";
+$("footer").textContent = "Even Match v" + APP_VERSION +
+  " · Dataset ververst wekelijks. Rolls van vanavond worden niet bewaard." +
+  " Klopt een ster niet? Meld het — correcties gaan mee in de volgende dataset.";
 ghost($("cardA"), duos.a); ghost($("cardB"), duos.b);
 syncFilters(); renderLeagues(); renderStand(); renderFinal();
 
