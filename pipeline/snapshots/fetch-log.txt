@@ -1,5 +1,3 @@
 200 601542 https://fifagamenews.com/fc-26-team-star-ratings/ -> stars.html
 200 936482 https://fifauteam.com/best-teams-fc-26/ -> best-teams.html
 200 1050812 https://fifauteam.com/fc-26-leagues-clubs-national-teams/ -> leagues-clubs.html
-403 5192 https://sofifa.com/teams?type=all&col=oa&sort=desc&offset=0 -> sofifa-teams-0.html
-403 5192 https://sofifa.com/teams?type=all&col=oa&sort=desc&offset=60 -> sofifa-teams-60.html

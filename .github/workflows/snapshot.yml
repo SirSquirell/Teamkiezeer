@@ -31,10 +31,8 @@ jobs:
           fetch "https://fifagamenews.com/fc-26-team-star-ratings/" "stars.html"
           fetch "https://fifauteam.com/best-teams-fc-26/" "best-teams.html"
           fetch "https://fifauteam.com/fc-26-leagues-clubs-national-teams/" "leagues-clubs.html"
-          # sofifa-probe: kandidaat derde bron (team OVA/ATT/MID/DEF).
-          # Twee pagina's om bereikbaarheid + paginering te beoordelen.
-          fetch "https://sofifa.com/teams?type=all&col=oa&sort=desc&offset=0" "sofifa-teams-0.html"
-          fetch "https://sofifa.com/teams?type=all&col=oa&sort=desc&offset=60" "sofifa-teams-60.html"
+          # sofifa is geprobeerd als derde bron (2026-08-22) maar geeft een
+          # Cloudflare-403 aan runners; zonder headless browser geen optie.
 
       - name: Commit snapshots
         run: |
