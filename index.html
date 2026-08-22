@@ -991,10 +991,12 @@ const store = {
 };
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
-const defaults = () => ({ maxDelta:2, cooldown:6, pinned:null, kind:"clubs", womens:false,
+const defaults = () => ({ maxDelta:2, cooldown:6, pinned:4, kind:"mixed", womens:false,
                           whitelist:[...DEFAULT_WHITELIST], haptics:true });
 
-let rules = Object.assign(defaults(), store.get("rules3", null) || store.get("rules2", null) || {});
+/* rules4: nieuwe klant-defaults (Mix + vaste ster 4) — oudere keys bewust niet
+   overgenomen, zodat bestaande toestellen ook op de nieuwe defaults starten. */
+let rules = Object.assign(defaults(), store.get("rules4", null) || {});
 if (!Array.isArray(rules.whitelist) || !rules.whitelist.length) rules.whitelist = [...DEFAULT_WHITELIST];
 
 let duos = Object.assign({ a:"W/M", b:"J/J" }, store.get("duos", null) || {});
@@ -1068,7 +1070,7 @@ async function syncPull(){
   }catch{ /* offline of endpoint down: lokaal blijft leidend */ }
 }
 
-const saveRules = () => store.set("rules3", rules);
+const saveRules = () => store.set("rules4", rules);
 const saveMatches = () => store.set("matches", matches = matches.slice(0, 200));
 const savePending = () => pending ? store.set("pending", pending) : store.del("pending");
 const saveDuos = () => store.set("duos", duos);
@@ -1503,7 +1505,8 @@ function syncFilters(){
   $("starOut").textContent = Number($("starRange").value).toLocaleString("nl") + " sterren";
   $("vDelta").textContent = rules.maxDelta;
   $("vCool").textContent = rules.cooldown;
-  $("lgCount").textContent = rules.whitelist.length + " van " + DATA.leagues.filter(l => !l.womens || rules.womens).length + " aan";
+  const visLeagues = DATA.leagues.filter(l => !l.womens || rules.womens);
+  $("lgCount").textContent = visLeagues.filter(l => rules.whitelist.includes(l.id)).length + " van " + visLeagues.length + " aan";
   $("poolN").textContent = DATA.teams.filter(poolFilter).length;
 }
 $("womens").addEventListener("change", e => {
