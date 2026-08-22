@@ -2,7 +2,10 @@ name: Build teams.json
 
 on:
   schedule:
-    - cron: "0 6 * * 1"
+    # 08:00 Europe/Amsterdam. Cron is UTC en volgt de zomertijd niet automatisch:
+    # 06:00 UTC = 08:00 tijdens CEST (eind maart-eind oktober); tijdens CET
+    # (winter) komt dit binnen op 07:00 lokaal. Zet dan naar "0 7 * * *" terug.
+    - cron: "0 6 * * *"
   workflow_dispatch:
   push:
     paths:
@@ -46,6 +49,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "Geen wijzigingen in data/teams.json"
           else
-            git commit -m "Update teams.json from weekly scrape"
+            git commit -m "Update teams.json from daily scrape"
             git push
           fi

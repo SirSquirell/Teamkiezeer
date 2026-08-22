@@ -62,7 +62,7 @@ oplaadkabel, je gewone Apple ID. Geen betaald account.
   Xcode via **Window → Devices and Simulators** bij je iPhone *"Connect via
   network"* aanvinken — daarna werkt ▶ ook via wifi.
 - **Teamdata is nooit een reden om opnieuw te installeren**: die haalt de
-  app zelf wekelijks op.
+  app zelf dagelijks op.
 
 ## Als het hapert
 

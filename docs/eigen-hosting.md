@@ -14,7 +14,7 @@ Zet via FTP in een map (bijv. `/evenmatch/`):
 - `hosting/sync.php` → upload als `sync.php`
 
 Teamdata hoef je **niet** te uploaden: de app haalt die zelf rechtstreeks
-van GitHub (de weekly scrape) en valt alleen terug op een lokale kopie als
+van GitHub (de dagelijkse scrape) en valt alleen terug op een lokale kopie als
 GitHub onbereikbaar is. Wil je die fallback ook: upload `data/teams.json`
 als `teams.json` ernaast en ververs die af en toe.
 

@@ -5,6 +5,15 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
+## 0.03.2 — 2026-08-22
+
+- **Databuild draait nu dagelijks (08:00 Europe/Amsterdam) i.p.v. wekelijks.**
+  `.github/workflows/data.yml` cron gewijzigd naar `0 6 * * *`; teksten in
+  app-footer, README en docs die "wekelijks" noemden zijn meegewerkt naar
+  "dagelijks". Cron is UTC en volgt de zomertijd niet automatisch — 06:00 UTC
+  komt tijdens CET (winter) op 07:00 lokaal binnen; zie het commentaar bij de
+  cron-regel om 'm dan terug te zetten naar `0 7 * * *`.
+
 ## 0.03.1 — 2026-08-22
 
 - **Landenteams hadden nooit een crest.** De scrape-bronnen tonen

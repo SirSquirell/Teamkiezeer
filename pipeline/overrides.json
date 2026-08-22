@@ -2,7 +2,7 @@
   "_uitleg": [
     "Handmatige correcties op de gescrapete data — de 'database' voor foutmeldingen.",
     "Klopt een ster (of rating) niet in de app? Voeg hier een regel toe; de",
-    "eerstvolgende build (weekly, of een push naar pipeline/) past hem toe op",
+    "eerstvolgende build (dagelijks, of een push naar pipeline/) past hem toe op",
     "data/teams.json. Sterren zijn leidend; squadRating mag ook, maar is optioneel.",
     "Velden: id (team-id uit data/teams.json), starRating en/of squadRating",
     "(weglaten of null = niet overschrijven), reason, source, checked (datum).",

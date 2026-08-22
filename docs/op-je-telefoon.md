@@ -7,7 +7,7 @@
 > **https://evenmatch.prulwerk.nl**
 
 - Werkt op elke telefoon, tablet en computer; niets te installeren, verloopt
-  nooit, en de teamdata ververst automatisch na elke weekly scrape.
+  nooit, en de teamdata ververst automatisch na elke dagelijkse scrape.
 - Voelt 'm als app: Safari/Chrome → deelknop → **"Zet op beginscherm"**.
   Dan staat er gewoon een Even Match-icoon tussen de apps.
 - Regels en history worden per toestel onthouden.
@@ -87,5 +87,5 @@ wekelijkse herinstallatie irritant, kies dan route 3 (AltStore) of gooi er
 ## Updates & data
 
 Nieuwe teamdata heeft **geen** herinstallatie nodig: de app haalt
-`data/teams.json` bij elke launch op van GitHub (weekly scrape). Alleen
+`data/teams.json` bij elke launch op van GitHub (dagelijkse scrape). Alleen
 app-códewijzigingen vragen een nieuwe build op het toestel.

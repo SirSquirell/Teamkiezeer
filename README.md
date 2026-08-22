@@ -13,7 +13,7 @@ Puur voor eigen gebruik, nooit voor de App Store.
 ## Layout
 
 ```
-/pipeline      Python scraper, draait wekelijks in GitHub Actions
+/pipeline      Python scraper, draait dagelijks in GitHub Actions
 index.html     de webapp — GitHub Pages serveert de repo-root van main
 /app           Xcode project (SwiftUI, iOS 17+)
 /data          gegenereerde teams.json + handmatige national-teams.json
@@ -26,7 +26,7 @@ index.html     de webapp — GitHub Pages serveert de repo-root van main
 - Landenteams: handmatig in `data/national-teams.json`
 - Crests: runtime gefetcht via URL, nooit gecommit (EA/club-IP)
 
-De GitHub Action draait de scraper wekelijks en commit `data/teams.json` alleen
+De GitHub Action draait de scraper dagelijks (08:00 Europe/Amsterdam) en commit `data/teams.json` alleen
 bij een non-empty diff. De app haalt dat bestand bij launch op via
 raw.githubusercontent, met cache- en bundled-fallback zodat alles offline werkt.
 
@@ -62,7 +62,7 @@ cp data/teams.json app/Teamkiezeer/Resources/bundled-teams.json
   De webapp toont zijn versie onderin de Filters-sheet; de iOS-app volgt via
   `MARKETING_VERSION`. Releasen = beide bumpen + changelog-regel + push naar main.
 - **Klopt een ster (of squad rating) niet?** Meld het; de correctie komt in
-  `pipeline/overrides.json` en overleeft daarmee elke weekly scrape — dat
+  `pipeline/overrides.json` en overleeft daarmee elke dagelijkse scrape — dat
   bestand is de database voor foutmeldingen. Twijfel over de juiste waarde?
   De Action **Build teams.json** handmatig draaien scrapet de live bronnen en
   de audit logt elke bron-inconsistentie (ster vs. rating-bucket). Sterren

@@ -30,7 +30,7 @@ kolom, kapotte join of verschoven rij zou hier direct zichtbaar zijn.
 (seizoensupdate), een breuk onder de ondergrens breekt de build (parsefout).
 
 **3. Actualiteit.** De bron werkt sterren bij gedurende het seizoen; onze
-Action scrapet elke maandag en commit alleen bij wijzigingen. `generatedAt`
+Action scrapet elke dag om 08:00 (Europe/Amsterdam) en commit alleen bij wijzigingen. `generatedAt`
 staat in de app (Regels-scherm) en op de website in de kop. De snapshot van
 vandaag is identiek aan de live pagina's (fetch-log 200's, zelfde bytes).
 
@@ -65,10 +65,10 @@ in-game spot-check blijft de bedoeling, het bestand is daarvoor ingericht.
   Montpellier, Saint-Étienne, Paris FC) zijn de vrouwenteams zonder marker;
   dedup houdt de eerste (mannen-)rij en logt elke gedropte rij.
 
-## Hoe dit wekelijks geborgd blijft
+## Hoe dit dagelijks geborgd blijft
 
 `python pipeline/build_teams.py` draait `run_audit()` op elke build (dus ook
-in de weekly Action). Hard falen: clubaantal buiten 550–800, <85% league-match,
+in de dagelijkse Action). Hard falen: clubaantal buiten 550–800, <85% league-match,
 niet-monotone buckets, ratings buiten 40–99, leagues met <8 teams, ankers
 onder hun ondergrens. Waarschuwen: ankerdrift en bucket-uitschieters.
 Een build die hard faalt commit níéts — de app en site blijven dan op de

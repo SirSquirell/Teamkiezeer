@@ -987,7 +987,7 @@ const store = {
   del(k){ try{ localStorage.removeItem(k); }catch{} },
 };
 
-const APP_VERSION = "0.03.1";   // bump bij elke release; historie in CHANGELOG.md
+const APP_VERSION = "0.03.2";   // bump bij elke release; historie in CHANGELOG.md
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
 const defaults = () => ({ cooldown:0, pinned:4, kind:"mixed", womens:false,
@@ -1809,7 +1809,7 @@ function renderMeta(){
    aantal teams van de ingebakken set naar de verse set. */
 $("meta").innerHTML = `EA ${DATA.game}<span class="date"> · data laden… · app v${APP_VERSION}</span>`;
 $("footer").textContent = "Even Match v" + APP_VERSION +
-  " · Dataset ververst wekelijks. Rolls van vanavond worden niet bewaard." +
+  " · Dataset ververst dagelijks. Rolls van vanavond worden niet bewaard." +
   " Klopt een ster niet? Meld het — correcties gaan mee in de volgende dataset.";
 ghost($("cardA"), duos.a); ghost($("cardB"), duos.b);
 syncFilters(); renderLeagues(); renderStand(); renderFinal();
