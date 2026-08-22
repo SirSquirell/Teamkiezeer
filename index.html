@@ -987,7 +987,7 @@ const store = {
   del(k){ try{ localStorage.removeItem(k); }catch{} },
 };
 
-const APP_VERSION = "0.03.0";   // bump bij elke release; historie in CHANGELOG.md
+const APP_VERSION = "0.03.1";   // bump bij elke release; historie in CHANGELOG.md
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
 const defaults = () => ({ cooldown:0, pinned:4, kind:"mixed", womens:false,

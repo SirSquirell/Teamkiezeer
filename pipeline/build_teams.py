@@ -287,13 +287,23 @@ def apply_overrides(teams, path: Path | None = None):
                 team[field] = want
 
 
+def load_flags() -> dict:
+    path = ROOT / "pipeline" / "flags.json"
+    return json.loads(path.read_text(encoding="utf-8"))["flags"]
+
+
 def load_national_teams():
+    """Landenteams komen uit een handmatige seed omdat fifauteam/fifagamenews
+    ze als platte tekst tonen, zonder crest per team. Vlaggen (via
+    pipeline/flags.json -> flagcdn.com) zijn wél altijd beschikbaar en geen
+    EA/club-IP, dus die vullen crestURL i.p.v. de initialen-fallback."""
     path = ROOT / "data" / "national-teams.json"
     if not path.exists():
         log("NATIONAL: data/national-teams.json ontbreekt, geen landenteams opgenomen")
         return []
     doc = json.loads(path.read_text(encoding="utf-8"))
     teams = doc["teams"]
+    flags = load_flags()
     for t in teams:
         for field in ("id", "name", "starRating", "squadRating"):
             if t.get(field) in (None, ""):
@@ -305,7 +315,16 @@ def load_national_teams():
             t.setdefault(field, None)
         if t["kind"] != "national":
             raise SystemExit(f"FOUT: {t['id']} in national-teams.json is geen national")
-    log(f"NATIONAL: {len(teams)} landenteams uit seed")
+        if not t["crestURL"]:
+            code = t["countryCode"]
+            flag = flags.get(code)
+            if flag is None:
+                raise SystemExit(
+                    f"FOUT: geen vlag-mapping voor countryCode '{code}' ({t['id']}) "
+                    "in pipeline/flags.json"
+                )
+            t["crestURL"] = f"https://flagcdn.com/{flag}.svg"
+    log(f"NATIONAL: {len(teams)} landenteams uit seed, {sum(1 for t in teams if t['crestURL'])} met vlag-crest")
     return teams
 
 

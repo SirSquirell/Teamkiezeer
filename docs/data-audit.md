@@ -45,6 +45,13 @@ in-game spot-check blijft de bedoeling, het bestand is daarvoor ingericht.
 
 ## Bekende, bewuste beperkingen
 
+- **Landenteams hebben geen crest-bron.** fifauteam/fifagamenews tonen
+  landenteams als platte tekst zonder logo per team (anders dan clubs, die
+  wel een crest-URL per rij hebben). `pipeline/build_teams.py` vult
+  `crestURL` voor landenteams daarom in met een vlag via
+  `pipeline/flags.json` (countryCode -> flagcdn.com-landcode) i.p.v. een
+  officieel bondslogo; de audit faalt hard als een landenteam zonder
+  crestURL blijft.
 - **Franse vrouwenclubs** (OL Lyonnes, PSG (v), Fleury, Dijon, "Nantes",
   "Le Havre", …) staan op de sterrenlijst zonder (W)-markering en hun league
   (Première Ligue) staat niet op de ratings-pagina. Ze krijgen `league: null`,

@@ -90,6 +90,20 @@ def test_overrides_applied_warned_and_flagged_obsolete(tmp_path, capsys):
     assert "OVERRIDE WARN: 'weg.team'" in out
 
 
+def test_national_teams_get_flag_crest():
+    from build_teams import load_national_teams
+
+    teams = load_national_teams()
+    assert len(teams) >= 20
+    for t in teams:
+        assert t["crestURL"], f"{t['id']} zonder crestURL"
+        assert t["crestURL"].startswith("https://flagcdn.com/")
+    spain = next(t for t in teams if t["id"] == "nat.spain")
+    assert spain["crestURL"] == "https://flagcdn.com/es.svg"
+    england = next(t for t in teams if t["id"] == "nat.england")
+    assert england["crestURL"] == "https://flagcdn.com/gb-eng.svg"
+
+
 def test_full_build_offline(tmp_path):
     from build_teams import build
 

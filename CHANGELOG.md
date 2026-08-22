@@ -5,6 +5,15 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
+## 0.03.1 — 2026-08-22
+
+- **Landenteams hadden nooit een crest.** De scrape-bronnen tonen
+  landenteams als platte tekst zonder logo per team, dus `crestURL` bleef
+  altijd `null` en de kaart viel stil terug op de lege plaatshouder (zichtbaar
+  op alle landenteam-matchups). `pipeline/build_teams.py` vult `crestURL`
+  nu met een vlag (`pipeline/flags.json` -> flagcdn.com) per landenteam; de
+  audit faalt hard als een landenteam alsnog zonder crest blijft.
+
 ## 0.03.0 — 2026-08-22
 
 - **Max ratingverschil is weg.** Gelijk aantal sterren is dé

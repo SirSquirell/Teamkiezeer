@@ -86,6 +86,7 @@ def run_audit(teams: list[dict], log) -> None:
     for t in nationals:
         hard(0.5 <= t["starRating"] <= 5.0 and 40 <= t["squadRating"] <= 99,
              f"national {t['id']} buiten bereik")
+        hard(bool(t["crestURL"]), f"national {t['id']} heeft geen crestURL")
 
     log(f"AUDIT: OK — {len(clubs)} clubs, {len(nationals)} landen, "
         f"sterrenverdeling {dict(sorted(stars.items(), reverse=True))}")
