@@ -766,7 +766,7 @@ body.scoring .draw{
         <div class="card b" id="cardB"></div>
         <div class="vs score-face" id="vs" aria-hidden="true">VS</div>
       </div>
-      <p class="ghost-note" id="stageNote">Twee teams, gelijke sterren, zo klein mogelijk ratingverschil.</p>
+      <p class="ghost-note" id="stageNote">Twee teams, altijd evenveel sterren.</p>
       <p class="skiphint" id="skipHint"></p>
 
       <div class="fair" id="fair">
@@ -938,11 +938,7 @@ body.scoring .draw{
     </div>
 
     <div class="group">
-      <span class="lbl">Marge</span>
-      <div class="stepper">
-        <span class="txt"><b>Max ratingverschil</b><span>Hoe scheef een match mag zijn</span></span>
-        <span class="ctl"><button data-step="delta:-1" aria-label="Minder">−</button><span class="val" id="vDelta"></span><button data-step="delta:1" aria-label="Meer">+</button></span>
-      </div>
+      <span class="lbl">Herhaling</span>
       <div class="stepper">
         <span class="txt"><b>Niet herhalen binnen</b><span>Aantal gespeelde matches waarin een club niet terugkomt</span></span>
         <span class="ctl"><button data-step="cool:-1" aria-label="Minder">−</button><span class="val" id="vCool"></span><button data-step="cool:1" aria-label="Meer">+</button></span>
@@ -990,15 +986,16 @@ const store = {
   del(k){ try{ localStorage.removeItem(k); }catch{} },
 };
 
-const APP_VERSION = "0.02.0";   // bump bij elke release; historie in CHANGELOG.md
+const APP_VERSION = "0.03.0";   // bump bij elke release; historie in CHANGELOG.md
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
-const defaults = () => ({ maxDelta:2, cooldown:6, pinned:4, kind:"mixed", womens:false,
+const defaults = () => ({ cooldown:0, pinned:4, kind:"mixed", womens:false,
                           whitelist:[...DEFAULT_WHITELIST], haptics:true });
 
-/* rules4: nieuwe klant-defaults (Mix + vaste ster 4) — oudere keys bewust niet
-   overgenomen, zodat bestaande toestellen ook op de nieuwe defaults starten. */
-let rules = Object.assign(defaults(), store.get("rules4", null) || {});
+/* rules5: gelijke sterren is dé regel — max ratingverschil bestaat niet meer,
+   cooldown standaard 0. Oudere keys bewust niet overgenomen, zodat bestaande
+   toestellen ook op de nieuwe defaults starten. */
+let rules = Object.assign(defaults(), store.get("rules5", null) || {});
 if (!Array.isArray(rules.whitelist) || !rules.whitelist.length) rules.whitelist = [...DEFAULT_WHITELIST];
 
 let duos = Object.assign({ a:"W/M", b:"J/J" }, store.get("duos", null) || {});
@@ -1072,7 +1069,7 @@ async function syncPull(){
   }catch{ /* offline of endpoint down: lokaal blijft leidend */ }
 }
 
-const saveRules = () => store.set("rules4", rules);
+const saveRules = () => store.set("rules5", rules);
 const saveMatches = () => store.set("matches", matches = matches.slice(0, 200));
 const savePending = () => pending ? store.set("pending", pending) : store.del("pending");
 const saveDuos = () => store.set("duos", duos);
@@ -1087,31 +1084,25 @@ function poolFilter(t){
   if (rules.pinned != null && t.starRating !== rules.pinned) return false;
   return true;
 }
-function attempt(pool, maxDelta){
+/* Gelijk aantal sterren is dé eerlijkheidsregel; de squad rating staat op de
+   kaart maar filtert niet. Kies gewogen een ster-bucket, dan twee teams. */
+function attempt(pool){
   const buckets = new Map();
   for (const t of pool){
     const key = t.kind + "|" + t.starRating;
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key).push(t);
   }
-  const viable = [];
-  for (const teams of buckets.values()){
-    if (teams.length < 2) continue;
-    const pairs = [];
-    for (let i = 0; i < teams.length - 1; i++)
-      for (let j = i + 1; j < teams.length; j++)
-        if (Math.abs(teams[i].squadRating - teams[j].squadRating) <= maxDelta)
-          pairs.push([teams[i], teams[j]]);
-    if (pairs.length) viable.push({ teams, pairs });
-  }
+  const viable = [...buckets.values()].filter(ts => ts.length >= 2);
   if (!viable.length) return null;
-  const total = viable.reduce((s, b) => s + b.teams.length, 0);
+  const total = viable.reduce((s, ts) => s + ts.length, 0);
   let pick = Math.floor(Math.random() * total);
-  let bucket = viable[0];
-  for (const b of viable){ if (pick < b.teams.length){ bucket = b; break; } pick -= b.teams.length; }
-  let pair = bucket.pairs[Math.floor(Math.random() * bucket.pairs.length)];
-  if (Math.random() < 0.5) pair = [pair[1], pair[0]];
-  return pair;
+  let teams = viable[0];
+  for (const ts of viable){ if (pick < ts.length){ teams = ts; break; } pick -= ts.length; }
+  const i = Math.floor(Math.random() * teams.length);
+  let j = Math.floor(Math.random() * (teams.length - 1));
+  if (j >= i) j++;
+  return Math.random() < 0.5 ? [teams[i], teams[j]] : [teams[j], teams[i]];
 }
 function drawPair(){
   const base = DATA.teams.filter(poolFilter);
@@ -1119,15 +1110,10 @@ function drawPair(){
   // Cooldown leest ALLEEN gespeelde matches, niet de rolls van vanavond.
   const recent = new Set(matches.slice(0, rules.cooldown).flatMap(m => [m.aid, m.bid]));
   const relax = [];
-  for (let stage = 0; stage <= 4; stage++){
-    const delta = rules.maxDelta + Math.min(stage, 3);
-    if (stage >= 1 && stage <= 3) relax.push("ratingverschil verruimd naar " + delta);
-    if (stage === 4) relax.push("herhaalfilter losgelaten");
-    const pool = stage < 4 ? base.filter(t => !recent.has(t.id)) : base;
-    const pair = attempt(pool, delta);
-    if (pair) return { a:pair[0], b:pair[1],
-                       delta:Math.abs(pair[0].squadRating - pair[1].squadRating), relax };
-  }
+  let pair = attempt(base.filter(t => !recent.has(t.id)));
+  if (!pair && recent.size){ relax.push("herhaalfilter losgelaten"); pair = attempt(base); }
+  if (pair) return { a:pair[0], b:pair[1],
+                     delta:Math.abs(pair[0].squadRating - pair[1].squadRating), relax };
   const star = rules.pinned != null ? rules.pinned.toLocaleString("nl") + " sterren " : "";
   return { error:"Geen eerlijk paar op " + star + "met deze filters." };
 }
@@ -1398,10 +1384,10 @@ function doDraw(){
     $("stageNote").innerHTML =
       `<b style="color:var(--danger)">${r.error}</b><br>` +
       `<span style="display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px">
-         <button class="pick" id="fixDelta">Verschil naar ${rules.maxDelta + 2}</button>
+         <button class="pick" id="fixStar">Elke ster oké</button>
          <button class="pick" id="fixLeagues">Leagues aanzetten</button>
        </span>`;
-    $("fixDelta").onclick = () => { rules.maxDelta = Math.min(10, rules.maxDelta + 2); saveRules(); syncFilters(); doDraw(); };
+    $("fixStar").onclick = () => { rules.pinned = null; saveRules(); syncFilters(); doDraw(); };
     $("fixLeagues").onclick = () => { openSheet("sheetStand", true); openSheet("sheetFilters"); $("lgToggle").click(); };
     return;
   }
@@ -1505,7 +1491,6 @@ function syncFilters(){
   $("starSlider").hidden = mode !== "fixed";
   if (mode === "fixed") $("starRange").value = rules.pinned;
   $("starOut").textContent = Number($("starRange").value).toLocaleString("nl") + " sterren";
-  $("vDelta").textContent = rules.maxDelta;
   $("vCool").textContent = rules.cooldown;
   const visLeagues = DATA.leagues.filter(l => !l.womens || rules.womens);
   $("lgCount").textContent = visLeagues.filter(l => rules.whitelist.includes(l.id)).length + " van " + visLeagues.length + " aan";
@@ -1518,9 +1503,8 @@ $("starRange").addEventListener("input", e => {
   rules.pinned = Number(e.target.value); saveRules(); syncFilters();
 });
 document.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => {
-  const [k, d] = b.dataset.step.split(":");
-  if (k === "delta") rules.maxDelta = Math.max(0, Math.min(10, rules.maxDelta + Number(d)));
-  else rules.cooldown = Math.max(0, Math.min(20, rules.cooldown + Number(d)));
+  const [, d] = b.dataset.step.split(":");
+  rules.cooldown = Math.max(0, Math.min(20, rules.cooldown + Number(d)));
   saveRules(); syncFilters();
 }));
 $("resetRules").addEventListener("click", () => {
@@ -1815,10 +1799,13 @@ function toast(msg){
 
 /* ══ boot ════════════════════════════════════════════════ */
 function renderMeta(){
-  $("meta").innerHTML = `${DATA.game} · ${DATA.teams.length} teams` +
-    `<span class="date"> · ${(DATA.generatedAt || "").slice(0,10)}</span>`;
+  const d = DATA.generatedAt || "";
+  $("meta").innerHTML = `EA ${DATA.game} · ${DATA.teams.length} teams` +
+    `<span class="date"> · data ${d.slice(8,10)}-${d.slice(5,7)} · app v${APP_VERSION}</span>`;
 }
-renderMeta();
+/* meta pas invullen als de dataloader klaar is — anders knippert het
+   aantal teams van de ingebakken set naar de verse set. */
+$("meta").innerHTML = `EA ${DATA.game}<span class="date"> · data laden… · app v${APP_VERSION}</span>`;
 $("footer").textContent = "Even Match v" + APP_VERSION +
   " · Dataset ververst wekelijks. Rolls van vanavond worden niet bewaard." +
   " Klopt een ster niet? Meld het — correcties gaan mee in de volgende dataset.";
@@ -1847,9 +1834,10 @@ syncFilters(); renderLeagues(); renderStand(); renderFinal();
   draw.disabled = false; draw.textContent = label;
   ghost($("cardA"), duos.a); ghost($("cardB"), duos.b);
   if (!loaded){
+    renderMeta();
     const withCrest = DATA.teams.filter(t => t.crestURL).length;
     $("stageNote").innerHTML = withCrest
-      ? "Twee teams, gelijke sterren, zo klein mogelijk ratingverschil."
+      ? "Twee teams, altijd evenveel sterren."
       : `<b>Offline set actief.</b><br>Deze kopie heeft geen clublogo's. ` +
         `Zet <code>teams.json</code> naast deze pagina of ga online voor de echte crests.`;
     return;
@@ -1861,7 +1849,7 @@ syncFilters(); renderLeagues(); renderStand(); renderFinal();
   saveRules();
   renderMeta(); syncFilters(); renderLeagues();
   const n = DATA.teams.filter(t => t.crestURL).length;
-  $("stageNote").textContent = "Twee teams, gelijke sterren, zo klein mogelijk ratingverschil.";
+  $("stageNote").textContent = "Twee teams, altijd evenveel sterren.";
   if (n < DATA.teams.length) console.info(`${DATA.teams.length - n} teams zonder crestURL`);
 })();
 syncPull();

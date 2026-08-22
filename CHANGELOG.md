@@ -5,6 +5,19 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
+## 0.03.0 — 2026-08-22
+
+- **Max ratingverschil is weg.** Gelijk aantal sterren is dé
+  eerlijkheidsregel; de squad rating staat nog op de kaarten maar filtert
+  niet meer. De relaxatieladder is daarmee ook simpeler (alleen het
+  herhaalfilter kan nog loslaten).
+- **"Niet herhalen binnen" standaard op 0** (was 6).
+- Geen flikkerende teller meer bij het laden: de kopregel verschijnt pas
+  als de verse dataset binnen is, in plaats van eerst de ingebakken
+  offline-set te tonen en daarna om te klappen.
+- Kopregel toont nu "EA FC 26", de datadatum als dd-mm en het
+  app-versienummer — versie is zo altijd zichtbaar op het hoofdscherm.
+
 ## 0.02.0 — 2026-08-22
 
 - Nieuwe standaardinstellingen: Teams op **Mix**, **vaste ster 4**,
