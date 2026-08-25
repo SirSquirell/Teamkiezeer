@@ -29,11 +29,11 @@ final class DrawEngineTests: XCTestCase {
     }
 
     private func drawOK(
-        _ pool: [Team], _ c: DrawConstraints, recent: Set<String> = [], seed: UInt64 = 1,
+        _ pool: [Team], _ c: DrawConstraints, recent: [[String]] = [], seed: UInt64 = 1,
         file: StaticString = #filePath, line: UInt = #line
     ) -> DrawResult {
         var rng = SeededRNG(seed: seed)
-        switch DrawEngine.draw(pool: pool, constraints: c, recentTeamIds: recent, rng: &rng) {
+        switch DrawEngine.draw(pool: pool, constraints: c, recentDraws: recent, rng: &rng) {
         case .success(let r): return r
         case .failure(let e):
             XCTFail("verwachtte succes, kreeg \(e)", file: file, line: line)
@@ -42,11 +42,11 @@ final class DrawEngineTests: XCTestCase {
     }
 
     private func drawErr(
-        _ pool: [Team], _ c: DrawConstraints, recent: Set<String> = [], seed: UInt64 = 1
+        _ pool: [Team], _ c: DrawConstraints, recent: [[String]] = [], seed: UInt64 = 1
     ) -> DrawError? {
         var rng = SeededRNG(seed: seed)
         if case .failure(let e) = DrawEngine.draw(
-            pool: pool, constraints: c, recentTeamIds: recent, rng: &rng
+            pool: pool, constraints: c, recentDraws: recent, rng: &rng
         ) { return e }
         return nil
     }
@@ -152,29 +152,48 @@ final class DrawEngineTests: XCTestCase {
             team("c", stars: 4.0, rating: 80), team("d", stars: 4.0, rating: 80),
         ]
         for seed in UInt64(0)..<50 {
-            let r = drawOK(pool, constraints(), recent: ["a", "b"], seed: seed)
+            let r = drawOK(pool, constraints(), recent: [["a", "b"]], seed: seed)
             XCTAssertEqual(Set([r.teamA.id, r.teamB.id]), Set(["c", "d"]))
             XCTAssertTrue(r.relaxations.isEmpty)
         }
     }
 
-    func testCooldownIdsTakesLastNDraws() {
-        let history = [("a", "b"), ("c", "d"), ("e", "f")]
-        XCTAssertEqual(
-            DrawEngine.cooldownIds(historyNewestFirst: history, cooldownDraws: 2),
-            Set(["a", "b", "c", "d"])
-        )
-        XCTAssertTrue(DrawEngine.cooldownIds(historyNewestFirst: history, cooldownDraws: 0).isEmpty)
+    func testCooldownLooksBackNoFurtherThanTheSetting() {
+        let pool = (0..<6).map { team("t\($0)", stars: 4.0, rating: 80) }
+        let history = [["t0", "t1"], ["t2", "t3"]]
+        // Cooldown 1 blokkeert alleen de laatste draw; t2 en t3 mogen weer.
+        var drawn = Set<String>()
+        for seed in UInt64(0)..<200 {
+            let r = drawOK(pool, constraints(cooldown: 1), recent: history, seed: seed)
+            drawn.insert(r.teamA.id)
+            drawn.insert(r.teamB.id)
+        }
+        XCTAssertEqual(drawn, Set(["t2", "t3", "t4", "t5"]))
     }
 
     // MARK: - Versoepeling
 
     func testCooldownIsDroppedAndReportedWhenItBlocksEveryPair() {
-        // Zonder cooldown-drop bestaat er geen paar: alleen a-b, en b zit in cooldown.
+        // Er bestaat maar één paar, en dat is net geweest: helemaal loslaten.
         let pool = [team("a", stars: 4.0, rating: 80), team("b", stars: 4.0, rating: 80)]
-        let r = drawOK(pool, constraints(), recent: ["b"])
-        XCTAssertEqual(r.relaxations, [.cooldownDropped])
+        let r = drawOK(pool, constraints(), recent: [["a", "b"]])
+        XCTAssertEqual(r.relaxations, [.cooldownShortened(to: 0)])
         XCTAssertEqual(Set([r.teamA.id, r.teamB.id]), Set(["a", "b"]))
+    }
+
+    func testCooldownShrinksOnlyAsFarAsNeeded() {
+        // Twee draws terug is te veel (dan is de pool leeg), één draw past wel.
+        let pool = (0..<4).map { team("t\($0)", stars: 4.0, rating: 80) }
+        let r = drawOK(pool, constraints(), recent: [["t0", "t1"], ["t2", "t3"]])
+        XCTAssertEqual(r.relaxations, [.cooldownShortened(to: 1)])
+        XCTAssertEqual(Set([r.teamA.id, r.teamB.id]), Set(["t2", "t3"]))
+    }
+
+    func testCooldownIsNotReportedWhenItFits() {
+        let pool = (0..<4).map { team("t\($0)", stars: 4.0, rating: 80) }
+        let r = drawOK(pool, constraints(), recent: [["t0", "t1"]])
+        XCTAssertTrue(r.relaxations.isEmpty)
+        XCTAssertEqual(Set([r.teamA.id, r.teamB.id]), Set(["t2", "t3"]))
     }
 
     func testFailsCleanlyWhenNoStarLevelHasTwoTeams() {

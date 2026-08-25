@@ -256,11 +256,11 @@ struct DrawView: View {
     private func performDraw() {
         guard let rules else { return }
         let constraints = rules.constraints
-        let recent = DrawRecordModel.recentTeamIds(in: context, cooldownDraws: constraints.cooldownDraws)
+        let recent = DrawRecordModel.recentDraws(in: context, limit: constraints.cooldownDraws)
         var rng = SystemRandomNumberGenerator()
 
         switch DrawEngine.draw(
-            pool: store.teams, constraints: constraints, recentTeamIds: recent, rng: &rng
+            pool: store.teams, constraints: constraints, recentDraws: recent, rng: &rng
         ) {
         case .success(let result):
             failure = nil

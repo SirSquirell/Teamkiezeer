@@ -129,11 +129,15 @@ public struct DrawConstraints: Codable, Equatable, Sendable {
 /// Elke versoepeling die de engine moest toepassen. Stil versoepelen is een bug,
 /// dus dit hoort zichtbaar in de result-UI.
 public enum Relaxation: Equatable, Sendable, Codable {
-    case cooldownDropped
+    /// Het herhaalfilter moest korter om nog een paar te vinden; `to` is het
+    /// aantal draws dat het uiteindelijk terugkeek (0 = helemaal losgelaten).
+    case cooldownShortened(to: Int)
 
     public var label: String {
         switch self {
-        case .cooldownDropped: return "cooldown losgelaten"
+        case .cooldownShortened(let to):
+            if to == 0 { return "herhaalfilter losgelaten" }
+            return "herhaalfilter beperkt tot \(to) draw\(to == 1 ? "" : "s")"
         }
     }
 }
@@ -156,8 +160,8 @@ public struct DrawResult: Equatable, Sendable {
 }
 
 public enum DrawError: Error, Equatable, Sendable {
-    /// Geen enkel geldig paar, ook niet zonder cooldown: geen sterbucket met
-    /// twee teams erin.
+    /// Geen enkel geldig paar, ook niet zonder herhaalfilter: geen sterbucket
+    /// met twee teams erin.
     case noFairPair(starLevel: Double?)
     /// De pool is na filtering leeg (nog vóór er over paren nagedacht wordt).
     case emptyPool

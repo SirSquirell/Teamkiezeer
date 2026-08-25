@@ -18,6 +18,20 @@ Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
   nu, net als de webapp, twee teams uniform binnen de sterbucket: elk trekbaar
   team zit exact op 2/N. Daarmee vervalt de instelling "Max. rating-verschil"
   in het Rules-scherm; de rating blijft op de kaart en in de balansmeter staan.
+- **Het herhaalfilter keek in de webapp alleen naar gespeelde matches**, niet
+  naar de rolls. Doorrollen filterde dus niets weg, ook niet als je 'm hoger
+  zette. Hij telt nu élke recente trekking — rolls, de gekozen eindmatch en
+  gespeelde matches — nieuwste eerst, en een paar dat zowel gerold als
+  gespeeld is telt één keer.
+- **Herhaalfilter versoepelt niet meer alles-of-niets.** Past er met de
+  ingestelde diepte geen paar meer (kleine pool, bijvoorbeeld 8 clubs op
+  5 sterren), dan krimpt het venster stap voor stap tot er wél een paar past
+  in plaats van het filter helemaal te laten vallen. De kaart meldt hoe ver
+  hij nog terugkeek: "herhaalfilter beperkt tot 3 draws".
+- **"Niet herhalen binnen" standaard op 6** (was 0), gelijk aan de iOS-app.
+  De opslagsleutel is `rules6`: bestaande toestellen starten dus eenmalig op
+  de nieuwe defaults, wat meteen een league-filter opruimt dat ooit per
+  ongeluk dichtstond.
 - **Nieuw: `pipeline/draw_audit.py`.** Rekent de exacte trekkingskans per team,
   league en land uit voor een filterstand, meldt structureel onbereikbare
   teams en de spreiding tussen de wel-trekbare teams.

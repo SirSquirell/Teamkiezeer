@@ -7,14 +7,15 @@ import Foundation
 /// kaart maar bepaalt niets: binnen één sterbucket mag elk team elk ander team
 /// treffen. Daarmee heeft elk trekbaar team exact dezelfde kans (2/N).
 ///
-/// Eén versoepeling wanneer er geen geldig paar is: de cooldown laten vallen.
-/// Die staat in DrawResult.relaxations, want stil versoepelen is een bug.
+/// Levert het herhaalfilter geen paar op, dan krimpt het venster stap voor stap
+/// tot er wél een paar past — niet verder dan nodig. Elke krimp staat in
+/// DrawResult.relaxations, want stil versoepelen is een bug.
 public enum DrawEngine {
 
     public static func draw(
         pool allTeams: [Team],
         constraints: DrawConstraints,
-        recentTeamIds: Set<String>,
+        recentDraws: [[String]],
         rng: inout some RandomNumberGenerator
     ) -> Result<DrawResult, DrawError> {
 
@@ -38,13 +39,13 @@ public enum DrawEngine {
 
         guard !basePool.isEmpty else { return .failure(.emptyPool) }
 
-        for stage in 0...1 {
-            let relaxations: [Relaxation] = stage == 0 ? [] : [.cooldownDropped]
-            let pool = stage == 0
-                ? basePool.filter { !recentTeamIds.contains($0.id) }
-                : basePool
+        let want = min(max(constraints.cooldownDraws, 0), recentDraws.count)
+        for window in stride(from: want, through: 0, by: -1) {
+            let blocked = Set(recentDraws.prefix(window).joined())
+            let pool = blocked.isEmpty ? basePool : basePool.filter { !blocked.contains($0.id) }
 
             if let result = drawAttempt(pool: pool, rng: &rng) {
+                let relaxations: [Relaxation] = window < want ? [.cooldownShortened(to: window)] : []
                 return .success(
                     DrawResult(
                         teamA: result.a,
@@ -105,16 +106,5 @@ public enum DrawEngine {
         var j = Int.random(in: 0..<(chosen.count - 1), using: &rng)
         if j >= i { j += 1 }
         return Bool.random(using: &rng) ? (a: chosen[i], b: chosen[j]) : (a: chosen[j], b: chosen[i])
-    }
-
-    /// Team-ids die onder de cooldown vallen: alle teams uit de laatste
-    /// `cooldownDraws` draws.
-    public static func cooldownIds(historyNewestFirst: [(String, String)], cooldownDraws: Int) -> Set<String> {
-        var ids = Set<String>()
-        for (a, b) in historyNewestFirst.prefix(cooldownDraws) {
-            ids.insert(a)
-            ids.insert(b)
-        }
-        return ids
     }
 }

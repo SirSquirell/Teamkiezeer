@@ -941,7 +941,7 @@ body.scoring .draw{
     <div class="group">
       <span class="lbl">Herhaling</span>
       <div class="stepper">
-        <span class="txt"><b>Niet herhalen binnen</b><span>Aantal gespeelde matches waarin een club niet terugkomt</span></span>
+        <span class="txt"><b>Niet herhalen binnen</b><span>Aantal trekkingen waarin een team niet terugkomt</span></span>
         <span class="ctl"><button data-step="cool:-1" aria-label="Minder">−</button><span class="val" id="vCool"></span><button data-step="cool:1" aria-label="Meer">+</button></span>
       </div>
     </div>
@@ -990,13 +990,15 @@ const store = {
 const APP_VERSION = "0.03.3";   // bump bij elke release; historie in CHANGELOG.md
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
-const defaults = () => ({ cooldown:0, pinned:4, kind:"mixed", womens:false,
+const defaults = () => ({ cooldown:6, pinned:4, kind:"mixed", womens:false,
                           whitelist:[...DEFAULT_WHITELIST], haptics:true });
 
-/* rules5: gelijke sterren is dé regel — max ratingverschil bestaat niet meer,
-   cooldown standaard 0. Oudere keys bewust niet overgenomen, zodat bestaande
-   toestellen ook op de nieuwe defaults starten. */
-let rules = Object.assign(defaults(), store.get("rules5", null) || {});
+/* rules6: het herhaalfilter telt nu élke trekking en staat standaard op 6.
+   Oudere keys bewust niet overgenomen, zodat bestaande toestellen op de nieuwe
+   defaults starten — en een league-filter dat ooit per ongeluk dichtstond
+   (bv. de hele Premier League uit) daarmee opgeruimd is. */
+let rules = Object.assign(defaults(), store.get("rules6", null) || {});
+store.del("rules5");
 if (!Array.isArray(rules.whitelist) || !rules.whitelist.length) rules.whitelist = [...DEFAULT_WHITELIST];
 
 let duos = Object.assign({ a:"W/M", b:"J/J" }, store.get("duos", null) || {});
@@ -1070,7 +1072,7 @@ async function syncPull(){
   }catch{ /* offline of endpoint down: lokaal blijft leidend */ }
 }
 
-const saveRules = () => store.set("rules5", rules);
+const saveRules = () => store.set("rules6", rules);
 const saveMatches = () => store.set("matches", matches = matches.slice(0, 200));
 const savePending = () => pending ? store.set("pending", pending) : store.del("pending");
 const saveDuos = () => store.set("duos", duos);
@@ -1105,16 +1107,38 @@ function attempt(pool){
   if (j >= i) j++;
   return Math.random() < 0.5 ? [teams[i], teams[j]] : [teams[j], teams[i]];
 }
+/* Het herhaalfilter kijkt naar élke recente trekking: de rolls van vanavond,
+   de gekozen eindmatch en de gespeelde matches. Nieuwste eerst, en een paar dat
+   zowel gerold als gespeeld is telt één keer — anders vreet het twee plekken
+   in het venster. */
+function recentDraws(){
+  const seen = new Set(), out = [];
+  const all = [...rolls, ...matches, ...(pending ? [pending] : [])]
+    .filter(d => d && d.aid && d.bid)
+    .sort((x, y) => (y.ts || 0) - (x.ts || 0));
+  for (const d of all){
+    const key = [d.aid, d.bid].sort().join("|");
+    if (seen.has(key)) continue;
+    seen.add(key); out.push([d.aid, d.bid]);
+  }
+  return out;
+}
 function drawPair(){
   const base = DATA.teams.filter(poolFilter);
   if (!base.length) return { error:"De pool is leeg met deze filters." };
-  // Cooldown leest ALLEEN gespeelde matches, niet de rolls van vanavond.
-  const recent = new Set(matches.slice(0, rules.cooldown).flatMap(m => [m.aid, m.bid]));
-  const relax = [];
-  let pair = attempt(base.filter(t => !recent.has(t.id)));
-  if (!pair && recent.size){ relax.push("herhaalfilter losgelaten"); pair = attempt(base); }
-  if (pair) return { a:pair[0], b:pair[1],
-                     delta:Math.abs(pair[0].squadRating - pair[1].squadRating), relax };
+  const recent = recentDraws();
+  const want = Math.min(rules.cooldown, recent.length);
+  // Versoepel zo min mogelijk: krimp het venster tot er weer een paar past.
+  for (let window = want; window >= 0; window--){
+    const block = new Set(recent.slice(0, window).flat());
+    const pair = attempt(block.size ? base.filter(t => !block.has(t.id)) : base);
+    if (!pair) continue;
+    const relax = window === want ? []
+      : [window ? `herhaalfilter beperkt tot ${window} draw${window === 1 ? "" : "s"}`
+                : "herhaalfilter losgelaten"];
+    return { a:pair[0], b:pair[1],
+             delta:Math.abs(pair[0].squadRating - pair[1].squadRating), relax };
+  }
   const star = rules.pinned != null ? rules.pinned.toLocaleString("nl") + " sterren " : "";
   return { error:"Geen eerlijk paar op " + star + "met deze filters." };
 }
