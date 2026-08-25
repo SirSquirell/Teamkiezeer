@@ -3,10 +3,12 @@ import Foundation
 /// De matching engine. Puur en zonder state: pool + constraints + recent
 /// getrokken team-ids + RNG erin, DrawResult of DrawError eruit.
 ///
-/// Versoepelingsladder wanneer er geen geldig paar is:
-///   1..3: maxRatingDelta telkens +1
-///   4:    cooldown laten vallen (delta blijft op de breedste stand)
-/// Elke toegepaste versoepeling staat in DrawResult.relaxations.
+/// Gelijk aantal sterren is dé eerlijkheidsregel. De squad rating staat op de
+/// kaart maar bepaalt niets: binnen één sterbucket mag elk team elk ander team
+/// treffen. Daarmee heeft elk trekbaar team exact dezelfde kans (2/N).
+///
+/// Eén versoepeling wanneer er geen geldig paar is: de cooldown laten vallen.
+/// Die staat in DrawResult.relaxations, want stil versoepelen is een bug.
 public enum DrawEngine {
 
     public static func draw(
@@ -36,21 +38,13 @@ public enum DrawEngine {
 
         guard !basePool.isEmpty else { return .failure(.emptyPool) }
 
-        var relaxations: [Relaxation] = []
-        for stage in 0...4 {
-            let delta = constraints.maxRatingDelta + min(stage, 3)
-            let cooldownActive = stage < 4
-            if stage >= 1 && stage <= 3 {
-                relaxations.append(.deltaWidened(to: delta))
-            } else if stage == 4 {
-                relaxations.append(.cooldownDropped)
-            }
-
-            let pool = cooldownActive
+        for stage in 0...1 {
+            let relaxations: [Relaxation] = stage == 0 ? [] : [.cooldownDropped]
+            let pool = stage == 0
                 ? basePool.filter { !recentTeamIds.contains($0.id) }
                 : basePool
 
-            if let result = drawAttempt(pool: pool, maxDelta: delta, rng: &rng) {
+            if let result = drawAttempt(pool: pool, rng: &rng) {
                 return .success(
                     DrawResult(
                         teamA: result.a,
@@ -66,9 +60,10 @@ public enum DrawEngine {
         return .failure(.noFairPair(starLevel: constraints.pinnedStars))
     }
 
-    /// Eén poging op een vaste stand van de ladder: kies een (soort, sterren)-
-    /// bucket gewogen naar grootte uit de buckets die minstens één geldig paar
-    /// hebben, en daarbinnen uniform een geldig paar.
+    /// Eén poging: kies een (soort, sterren)-bucket gewogen naar grootte uit de
+    /// buckets met minstens twee teams, en daarbinnen twee verschillende teams
+    /// uniform. De bucketweging (n/N) en de teamkans binnen de bucket (2/n)
+    /// vallen tegen elkaar weg, dus geen enkel team is bevoordeeld.
     private struct BucketKey: Hashable, Comparable {
         let kind: Team.Kind
         let stars: Double
@@ -79,7 +74,6 @@ public enum DrawEngine {
 
     private static func drawAttempt(
         pool: [Team],
-        maxDelta: Int,
         rng: inout some RandomNumberGenerator
     ) -> (a: Team, b: Team)? {
 
@@ -89,38 +83,28 @@ public enum DrawEngine {
         }
 
         // Deterministische volgorde: sorteer buckets en teams voor de RNG uit.
-        let viable: [(key: BucketKey, teams: [Team], pairs: [(Team, Team)])] = buckets
+        let viable = buckets
             .sorted { $0.key < $1.key }
-            .compactMap { key, teams in
+            .compactMap { _, teams -> [Team]? in
                 guard teams.count >= 2 else { return nil }
-                let sorted = teams.sorted { $0.id < $1.id }
-                var pairs: [(Team, Team)] = []
-                for i in 0..<(sorted.count - 1) {
-                    for j in (i + 1)..<sorted.count {
-                        let a = sorted[i], b = sorted[j]
-                        guard a.id != b.id,
-                              let ra = a.squadRating, let rb = b.squadRating,
-                              abs(ra - rb) <= maxDelta else { continue }
-                        pairs.append((a, b))
-                    }
-                }
-                return pairs.isEmpty ? nil : (key, sorted, pairs)
+                return teams.sorted { $0.id < $1.id }
             }
 
         guard !viable.isEmpty else { return nil }
 
         // Gewogen bucketkeuze naar aantal teams in de bucket.
-        let totalWeight = viable.reduce(0) { $0 + $1.teams.count }
+        let totalWeight = viable.reduce(0) { $0 + $1.count }
         var pick = Int.random(in: 0..<totalWeight, using: &rng)
         var chosen = viable[0]
         for bucket in viable {
-            if pick < bucket.teams.count { chosen = bucket; break }
-            pick -= bucket.teams.count
+            if pick < bucket.count { chosen = bucket; break }
+            pick -= bucket.count
         }
 
-        var pair = chosen.pairs[Int.random(in: 0..<chosen.pairs.count, using: &rng)]
-        if Bool.random(using: &rng) { pair = (pair.1, pair.0) }
-        return (a: pair.0, b: pair.1)
+        let i = Int.random(in: 0..<chosen.count, using: &rng)
+        var j = Int.random(in: 0..<(chosen.count - 1), using: &rng)
+        if j >= i { j += 1 }
+        return Bool.random(using: &rng) ? (a: chosen[i], b: chosen[j]) : (a: chosen[j], b: chosen[i])
     }
 
     /// Team-ids die onder de cooldown vallen: alle teams uit de laatste

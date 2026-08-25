@@ -17,12 +17,12 @@ final class DrawEngineTests: XCTestCase {
     }
 
     private func constraints(
-        delta: Int = 2, cooldown: Int = 6, pinned: Double? = nil,
+        cooldown: Int = 6, pinned: Double? = nil,
         womens: Bool = false, kind: KindFilter = .clubsOnly,
         whitelist: Set<String> = ["eng.1"]
     ) -> DrawConstraints {
         DrawConstraints(
-            maxRatingDelta: delta, cooldownDraws: cooldown,
+            cooldownDraws: cooldown,
             leagueWhitelist: whitelist, includeWomens: womens,
             pinnedStars: pinned, kindFilter: kind
         )
@@ -93,17 +93,54 @@ final class DrawEngineTests: XCTestCase {
         XCTAssertEqual(drawErr(pool, constraints(pinned: 5.0)), .noFairPair(starLevel: 5.0))
     }
 
-    func testDeltaIsEnforcedWithoutRelaxationWhenPairsExist() {
+    func testSquadRatingNeverConstrainsThePair() {
+        // Zelfde sterren is de enige regel: ook een gat van 22 rating mag,
+        // en dat is geen versoepeling maar gewoon een geldige trekking.
         let pool = [
-            team("a", stars: 4.5, rating: 82), team("b", stars: 4.5, rating: 79),
-            team("c", stars: 4.5, rating: 81),
+            team("laag", stars: 4.5, rating: 60), team("hoog", stars: 4.5, rating: 82),
         ]
-        // a-c (delta 1) is het enige paar binnen delta 2; a-b (3) en b-c (2)…
-        // b-c is delta 2 en dus ook geldig. a-b mag nooit.
-        for seed in UInt64(0)..<50 {
+        for seed in UInt64(0)..<20 {
             let r = drawOK(pool, constraints(), seed: seed)
-            XCTAssertLessThanOrEqual(r.ratingDelta, 2)
-            XCTAssertTrue(r.relaxations.isEmpty, "geen relaxatie nodig, dus ook niet toepassen")
+            XCTAssertEqual(Set([r.teamA.id, r.teamB.id]), Set(["laag", "hoog"]))
+            XCTAssertEqual(r.ratingDelta, 22)
+            XCTAssertTrue(r.relaxations.isEmpty, "de rating is display, geen constraint")
+        }
+    }
+
+    func testEveryTeamInABucketIsReachable() {
+        // Eén uitschieter in de bucket mag niet stilletjes onbereikbaar worden
+        // (dat gebeurde toen de engine nog op rating-verschil filterde).
+        let pool = [
+            team("outlier", stars: 4.0, rating: 60),
+            team("a", stars: 4.0, rating: 80), team("b", stars: 4.0, rating: 80),
+            team("c", stars: 4.0, rating: 81), team("d", stars: 4.0, rating: 79),
+        ]
+        var drawn = Set<String>()
+        for seed in UInt64(0)..<300 {
+            let r = drawOK(pool, constraints(cooldown: 0), seed: seed)
+            drawn.insert(r.teamA.id)
+            drawn.insert(r.teamB.id)
+        }
+        XCTAssertEqual(drawn, Set(pool.map(\.id)))
+    }
+
+    func testEveryTeamIsRoughlyEquallyLikely() {
+        // Kans per team is 2/N, ongeacht bucketgrootte of rating. Met 4000
+        // draws over 3 + 5 teams zit elke kaart-telling ruim binnen de marge.
+        let small = (0..<3).map { team("s\($0)", stars: 5.0, rating: 84 + $0) }
+        let big = (0..<5).map { team("b\($0)", stars: 3.0, rating: 70 + $0 * 3) }
+        let pool = small + big
+        var count: [String: Int] = [:]
+        let draws = 4000
+        for seed in UInt64(0)..<UInt64(draws) {
+            let r = drawOK(pool, constraints(cooldown: 0), seed: seed)
+            count[r.teamA.id, default: 0] += 1
+            count[r.teamB.id, default: 0] += 1
+        }
+        let expected = Double(2 * draws) / Double(pool.count)
+        for t in pool {
+            let got = Double(count[t.id] ?? 0)
+            XCTAssertEqual(got, expected, accuracy: expected * 0.25, "\(t.id) wijkt te ver af")
         }
     }
 
@@ -130,29 +167,18 @@ final class DrawEngineTests: XCTestCase {
         XCTAssertTrue(DrawEngine.cooldownIds(historyNewestFirst: history, cooldownDraws: 0).isEmpty)
     }
 
-    // MARK: - Versoepelingsladder
+    // MARK: - Versoepeling
 
-    func testDeltaRelaxesStepwiseAndReportsEveryStep() {
-        // Enige paar heeft delta 4: twee stappen verruimen nodig (2 -> 3 -> 4).
-        let pool = [team("a", stars: 4.0, rating: 84), team("b", stars: 4.0, rating: 80)]
-        let r = drawOK(pool, constraints())
-        XCTAssertEqual(r.ratingDelta, 4)
-        XCTAssertEqual(r.relaxations, [.deltaWidened(to: 3), .deltaWidened(to: 4)])
-    }
-
-    func testCooldownDropsOnlyAfterFullDeltaLadder() {
+    func testCooldownIsDroppedAndReportedWhenItBlocksEveryPair() {
         // Zonder cooldown-drop bestaat er geen paar: alleen a-b, en b zit in cooldown.
         let pool = [team("a", stars: 4.0, rating: 80), team("b", stars: 4.0, rating: 80)]
         let r = drawOK(pool, constraints(), recent: ["b"])
-        XCTAssertEqual(
-            r.relaxations,
-            [.deltaWidened(to: 3), .deltaWidened(to: 4), .deltaWidened(to: 5), .cooldownDropped]
-        )
+        XCTAssertEqual(r.relaxations, [.cooldownDropped])
         XCTAssertEqual(Set([r.teamA.id, r.teamB.id]), Set(["a", "b"]))
     }
 
-    func testFailsCleanlyWhenNoPairEvenAfterLadder() {
-        let pool = [team("a", stars: 4.0, rating: 90), team("b", stars: 4.0, rating: 60)]
+    func testFailsCleanlyWhenNoStarLevelHasTwoTeams() {
+        let pool = [team("a", stars: 4.0, rating: 90), team("b", stars: 3.0, rating: 60)]
         XCTAssertEqual(drawErr(pool, constraints()), .noFairPair(starLevel: nil))
     }
 

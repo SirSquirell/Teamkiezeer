@@ -4,15 +4,12 @@ Beantwoordt één vraag: hoe vaak kan elk team, elke league en elk land
 werkelijk vallen bij een gegeven filterstand? Draait analytisch (exacte
 kansen, geen steekproef) op `data/teams.json`.
 
-    python pipeline/draw_audit.py                       # web-defaults (vaste ster 4)
-    python pipeline/draw_audit.py --stars any           # "Verras ons"
-    python pipeline/draw_audit.py --engine ios --leagues top
+    python pipeline/draw_audit.py                    # de defaults (vaste ster 4)
+    python pipeline/draw_audit.py --stars any        # "Verras ons"
+    python pipeline/draw_audit.py --leagues top --kind clubs
 
-Twee engines, want de clients trekken niet hetzelfde:
-- `web`  (index.html): kies een (soort, ster)-bucket gewogen naar grootte,
-         dan twee teams uniform. Geen ratinggrens.
-- `ios`  (TeamkiezeerKit/DrawEngine): zelfde bucketkeuze, maar daarna
-         uniform over de *geldige paren* binnen `maxRatingDelta`.
+Beide clients trekken hetzelfde: kies een (soort, ster)-bucket gewogen naar
+grootte, dan twee verschillende teams uniform. De squad rating doet niet mee.
 """
 
 from __future__ import annotations
@@ -20,7 +17,6 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter, defaultdict
-from itertools import combinations
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -57,7 +53,7 @@ def buckets_of(pool: list[dict]) -> dict:
     return b
 
 
-def web_probabilities(pool: list[dict]) -> dict[str, float]:
+def probabilities(pool: list[dict]) -> dict[str, float]:
     """Kans dat een team één van de twee kaarten vult, per draw.
 
     De bucket weegt naar grootte (n/N) en binnen de bucket is elk team
@@ -71,41 +67,6 @@ def web_probabilities(pool: list[dict]) -> dict[str, float]:
     for teams in viable.values():
         for t in teams:
             p[t["id"]] = (len(teams) / total) * (2 / len(teams))
-    return p
-
-
-def ios_probabilities(pool: list[dict], max_delta: int) -> dict[str, float]:
-    """Idem, maar uniform over de geldige paren in de bucket.
-
-    Daardoor telt hoeveel tegenstanders een team heeft: wie met zijn
-    squad rating aan de rand van zijn sterbucket zit, heeft er minder en
-    valt navenant minder vaak. Alleen trap 0 van de versoepelingsladder:
-    zolang er ergens in de pool één geldig paar is, komt de engine nooit
-    aan trap 1 toe.
-    """
-    b = buckets_of(pool)
-    weighed, total = [], 0
-    for key in sorted(b, key=str):
-        teams = sorted(b[key], key=lambda t: t["id"])
-        if len(teams) < 2:
-            continue
-        pairs = [
-            (x, y)
-            for x, y in combinations(teams, 2)
-            if abs(x["squadRating"] - y["squadRating"]) <= max_delta
-        ]
-        if not pairs:
-            continue
-        weighed.append((teams, pairs))
-        total += len(teams)
-    p = {t["id"]: 0.0 for t in pool}
-    for teams, pairs in weighed:
-        deg = Counter()
-        for x, y in pairs:
-            deg[x["id"]] += 1
-            deg[y["id"]] += 1
-        for t in teams:
-            p[t["id"]] = (len(teams) / total) * (deg[t["id"]] / len(pairs))
     return p
 
 
@@ -179,13 +140,11 @@ def main() -> None:
     allw = {l["id"] for l in doc["leagues"]}
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--engine", choices=["web", "ios"], default="web")
     ap.add_argument("--stars", default="4", help='vaste ster (bv. 4 of 3.5) of "any" voor Verras ons')
     ap.add_argument("--kind", choices=["mixed", "clubs", "nats"], default="mixed")
     ap.add_argument("--leagues", choices=["all", "top"], default="all",
                     help="all = de web-default (alles aan), top = de iOS-default")
     ap.add_argument("--womens", action="store_true")
-    ap.add_argument("--max-delta", type=int, default=2, help="alleen voor --engine ios")
     ap.add_argument("--draws", type=int, default=20)
     args = ap.parse_args()
 
@@ -193,10 +152,9 @@ def main() -> None:
     whitelist = allw if args.leagues == "all" else top
     pool = build_pool(doc, stars, args.kind, args.womens, whitelist)
 
-    print(f"engine={args.engine}  ster={args.stars}  soort={args.kind}  "
+    print(f"ster={args.stars}  soort={args.kind}  "
           f"leagues={args.leagues} ({len(whitelist)})  vrouwen={args.womens}")
-    p = web_probabilities(pool) if args.engine == "web" else ios_probabilities(pool, args.max_delta)
-    report(doc, pool, p, args)
+    report(doc, pool, probabilities(pool), args)
 
 
 if __name__ == "__main__":

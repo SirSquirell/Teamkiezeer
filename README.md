@@ -70,7 +70,7 @@ cp data/teams.json app/Teamkiezeer/Resources/bundled-teams.json
   het zodra de bron is bijgetrokken en een override weg kan.
 - **Vallen er steeds dezelfde teams?** `python pipeline/draw_audit.py` rekent de
   exacte trekkingskans per team, league en land uit voor een filterstand
-  (`--stars any`, `--leagues top`, `--engine ios`, …) en meldt teams die
+  (`--stars any`, `--leagues top`, `--kind clubs`, …) en meldt teams die
   structureel nooit kunnen vallen.
 - Eigen hosting via FTP (incl. gedeelde scores): zie docs/eigen-hosting.md.
 - Nieuwe league op de bronpagina? De build faalt bewust; voeg de league toe
