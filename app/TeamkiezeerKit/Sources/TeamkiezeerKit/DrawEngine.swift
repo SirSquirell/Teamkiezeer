@@ -1,7 +1,7 @@
 import Foundation
 
-/// De matching engine. Puur en zonder state: pool + constraints + recent
-/// getrokken team-ids + RNG erin, DrawResult of DrawError eruit.
+/// De matching engine. Puur en zonder state: pool + constraints + de recente
+/// draws + RNG erin, DrawResult of DrawError eruit.
 ///
 /// Gelijk aantal sterren is dé eerlijkheidsregel. De squad rating staat op de
 /// kaart maar bepaalt niets: binnen één sterbucket mag elk team elk ander team
@@ -12,6 +12,9 @@ import Foundation
 /// DrawResult.relaxations, want stil versoepelen is een bug.
 public enum DrawEngine {
 
+    /// - Parameter recentDraws: de laatste draws als paren van team-ids,
+    ///   nieuwste eerst. Hoe ver de engine daarin terugkijkt bepaalt
+    ///   `constraints.cooldownDraws`.
     public static func draw(
         pool allTeams: [Team],
         constraints: DrawConstraints,
