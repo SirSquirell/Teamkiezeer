@@ -53,8 +53,26 @@ jobs:
             echo "Geen wijzigingen in data/teams.json"
           else
             git commit -m "Update teams.json from daily scrape"
+            # De snapshot-workflow kan in dezelfde minuut op main hebben gepusht
+            # (2026-09-02: build geslaagd, push afgewezen met "fetch first").
+            # Eerst binnenhalen, dan pas pushen; teams.json is het enige bestand
+            # dat deze job aanraakt, dus de rebase kan niet conflicteren.
+            git pull --rebase origin "${GITHUB_REF_NAME:-main}"
             git push
           fi
+
+      - name: Sluit het faal-issue als de build weer slaagt
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITEL="Databuild mislukt"
+          gh issue list --state open --search "in:title \"$TITEL\"" --json number,title \
+            --jq ".[] | select(.title == \"$TITEL\") | .number" | while read -r nr; do
+            gh issue close "$nr" --comment "De build slaagt weer: $RUN_URL"
+          done
 
       - name: Open een issue als het misging
         if: failure()
