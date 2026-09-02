@@ -39,9 +39,6 @@ struct RulesView: View {
             .listRowBackground(Theme.surface)
 
             Section("Eerlijkheid") {
-                Stepper(value: $rules.maxRatingDelta, in: 0...10) {
-                    row("Max. rating-verschil", value: "\(rules.maxRatingDelta)")
-                }
                 Stepper(value: $rules.cooldownDraws, in: 0...20) {
                     row("Cooldown (draws)", value: "\(rules.cooldownDraws)")
                 }

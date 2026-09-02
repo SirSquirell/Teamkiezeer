@@ -58,16 +58,16 @@ final class DrawRecordModel {
     /// Maximaal aantal bewaarde draws.
     static let historyLimit = 50
 
-    /// Cooldown-input voor de engine: team-ids uit de laatste `cooldownDraws`
-    /// draws, plus trimmen van alles voorbij de limiet.
-    static func recentTeamIds(in context: ModelContext, cooldownDraws: Int) -> Set<String> {
-        guard cooldownDraws > 0 else { return [] }
+    /// Herhaalfilter-input voor de engine: de laatste `limit` draws als paren
+    /// van team-ids, nieuwste eerst. De engine bepaalt zelf hoe ver hij
+    /// terugkijkt, dus dit is een geordende lijst en geen platte set.
+    static func recentDraws(in context: ModelContext, limit: Int) -> [[String]] {
+        guard limit > 0 else { return [] }
         var descriptor = FetchDescriptor<DrawRecordModel>(
             sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
         )
-        descriptor.fetchLimit = cooldownDraws
-        let recent = (try? context.fetch(descriptor)) ?? []
-        return Set(recent.flatMap { [$0.aId, $0.bId] })
+        descriptor.fetchLimit = limit
+        return ((try? context.fetch(descriptor)) ?? []).map { [$0.aId, $0.bId] }
     }
 
     static func insertTrimmed(_ record: DrawRecordModel, in context: ModelContext) {

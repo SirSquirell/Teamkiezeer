@@ -105,7 +105,6 @@ public enum KindFilter: String, Codable, Sendable, CaseIterable {
 
 /// De regels waar een draw aan moet voldoen.
 public struct DrawConstraints: Codable, Equatable, Sendable {
-    public var maxRatingDelta: Int
     public var cooldownDraws: Int
     public var leagueWhitelist: Set<String>
     public var includeWomens: Bool
@@ -113,14 +112,12 @@ public struct DrawConstraints: Codable, Equatable, Sendable {
     public var kindFilter: KindFilter
 
     public init(
-        maxRatingDelta: Int = 2,
         cooldownDraws: Int = 6,
         leagueWhitelist: Set<String>,
         includeWomens: Bool = false,
         pinnedStars: Double? = nil,
         kindFilter: KindFilter = .clubsOnly
     ) {
-        self.maxRatingDelta = maxRatingDelta
         self.cooldownDraws = cooldownDraws
         self.leagueWhitelist = leagueWhitelist
         self.includeWomens = includeWomens
@@ -132,13 +129,15 @@ public struct DrawConstraints: Codable, Equatable, Sendable {
 /// Elke versoepeling die de engine moest toepassen. Stil versoepelen is een bug,
 /// dus dit hoort zichtbaar in de result-UI.
 public enum Relaxation: Equatable, Sendable, Codable {
-    case deltaWidened(to: Int)
-    case cooldownDropped
+    /// Het herhaalfilter moest korter om nog een paar te vinden; `to` is het
+    /// aantal draws dat het uiteindelijk terugkeek (0 = helemaal losgelaten).
+    case cooldownShortened(to: Int)
 
     public var label: String {
         switch self {
-        case .deltaWidened(let to): return "delta verruimd naar \(to)"
-        case .cooldownDropped: return "cooldown losgelaten"
+        case .cooldownShortened(let to):
+            if to == 0 { return "herhaalfilter losgelaten" }
+            return "herhaalfilter beperkt tot \(to) draw\(to == 1 ? "" : "s")"
         }
     }
 }
@@ -147,6 +146,7 @@ public struct DrawResult: Equatable, Sendable {
     public let teamA: Team
     public let teamB: Team
     public let starLevel: Double
+    /// Verschil in squad rating. Puur ter display — de engine trekt erop niet.
     public let ratingDelta: Int
     public let relaxations: [Relaxation]
 
@@ -160,7 +160,8 @@ public struct DrawResult: Equatable, Sendable {
 }
 
 public enum DrawError: Error, Equatable, Sendable {
-    /// Geen enkel geldig paar, ook na de volledige versoepelingsladder.
+    /// Geen enkel geldig paar, ook niet zonder herhaalfilter: geen sterbucket
+    /// met twee teams erin.
     case noFairPair(starLevel: Double?)
     /// De pool is na filtering leeg (nog vóór er over paren nagedacht wordt).
     case emptyPool

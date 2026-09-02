@@ -6,7 +6,6 @@ import TeamkiezeerKit
 /// initialiseert de whitelist eenmalig vanuit de dataset-defaults.
 @Model
 final class RulesModel {
-    var maxRatingDelta: Int = 2
     var cooldownDraws: Int = 6
     var includeWomens: Bool = false
     /// nil = "verras ons"
@@ -23,7 +22,6 @@ final class RulesModel {
 
     var constraints: DrawConstraints {
         DrawConstraints(
-            maxRatingDelta: maxRatingDelta,
             cooldownDraws: cooldownDraws,
             leagueWhitelist: Set(leagueWhitelist),
             includeWomens: includeWomens,
