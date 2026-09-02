@@ -919,3 +919,11 @@ if (isRail()) { $("sheetStand").hidden = false; }
 addEventListener("resize", () => {
   if (isRail()){ $("sheetStand").hidden = false; $("scrimStand").hidden = true; lockScroll(false); }
 });
+
+/* ── offline ─────────────────────────────────────────────────────────
+   sw.js bewaart de pagina, het script en de fonts; de versie in de URL maakt
+   elke release een nieuwe cache. Vanaf file:// bestaat er geen origin om
+   voor te registreren. */
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("sw.js?v=" + APP_VERSION).catch(() => {});
+}

@@ -1,13 +1,16 @@
 {
+  "id": "/",
+  "scope": "./",
+  "lang": "nl",
   "name": "Even Match",
   "short_name": "Even Match",
-  "description": "2v2 team picker voor EA FC — twee teams, even sterk.",
+  "description": "2v2 team picker voor EA FC: twee teams, even sterk.",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0A0B0D",
   "theme_color": "#0A0B0D",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
