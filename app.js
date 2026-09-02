@@ -49,34 +49,8 @@ if (matches === null) {
   store.set("matches", matches);
 }
 
-/* migratie van de v1-webapp: gespeelde matches stonden in 'results',
-   duo-namen in {wm,jj}, stoeltje als 'wm'/'jj'. */
-function v1ToMatch(r){
-  try{
-    const wmA = r.wmPlays !== "b";
-    const A = wmA ? r.a : r.b, B = wmA ? r.b : r.a;
-    return { ts: r.playedAt || r.ts || Date.now(), aid:A.id, bid:B.id, an:A.name, bn:B.name,
-             ar:A.rating, br:B.rating, stars:r.stars,
-             delta: r.delta != null ? r.delta : Math.abs((A.rating||0)-(B.rating||0)),
-             sa: wmA ? r.score.a : r.score.b, sb: wmA ? r.score.b : r.score.a,
-             chair: r.chair === "wm" ? "a" : r.chair === "jj" ? "b" : "none" };
-  }catch{ return null; }
-}
-(function migrateV1(){
-  const oldR = store.get("results", null);
-  if (Array.isArray(oldR) && oldR.length){
-    const have = new Set(matches.map(m => m.ts));
-    for (const m of oldR.map(v1ToMatch).filter(Boolean)) if (!have.has(m.ts)) matches.push(m);
-    matches.sort((x, y) => (y.ts || 0) - (x.ts || 0));
-    store.set("matches", matches);
-    store.del("results");
-  }
-  const od = store.get("duos", null) || {};
-  if (od.wm || od.jj){ duos = { a: od.wm || duos.a, b: od.jj || duos.b }; store.set("duos", duos); }
-})();
-
-/* sync: één JSON-blob GET/PUT (bijv. hosting/sync.php); leest ook de oude
-   v1-vorm {duos, results}. Pull bij openen, push na elke mutatie. */
+/* sync: één JSON-blob GET/PUT (bijv. hosting/sync.php?key=...). Pull bij
+   openen, push na elke mutatie. */
 function syncPush(){
   const url = (store.get("syncUrl", "") || "").trim(); if (!url) return;
   fetch(url, { method:"PUT", headers:{ "Content-Type":"application/json" },
@@ -88,13 +62,8 @@ async function syncPull(){
     const r = await fetch(url, { cache:"no-cache" });
     if (!r.ok) return;
     const doc = await r.json();
-    let rm = null, rd = null;
-    if (doc && Array.isArray(doc.matches)){ rm = doc.matches; rd = doc.duos; }
-    else if (doc && Array.isArray(doc.results)){
-      rm = doc.results.map(v1ToMatch).filter(Boolean);
-      rd = doc.duos && doc.duos.wm ? { a:doc.duos.wm, b:doc.duos.jj } : doc.duos;
-    }
-    if (!rm) return;
+    if (!doc || !Array.isArray(doc.matches)) return;
+    const rm = doc.matches, rd = doc.duos;
     if (rm.length >= matches.length){
       matches = rm; store.set("matches", matches);
       if (rd && rd.a){ duos = rd; store.set("duos", duos); }
