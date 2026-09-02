@@ -1,3 +1,6 @@
 522 0 https://fifagamenews.com/fc-26-team-star-ratings/ -> stars.html
 200 936482 https://fifauteam.com/best-teams-fc-26/ -> best-teams.html
 200 1050812 https://fifauteam.com/fc-26-leagues-clubs-national-teams/ -> leagues-clubs.html
+# 2026-09-02: stars.html hersteld uit commit 8b9fea1 (200, 601542 bytes, snapshot van
+# 2026-08-22). De 522 hierboven schreef een leeg bestand weg en dat werd gecommit;
+# de workflow schrijft sindsdien alleen nog bij een geslaagde, niet-lege fetch.
