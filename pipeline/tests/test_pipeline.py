@@ -138,3 +138,17 @@ def test_parser_rejects_html_in_team_name(stars):
         parse_stars(html)
     assert all("<" not in r.name and ">" not in r.name for r in stars)
     assert any(r.name == "St Mirren" for r in stars)
+
+
+def test_dedup_keeps_the_row_with_the_most_stars(stars):
+    """De sterrenlijst staat op rang, dus de eerste rij per naam heeft de
+    meeste sterren; een gedropt duplicaat mag nooit hoger staan dan de
+    behouden rij, anders was de aanname over de bronvolgorde fout."""
+    from build_teams import dedup_stars
+
+    kept = {(normalize(r.name), is_womens_name(r.name)): r for r in dedup_stars(stars)}
+    dropped = [r for r in stars if kept[(normalize(r.name), is_womens_name(r.name))] is not r]
+    assert dropped, "de snapshot hoort duplicaten te bevatten (PSG, Marseille, ...)"
+    for r in dropped:
+        keeper = kept[(normalize(r.name), is_womens_name(r.name))]
+        assert r.stars <= keeper.stars, f"{r.name}: {r.stars} gedropt maar {keeper.stars} gehouden"

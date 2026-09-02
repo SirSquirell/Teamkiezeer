@@ -31,8 +31,11 @@ kolom, kapotte join of verschoven rij zou hier direct zichtbaar zijn.
 
 **3. Actualiteit.** De bron werkt sterren bij gedurende het seizoen; onze
 Action scrapet elke dag om 08:00 (Europe/Amsterdam) en commit alleen bij wijzigingen. `generatedAt`
-staat in de app (Regels-scherm) en op de website in de kop. De snapshot van
-vandaag is identiek aan de live pagina's (fetch-log 200's, zelfde bytes).
+staat in de app (Regels-scherm) en op de website in de kop. De snapshots in
+`pipeline/snapshots/` zijn testfixtures van 2026-08-22 en lopen bewust niet
+mee met de dagelijkse build; ze worden alleen vervangen als de
+snapshot-workflow voor elke bron een geslaagde, niet-lege fetch had
+(`fetch-log.txt` noteert status en bytes).
 
 **4. Landenteams gevalideerd tegen de officiële FC 26-lijst.** De
 handmatige seed is vergeleken met fifauteams "FC 26 Leagues, Clubs & National

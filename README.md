@@ -3,8 +3,8 @@
 *Two teams. Dead even.*
 
 2v2 team picker voor EA FC Kick-Off (repo-naam: Teamkiezeer; de app en site heten **Even Match**). Eén knop: **Draw**. De app kiest twee teams
-met identieke sterren, dezelfde soort (club vs. landenteam), en een squad-rating
-verschil binnen de afgesproken marge — met een korte slot-machine ceremony.
+met identieke sterren en dezelfde soort (club vs. landenteam), met een korte
+slot-machine ceremony. De squad rating staat op de kaart maar filtert niet.
 
 Puur voor eigen gebruik, nooit voor de App Store.
 
@@ -29,6 +29,9 @@ index.html     de webapp — GitHub Pages serveert de repo-root van main
 De GitHub Action draait de scraper dagelijks (08:00 Europe/Amsterdam) en commit `data/teams.json` alleen
 bij een non-empty diff. De app haalt dat bestand bij launch op via
 raw.githubusercontent, met cache- en bundled-fallback zodat alles offline werkt.
+De webapp doet hetzelfde: een service worker (`sw.js`) bewaart de pagina, het
+script en de fonts, en de pagina heeft een ingebakken dataset als terugval,
+dus na één bezoek werkt de site ook zonder netwerk.
 
 ## Bouwen (app)
 

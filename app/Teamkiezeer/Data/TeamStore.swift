@@ -34,7 +34,7 @@ final class TeamStore {
     var leagues: [League] { document?.leagues ?? [] }
     var defaultWhitelist: [String] { leagues.filter(\.defaultWhitelist).map(\.id) }
 
-    /// raw.githubusercontent op de default branch; de weekly Action commit
+    /// raw.githubusercontent op de default branch; de dagelijkse Action commit
     /// daar een verse teams.json.
     static let remoteURL = URL(
         string: "https://raw.githubusercontent.com/SirSquirell/Teamkiezeer/main/data/teams.json"

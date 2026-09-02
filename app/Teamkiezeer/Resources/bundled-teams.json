@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "game": "FC 26",
- "generatedAt": "2026-08-21T16:22:11Z",
+ "generatedAt": "2026-08-22T17:07:41Z",
  "leagues": [
   {
    "id": "eng.1",
@@ -11381,7 +11381,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/es.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11398,7 +11398,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/fr.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11415,7 +11415,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/gb-eng.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11432,7 +11432,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ar.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11449,7 +11449,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/pt.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11466,7 +11466,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/br.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11483,7 +11483,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/de.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11500,7 +11500,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/nl.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11517,7 +11517,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/it.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11534,7 +11534,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/hr.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11551,7 +11551,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ma.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11568,7 +11568,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/us.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11585,7 +11585,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/dk.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11602,7 +11602,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/no.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11619,7 +11619,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ua.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11636,7 +11636,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/mx.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11653,7 +11653,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/pl.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11670,7 +11670,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/se.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11687,7 +11687,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/gb-sct.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11704,7 +11704,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/gb-wls.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11721,7 +11721,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/cz.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11738,7 +11738,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/hu.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11755,7 +11755,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ro.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11772,7 +11772,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ie.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11789,7 +11789,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ca.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11806,7 +11806,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/gh.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11823,7 +11823,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/fi.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11840,7 +11840,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/is.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11857,7 +11857,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/gb-nir.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11874,7 +11874,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/cn.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11891,7 +11891,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/qa.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11908,7 +11908,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/nz.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11925,7 +11925,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/es.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11942,7 +11942,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/gb-eng.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11959,7 +11959,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/fr.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11976,7 +11976,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/de.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -11993,7 +11993,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/us.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12010,7 +12010,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/nl.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12027,7 +12027,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/se.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12044,7 +12044,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/br.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12061,7 +12061,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ca.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12078,7 +12078,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/no.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12095,7 +12095,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/dk.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12112,7 +12112,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/pt.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12129,7 +12129,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/is.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12146,7 +12146,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/pl.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12163,7 +12163,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/fi.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12180,7 +12180,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/gb-sct.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12197,7 +12197,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/cn.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12214,7 +12214,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/mx.svg",
    "primaryColor": null,
    "secondaryColor": null
   },
@@ -12231,7 +12231,7 @@
    "defence": null,
    "leagueId": null,
    "leagueName": null,
-   "crestURL": null,
+   "crestURL": "https://flagcdn.com/ar.svg",
    "primaryColor": null,
    "secondaryColor": null
   }
