@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   snapshot:
@@ -17,22 +18,40 @@ jobs:
 
       - name: Fetch source pages
         run: |
+          set -euo pipefail
           mkdir -p pipeline/snapshots
           UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+          TMP=$(mktemp -d)
+          LOG="$TMP/fetch-log.txt"
+          : > "$LOG"
+          ok=1
+          # Eerst naar een tijdelijk bestand; pas bij een 2xx met inhoud gaat het
+          # over de oude snapshot heen. Een 522 schreef ooit een leeg stars.html
+          # weg en dat werd gecommit, waarna de tests en de offline build stuk waren.
           fetch () {
             url="$1"; out="$2"
-            code=$(curl -sSL -A "$UA" -H "Accept: text/html,application/xhtml+xml" \
-              -o "pipeline/snapshots/$out" -w "%{http_code}" --max-time 60 "$url" || echo "ERR")
-            size=$(wc -c < "pipeline/snapshots/$out" 2>/dev/null || echo 0)
-            echo "$code $size $url -> $out" | tee -a pipeline/snapshots/fetch-log.txt
+            code=$(curl -sSL --fail -A "$UA" -H "Accept: text/html,application/xhtml+xml" \
+              -o "$TMP/$out" -w "%{http_code}" --max-time 60 "$url" || echo "ERR")
+            if [ "$code" = "200" ] && [ -s "$TMP/$out" ]; then
+              size=$(wc -c < "$TMP/$out")
+              mv "$TMP/$out" "pipeline/snapshots/$out"
+            else
+              size=0; ok=0
+              echo "::error::$url gaf $code, snapshot $out niet vervangen"
+            fi
+            echo "$code $size $url -> $out" | tee -a "$LOG"
           }
-          : > pipeline/snapshots/fetch-log.txt
-          rm -f pipeline/snapshots/*sitemap*.xml pipeline/snapshots/*-guess*.html pipeline/snapshots/*robots*
           fetch "https://fifagamenews.com/fc-26-team-star-ratings/" "stars.html"
           fetch "https://fifauteam.com/best-teams-fc-26/" "best-teams.html"
           fetch "https://fifauteam.com/fc-26-leagues-clubs-national-teams/" "leagues-clubs.html"
           # sofifa is geprobeerd als derde bron (2026-08-22) maar geeft een
           # Cloudflare-403 aan runners; zonder headless browser geen optie.
+          if [ "$ok" = "1" ]; then
+            cp "$LOG" pipeline/snapshots/fetch-log.txt
+          else
+            echo "Niet elke fetch slaagde; er wordt niets gecommit."
+            exit 1
+          fi
 
       - name: Commit snapshots
         run: |
@@ -41,3 +60,19 @@ jobs:
           git add pipeline/snapshots
           git diff --cached --quiet || git commit -m "Snapshot source pages for parser development"
           git push
+
+      - name: Open een issue als het misging
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITEL="Snapshot mislukt"
+          if [ -n "$(gh issue list --state open --search "in:title \"$TITEL\"" --json title --jq ".[] | select(.title == \"$TITEL\") | .title")" ]; then
+            echo "Er staat al een open issue '$TITEL'; geen tweede."
+            exit 0
+          fi
+          BODY="De snapshot-workflow is mislukt. Zie de run: $RUN_URL"
+          BODY="$BODY"$'\n\n'"Zolang dit openstaat blijven de oude snapshots staan; er is niets overschreven."
+          gh issue create --title "$TITEL" --body "$BODY"
