@@ -7,6 +7,9 @@ on:
       - "app/**"
       - ".github/workflows/ipa.yml"
 
+permissions:
+  contents: read
+
 jobs:
   ipa:
     runs-on: macos-15

@@ -8,6 +8,7 @@ on:
     - cron: "0 6 * * *"
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - "pipeline/**"
       - "data/national-teams.json"
@@ -15,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: data-build
@@ -26,7 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          # Een push bouwt de gepushte ref (altijd main); de dagelijkse run en een
+          # handmatige start bouwen expliciet main, nooit een toevallige branch.
+          ref: ${{ github.event_name == 'push' && github.ref_name || 'main' }}
 
       - uses: actions/setup-python@v5
         with:
@@ -35,9 +39,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r pipeline/requirements.txt
 
-      - name: Run pipeline tests (against committed snapshots)
-        run: python -m pytest pipeline/tests -q
-
+      # De pytest-suite draait in ci.yml en bewaakt merges; hier bewaakt
+      # audit.py (in build_teams.py, faalt hard) de live data.
       - name: Build teams.json (live scrape)
         run: python pipeline/build_teams.py
 
@@ -52,3 +55,19 @@ jobs:
             git commit -m "Update teams.json from daily scrape"
             git push
           fi
+
+      - name: Open een issue als het misging
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITEL="Databuild mislukt"
+          if [ -n "$(gh issue list --state open --search "in:title \"$TITEL\"" --json title --jq ".[] | select(.title == \"$TITEL\") | .title")" ]; then
+            echo "Er staat al een open issue '$TITEL'; geen tweede."
+            exit 0
+          fi
+          BODY="De dagelijkse databuild is mislukt. Zie de run: $RUN_URL"
+          BODY="$BODY"$'\n\n'"De app en de site blijven op de laatste goede data/teams.json staan; er is niets gecommit."
+          gh issue create --title "$TITEL" --body "$BODY"

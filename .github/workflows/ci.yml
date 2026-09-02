@@ -4,8 +4,12 @@ on:
   push:
     paths:
       - "app/TeamkiezeerKit/**"
+      - "pipeline/**"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   swift-tests:
@@ -16,3 +20,15 @@ jobs:
       - name: Run TeamkiezeerKit tests
         working-directory: app/TeamkiezeerKit
         run: swift test
+
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r pipeline/requirements.txt
+      - name: Run pipeline tests (against committed snapshots)
+        run: python -m pytest pipeline/tests -q
