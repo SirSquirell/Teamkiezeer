@@ -5,7 +5,51 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
-## 0.03.3 — 2026-08-25
+## 0.03.3 — 2026-09-02
+
+- **De databuild en de tests waren stuk door een lege snapshot.** De
+  snapshot-workflow schreef bij een 522 van fifagamenews een leeg `stars.html`
+  weg en committe dat; twee tests en de offline build faalden sindsdien.
+  `stars.html` is teruggezet uit de laatste geslaagde fetch (de offline build
+  geeft exact dezelfde 654 clubs en 51 landenteams als `data/teams.json`), en
+  de workflow overschrijft een snapshot nu alleen bij een 200 met inhoud.
+  Mislukt een fetch of de dagelijkse build, dan opent de workflow een issue
+  ("Snapshot mislukt" / "Databuild mislukt") in plaats van stil groen te zijn.
+- **Webapp: alles wat uit teams.json, localStorage of de sync komt wordt
+  geëscaped** voor het in de pagina belandt (teamnamen, duo-namen, scores,
+  landcodes, datumtekst). Het clublogo is een element met echte handlers in
+  plaats van een HTML-string met inline `onload`/`onerror`. `parse.py` laat de
+  build falen op een teamnaam met `<` of `>` erin; een los teken aan de rand
+  gaat eraf, waardoor "> St Mirren" bij de volgende build "St Mirren" heet.
+- **`hosting/sync.php` vraagt een sleutel.** Zonder ingevulde `SLEUTEL` geeft
+  het 503, met een verkeerde `?key=` 403. De body van een PUT wordt
+  gevalideerd (matches-lijst tot 200, numerieke scores, namen tot 80 tekens
+  zonder `<`/`>`), en CORS staat alleen open voor `https://evenmatch.prulwerk.nl`.
+  Wie al synct: sleutel invullen en de Sync-URL in de app aanvullen met
+  `?key=...` (zie docs/eigen-hosting.md).
+- **Geen Google Fonts meer, wel een Content-Security-Policy.** Archivo 400 en
+  900 staan in `fonts/`; het script staat in `app.js`; de CSP laat alleen
+  eigen scripts en fonts toe. Let op: de zelfgehoste instances hebben geen
+  breedte-as, dus `font-stretch:125%` op de scoreboard-cijfers doet nu niets
+  en die zijn smaller dan hiervoor (TK-18 in docs/BACKLOG.md).
+- **De webapp werkt offline.** `sw.js` bewaart pagina, script, manifest,
+  iconen en fonts (netwerk eerst, cache als terugval); de cache draagt de
+  app-versie en oude caches gaan weg bij een nieuwe release. `manifest.json`
+  heeft nu `id`, `scope`, `lang` en maskable-iconen.
+- **Workflows.** `data.yml` draait alleen nog op `main` (niet meer op elke
+  branch die `pipeline/` raakt) en bouwt bij de dagelijkse run expliciet
+  `main`; pytest zit nu in `ci.yml` naast de Swift-tests zodat tests merges
+  bewaken en niet de scrape. `requirements.txt` staat op exacte versies en
+  elke workflow heeft expliciete `permissions`.
+- **Dode code weg.** De migratie uit de v1-webapp (die bestond één dag,
+  0.01.0) en de v1-tak in de sync zijn verwijderd; wie een stand in de oude
+  `{results}`-vorm op een sync-endpoint heeft staan krijgt die niet meer
+  binnen. Ook weg: de verwijzing naar een spec die niet in de repo staat.
+- **Docs en tests.** README zonder de ratingmarge (weg sinds 0.03.0),
+  data-audit.md beschrijft de snapshots als fixtures, `bundled-teams.json`
+  is een verse kopie van `data/teams.json`. Nieuw: `docs/BACKLOG.md` met de
+  open stories (TK-08 en verder), een test dat dedup nooit een hogere ster
+  wegdropt, en een test op de parse-guard.
 
 - **De iOS/Mac-engine filterde nog wél op ratingverschil.** In 0.03.0 verdween
   `maxRatingDelta` uit de webapp, maar `TeamkiezeerKit/DrawEngine` trok nog
