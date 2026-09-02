@@ -29,6 +29,16 @@ class LeagueRow:
     crest_url: str | None
 
 
+def _check_name(name: str, where: str) -> str:
+    """Een teamnaam met < of > erin is nooit echt; zo'n rij faalt de build luid
+    in plaats van via teams.json in de webapp te belanden. Een los teken aan de
+    rand is wél echt gezien ("> St Mirren" op de sterrenpagina) en gaat eraf."""
+    name = name.strip("<> ")
+    if "<" in name or ">" in name:
+        raise ValueError(f"{where}: teamnaam bevat HTML-tekens: {name!r}")
+    return name
+
+
 def _crest_from_cell(cell) -> str | None:
     img = cell.find("img")
     if img is None:
@@ -47,7 +57,7 @@ def parse_stars(html: str) -> list[StarRow]:
         cells = tr.find_all("td")
         if len(cells) != 3 or not cells[0].get_text(strip=True).isdigit():
             continue
-        name = " ".join(cells[1].get_text(" ", strip=True).split())
+        name = _check_name(" ".join(cells[1].get_text(" ", strip=True).split()), "sterrenpagina")
         stars = float(cells[2].get_text(strip=True).replace(",", "."))
         if not 0.5 <= stars <= 5.0:
             raise ValueError(f"sterrenpagina: onmogelijke sterwaarde {stars} voor {name}")
@@ -94,7 +104,7 @@ def parse_best_teams(html: str) -> list[LeagueRow]:
             rating = int(rating_text)
             if not 1 <= rating <= 99:
                 raise ValueError(f"best-teams: onmogelijke squad rating {rating} in {title}")
-            name = " ".join(cells[1].get_text(" ", strip=True).split())
+            name = _check_name(" ".join(cells[1].get_text(" ", strip=True).split()), "best-teams")
             rows.append(
                 LeagueRow(
                     league_title=title,

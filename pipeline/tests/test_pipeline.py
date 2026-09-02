@@ -128,3 +128,13 @@ def test_full_build_offline(tmp_path):
                            "ned.1", "por.1", "tur.1", "usa.1", "sau.1"}
     aut = [l for l in doc["leagues"] if l["id"] in ("aut.1", "eng.w1")]
     assert aut == [], "gedropte kopie-leagues horen niet in de output"
+
+
+def test_parser_rejects_html_in_team_name(stars):
+    """Een teamnaam met < of > erin mag nooit via teams.json in de webapp
+    belanden; een los teken aan de rand (de bron toont "> St Mirren") gaat eraf."""
+    html = """<table><tr><td>1</td><td>Evil &lt;img src=x&gt; FC</td><td>5</td></tr></table>"""
+    with pytest.raises(ValueError, match="HTML-tekens"):
+        parse_stars(html)
+    assert all("<" not in r.name and ">" not in r.name for r in stars)
+    assert any(r.name == "St Mirren" for r in stars)

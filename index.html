@@ -981,6 +981,10 @@ const SOURCES = [                          // altijd-verse bron eerst
 
 /* ══ state ═══════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
+/* Alles wat uit teams.json, localStorage of de sync komt en in innerHTML
+   belandt gaat hierdoorheen. Eén helper, geen uitzonderingen. */
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c]);
 const store = {
   get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch{ return d; } },
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} },
@@ -1150,14 +1154,19 @@ const starSvg = cls => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="tru
 /* Alleen echte clublogos. Geen initialen-badge, geen gegenereerd merkteken.
    Zolang het logo laadt of als het ontbreekt staat er een neutrale plaat;
    de clubnaam in de naambalk doet het identificeren. */
-function crestHTML(t){
-  if (!t.crestURL) return `<div class="crest"><span class="plate"></span></div>`;
-  return `<div class="crest"><span class="plate"></span>` +
-    `<img src="${t.crestURL}" alt="" loading="eager" decoding="async"` +
-    ` onload="this.classList.add('on');this.parentElement.classList.add('ok')"` +
-    ` onerror="this.remove()"></div>`;
+function crestNode(t){
+  const wrap = document.createElement("div"); wrap.className = "crest";
+  const plate = document.createElement("span"); plate.className = "plate";
+  wrap.appendChild(plate);
+  if (!t.crestURL) return wrap;
+  const img = document.createElement("img");
+  img.alt = ""; img.loading = "eager"; img.decoding = "async";
+  img.addEventListener("load", () => { img.classList.add("on"); wrap.classList.add("ok"); });
+  img.addEventListener("error", () => img.remove());
+  img.src = t.crestURL;
+  wrap.appendChild(img);
+  return wrap;
 }
-const identityHTML = t => crestHTML(t);
 function starsHTML(t, on){
   return [0,1,2,3,4].map(i => {
     const f = t.starRating - i >= 1 ? 1 : (t.starRating - i >= .5 ? .5 : 0);
@@ -1186,7 +1195,7 @@ function setTier(stars){
 function skeleton(card, who){
   card.classList.remove("settled","ghost","skel");
   card.innerHTML =
-    `<span class="duoname">${who}</span>
+    `<span class="duoname">${esc(who)}</span>
      <div class="chead">
        <span class="rating hide">0</span>
        <span class="stars" role="img" aria-label="rating nog onbekend">${starsHTML({starRating:0}, 0)}</span>
@@ -1200,7 +1209,7 @@ function skeleton(card, who){
 function ghost(card, who, skel){
   card.className = "card " + (card.classList.contains("a") ? "a" : "b") + " ghost in" + (skel ? " skel" : "");
   card.innerHTML =
-    `<span class="duoname">${who}</span>
+    `<span class="duoname">${esc(who)}</span>
      <div class="chead"><span class="ghost-line" style="width:34px;height:24px"></span>
        <span class="ghost-line" style="width:64px;height:11px"></span></div>
      <div class="identity" style="display:grid;place-items:center"><div class="ghost-crest"></div></div>
@@ -1211,7 +1220,7 @@ function ghost(card, who, skel){
 /* Snel cyclen = harde knip, ook bij de landing. Eén laag, geen crossfade. */
 function swapTeam(card, t, reel){
   const layer = card.querySelector(".layer");
-  layer.innerHTML = identityHTML(t);
+  layer.replaceChildren(crestNode(t));
   const nm = card.querySelector(".tname span");
   if (nm) nm.textContent = t.name;
   if (reel){ layer.classList.remove("reel"); void layer.offsetWidth; layer.classList.add("reel"); }
@@ -1297,7 +1306,7 @@ function jump(r){
   for (const [card, t, who] of [[$("cardA"), r.a, duos.a], [$("cardB"), r.b, duos.b]]){
     card.classList.add("in"); card.classList.remove("out","settled");
     skeleton(card, who);
-    card.querySelector(".layer").innerHTML = identityHTML(t);
+    card.querySelector(".layer").replaceChildren(crestNode(t));
     card.querySelector(".tname span").textContent = t.name;
     card.querySelector(".league").textContent = leagueLabel(t);
     const stars = card.querySelector(".stars");
@@ -1407,7 +1416,7 @@ function doDraw(){
     $("vs").classList.remove("show");
     $("stageNote").hidden = false;
     $("stageNote").innerHTML =
-      `<b style="color:var(--danger)">${r.error}</b><br>` +
+      `<b style="color:var(--danger)">${esc(r.error)}</b><br>` +
       `<span style="display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px">
          <button class="pick" id="fixStar">Elke ster oké</button>
          <button class="pick" id="fixLeagues">Leagues aanzetten</button>
@@ -1567,7 +1576,7 @@ function renderLeagues(){
     for (const l of list){
       const row = document.createElement("div"); row.className = "lgrow";
       const nm = document.createElement("span"); nm.className = "nm";
-      nm.innerHTML = `<b></b><span>${l.countryCode}</span>`;
+      nm.innerHTML = `<b></b><span>${esc(l.countryCode)}</span>`;
       nm.querySelector("b").textContent = l.name;
       const sw = document.createElement("label"); sw.className = "sw";
       const cb = document.createElement("input"); cb.type = "checkbox";
@@ -1612,7 +1621,7 @@ function renderStand(){
     [`${ga - gb > 0 ? "+" : ""}${ga - gb}`, "doelsaldo " + duos.a],
     [gpm, "goals per match"],
     [String(dr), dr === 1 ? "gelijkspel" : "gelijkspelen"],
-  ].map(([v, k]) => `<div class="kpi"><div class="v">${v}</div><div class="k">${k}</div></div>`).join("");
+  ].map(([v, k]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="k">${esc(k)}</div></div>`).join("");
 
   const bars = $("bars"); bars.innerHTML = "";
   const last = played.slice(0, 10).reverse();
@@ -1626,8 +1635,8 @@ function renderStand(){
   }
   if (!last.length) bars.innerHTML = '<span class="empty">Nog geen marges om te tekenen.</span>';
   $("chartLegend").innerHTML =
-    `<span><b style="background:var(--duo-a)"></b>${duos.a}</span>
-     <span><b style="background:var(--duo-b)"></b>${duos.b}</span>`;
+    `<span><b style="background:var(--duo-a)"></b>${esc(duos.a)}</span>
+     <span><b style="background:var(--duo-b)"></b>${esc(duos.b)}</span>`;
 
   const fav = t => { const c = {}; for (const m of played){ c[m[t]] = (c[m[t]] || 0) + 1; }
     const k = Object.keys(c).sort((x,y) => c[y] - c[x])[0];
@@ -1645,14 +1654,14 @@ function renderStand(){
     [`Favo club ${duos.b}`, fav("bn")],
     ["Sterrating", played.length ? fav("stars").replace(/^([\d.,]+)/, (m) => m.replace(".", ",") + " ster") : "nog geen"],
     ["'t Stoeltje", chairStats()],
-  ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+  ].map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
 
   const pl = $("playedList");
   pl.innerHTML = played.length ? played.slice(0, 12).map((m, i) =>
     `<div class="mrow">
-       <span class="t">${m.an}</span>
-       <span class="s">${m.sa}–${m.sb}</span>
-       <span class="t r">${m.bn}</span>
+       <span class="t">${esc(m.an)}</span>
+       <span class="s">${esc(m.sa)}–${esc(m.sb)}</span>
+       <span class="t r">${esc(m.bn)}</span>
        <button class="x" data-del="${i}" aria-label="Match verwijderen">✕</button>
      </div>`).join("")
     : '<p class="empty">Nog geen gespeelde matches. Kies een loting als eindmatch en vul de score in.</p>';
@@ -1661,10 +1670,10 @@ function renderStand(){
     ? `ook gerold vanavond (${rolls.length})` : "nog niks gerold vanavond";
   $("rollList").innerHTML = rolls.length ? rolls.map(r =>
     `<div class="mrow">
-       <span class="t">${r.an}</span>
-       <span class="s">${r.ar}–${r.br}</span>
-       <span class="t r">${r.bn}</span>
-       <span class="s" style="color:var(--tx-3)">Δ${r.delta}</span>
+       <span class="t">${esc(r.an)}</span>
+       <span class="s">${esc(r.ar)}–${esc(r.br)}</span>
+       <span class="t r">${esc(r.bn)}</span>
+       <span class="s" style="color:var(--tx-3)">Δ${esc(r.delta)}</span>
      </div>`).join("") : '<p class="empty">Rolls van vanavond worden niet bewaard en tellen niet mee voor het herhaalfilter.</p>';
 }
 $("playedList").addEventListener("click", e => {
@@ -1826,12 +1835,12 @@ function toast(msg){
 /* ══ boot ════════════════════════════════════════════════ */
 function renderMeta(){
   const d = DATA.generatedAt || "";
-  $("meta").innerHTML = `EA ${DATA.game} · ${DATA.teams.length} teams` +
-    `<span class="date"> · data ${d.slice(8,10)}-${d.slice(5,7)} · app v${APP_VERSION}</span>`;
+  $("meta").innerHTML = `EA ${esc(DATA.game)} · ${DATA.teams.length} teams` +
+    `<span class="date"> · data ${esc(d.slice(8,10))}-${esc(d.slice(5,7))} · app v${APP_VERSION}</span>`;
 }
 /* meta pas invullen als de dataloader klaar is — anders knippert het
    aantal teams van de ingebakken set naar de verse set. */
-$("meta").innerHTML = `EA ${DATA.game}<span class="date"> · data laden… · app v${APP_VERSION}</span>`;
+$("meta").innerHTML = `EA ${esc(DATA.game)}<span class="date"> · data laden… · app v${APP_VERSION}</span>`;
 $("footer").textContent = "Even Match v" + APP_VERSION +
   " · Dataset ververst dagelijks. Rolls van vanavond worden niet bewaard." +
   " Klopt een ster niet? Meld het — correcties gaan mee in de volgende dataset.";
