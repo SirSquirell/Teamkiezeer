@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "game": "FC 26",
- "generatedAt": "2026-08-22T17:07:41Z",
+ "generatedAt": "2026-09-02T17:42:01Z",
  "leagues": [
   {
    "id": "eng.1",
@@ -10078,7 +10078,7 @@
   },
   {
    "id": "sco.st-mirren",
-   "name": "> St Mirren",
+   "name": "St Mirren",
    "kind": "club",
    "womens": false,
    "starRating": 1.5,
