@@ -1,0 +1,36 @@
+{
+  "_uitleg": [
+    "Eén plek voor alles wat per EA-titel verschilt: label, bron-URL's en het",
+    "uitvoerbestand. build_teams.py, snapshot.yml en check_next_game.py lezen",
+    "hier; hardcode een game nergens anders.",
+    "",
+    "'current' is de titel waar de dagelijkse build op draait en die de webapp",
+    "als data/teams.json serveert. 'next' is de opvolger: check_next_game.py",
+    "kijkt elke build of die bron al échte data heeft in plaats van een kopie",
+    "van de huidige titel. Zodra dat zo is, is overstappen: current omzetten,",
+    "verse snapshots trekken, ankers in audit.py hertoetsen.",
+    "",
+    "Let op: de bronsites publiceren de pagina van een nieuwe titel al wéken",
+    "voor de echte ratings landen, gevuld met de tabel van het vorige jaar.",
+    "Een 200 op de URL is dus geen bewijs dat de data er is. Zie",
+    "check_next_game.py voor de toets die dat wél is."
+  ],
+  "current": "fc26",
+  "next": "fc27",
+  "games": {
+    "fc26": {
+      "label": "FC 26",
+      "starsURL": "https://fifagamenews.com/fc-26-team-star-ratings/",
+      "bestTeamsURL": "https://fifauteam.com/best-teams-fc-26/",
+      "leaguesClubsURL": "https://fifauteam.com/fc-26-leagues-clubs-national-teams/",
+      "out": "data/teams.json"
+    },
+    "fc27": {
+      "label": "FC 27",
+      "starsURL": "https://fifagamenews.com/fc-27-team-star-ratings/",
+      "bestTeamsURL": "https://fifauteam.com/best-teams-fc-27/",
+      "leaguesClubsURL": "https://fifauteam.com/fc-27-leagues-clubs-national-teams/",
+      "out": "data/teams-fc27.json"
+    }
+  }
+}

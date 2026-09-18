@@ -152,3 +152,63 @@ def test_dedup_keeps_the_row_with_the_most_stars(stars):
     for r in dropped:
         keeper = kept[(normalize(r.name), is_womens_name(r.name))]
         assert r.stars <= keeper.stars, f"{r.name}: {r.stars} gedropt maar {keeper.stars} gehouden"
+
+
+# ── titel-config en de opvolger-detector ──────────────────────────────────
+
+def test_games_json_is_consistent():
+    """games.json is de enige plek waar een EA-titel gehardcodeerd staat;
+    een typo hier stuurt de hele build naar de verkeerde bron."""
+    doc = json.loads((ROOT / "pipeline" / "games.json").read_text(encoding="utf-8"))
+    games = doc["games"]
+    assert doc["current"] in games
+    assert doc.get("next") in games, "'next' moet bestaan; de detector hangt eraan"
+    assert doc["current"] != doc["next"]
+    for gid, g in games.items():
+        for veld in ("label", "starsURL", "bestTeamsURL", "leaguesClubsURL", "out"):
+            assert g.get(veld), f"{gid} mist '{veld}'"
+        assert g["starsURL"].startswith("https://")
+    paden = [g["out"] for g in games.values()]
+    assert len(paden) == len(set(paden)), "twee titels naar hetzelfde bestand"
+    assert games[doc["current"]]["out"] == "data/teams.json", \
+        "de huidige titel hoort op data/teams.json te staan; daar leest de webapp"
+
+
+def test_no_game_hardcoded_outside_games_json():
+    """De reden dat games.json bestaat: een titelwissel mag geen speurtocht
+    door de pipeline zijn."""
+    import re
+
+    for naam in ("build_teams.py", "check_next_game.py"):
+        bron = (ROOT / "pipeline" / naam).read_text(encoding="utf-8")
+        code = "\n".join(
+            r for r in bron.splitlines() if not r.strip().startswith("#")
+        ).split('"""')
+        # even indexen staan buiten docstrings
+        echte_code = "".join(code[i] for i in range(0, len(code), 2))
+        assert not re.search(r"fc-2\d-team-star-ratings|best-teams-fc-2\d", echte_code), \
+            f"{naam} hardcodet een bron-URL; die hoort in games.json"
+
+
+def test_detector_noemt_een_kopie_geen_nieuwe_titel():
+    """Het geval van 2026-09-18: de FC 27-pagina gaf een 200 met exact de
+    FC 26-tabel. Een 200 is geen bewijs; het verschil is dat wel."""
+    from check_next_game import sterren_uit_dataset, sterren_uit_pagina, vergelijk, DRIFT_DREMPEL
+
+    huidig = sterren_uit_dataset(ROOT / "data" / "teams.json")
+    kopie = sterren_uit_pagina((SNAP / "stars.html").read_text(encoding="utf-8"))
+    r = vergelijk(kopie, huidig)
+    assert r["gedeeld"] > 600, "de snapshot hoort tegen dezelfde dataset te matchen"
+    assert r["afwijkend"] < DRIFT_DREMPEL, "eigen snapshot mag nooit als nieuwe titel gelden"
+
+
+def test_detector_ziet_echte_nieuwe_sterren():
+    from check_next_game import sterren_uit_dataset, vergelijk, DRIFT_DREMPEL
+
+    huidig = sterren_uit_dataset(ROOT / "data" / "teams.json")
+    nieuw = dict(huidig)
+    for i, sleutel in enumerate(sorted(nieuw)):
+        if i >= DRIFT_DREMPEL + 5:
+            break
+        nieuw[sleutel] = 0.5 if huidig[sleutel] > 2.5 else 5.0
+    assert vergelijk(nieuw, huidig)["afwijkend"] >= DRIFT_DREMPEL

@@ -41,9 +41,16 @@ jobs:
             fi
             echo "$code $size $url -> $out" | tee -a "$LOG"
           }
-          fetch "https://fifagamenews.com/fc-26-team-star-ratings/" "stars.html"
-          fetch "https://fifauteam.com/best-teams-fc-26/" "best-teams.html"
-          fetch "https://fifauteam.com/fc-26-leagues-clubs-national-teams/" "leagues-clubs.html"
+          # De URL's staan in pipeline/games.json, niet hier: bij een
+          # titelwissel is dat één bestand in plaats van drie plekken.
+          # Gesnapshot wordt de 'current' titel, want dat zijn de fixtures
+          # waar pytest de parsers tegenaan houdt.
+          G=pipeline/games.json
+          CUR=$(jq -r '.current' "$G")
+          echo "Snapshot van titel: $CUR ($(jq -r ".games.\"$CUR\".label" "$G"))"
+          fetch "$(jq -r ".games.\"$CUR\".starsURL" "$G")" "stars.html"
+          fetch "$(jq -r ".games.\"$CUR\".bestTeamsURL" "$G")" "best-teams.html"
+          fetch "$(jq -r ".games.\"$CUR\".leaguesClubsURL" "$G")" "leagues-clubs.html"
           # sofifa is geprobeerd als derde bron (2026-08-22) maar geeft een
           # Cloudflare-403 aan runners; zonder headless browser geen optie.
           if [ "$ok" = "1" ]; then

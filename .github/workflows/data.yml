@@ -61,6 +61,32 @@ jobs:
             git push
           fi
 
+      # De bronsite zet de pagina van een nieuwe titel weken voor de release
+      # online, gevuld met de tabel van het vorige jaar. Deze stap kijkt of er
+      # inmiddels échte sterren staan i.p.v. een kopie, en meldt het één keer.
+      # Faalt nooit de build: het is een signaal, geen poortwachter.
+      - name: Staat de data van de volgende titel al live?
+        id: volgende
+        continue-on-error: true
+        run: python pipeline/check_next_game.py
+
+      - name: Meld het als de volgende titel eigen data heeft
+        if: steps.volgende.outputs.status == 'live'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          AFWIJKEND: ${{ steps.volgende.outputs.afwijkend }}
+        run: |
+          TITEL="Volgende EA-titel heeft eigen data"
+          if [ -n "$(gh issue list --state open --search "in:title \"$TITEL\"" --json title --jq ".[] | select(.title == \"$TITEL\") | .title")" ]; then
+            echo "Er staat al een open issue '$TITEL'; geen tweede."
+            exit 0
+          fi
+          BODY="De sterrenpagina van de volgende titel wijkt op $AFWIJKEND clubs af van de huidige dataset; dat is geen kopie meer. Zie de run: $RUN_URL"
+          BODY="$BODY"$'\n\n'"Overstappen: \`current\` in \`pipeline/games.json\` omzetten, de snapshot-workflow draaien voor verse fixtures, de ankers in \`pipeline/audit.py\` hertoetsen en de landenteam-seed valideren tegen de nieuwe leagues-clubs-pagina."
+          gh issue create --title "$TITEL" --body "$BODY"
+
       - name: Sluit het faal-issue als de build weer slaagt
         if: success()
         env:

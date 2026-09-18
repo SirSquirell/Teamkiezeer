@@ -3,7 +3,10 @@
 Gebruik:
     python3 pipeline/build_teams.py --offline          # parse uit pipeline/snapshots/
     python3 pipeline/build_teams.py                    # live fetch (GitHub Actions)
-    opties: --skip-colors --skip-crest-check --out PATH
+    opties: --skip-colors --skip-crest-check --out PATH --game ID
+
+Welke EA-titel er gebouwd wordt komt uit pipeline/games.json ('current', tenzij
+--game iets anders zegt); daar staan ook de bron-URL's en het uitvoerpad.
 
 Stappen: fetch/parse -> dedup sterrenlijst -> league-kopie-drop + assertie ->
 join op genormaliseerde naam (+ vrouwenvlag) -> crest/kleur-verrijking ->
@@ -29,12 +32,30 @@ from parse import parse_best_teams, parse_stars
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOTS = ROOT / "pipeline" / "snapshots"
 
-STARS_URL = "https://fifagamenews.com/fc-26-team-star-ratings/"
-BEST_TEAMS_URL = "https://fifauteam.com/best-teams-fc-26/"
+GAMES_PATH = ROOT / "pipeline" / "games.json"
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 )
+
+
+def load_games() -> dict:
+    """De titel-config (pipeline/games.json). Eén plek voor label, bron-URL's
+    en uitvoerpad per EA-titel; hardcode een game hier niet omheen."""
+    return json.loads(GAMES_PATH.read_text(encoding="utf-8"))
+
+
+def resolve_game(game_id: str | None) -> tuple[str, dict]:
+    """Geef (id, config) voor de gevraagde titel, of voor 'current' als er geen
+    is opgegeven. Een onbekende id faalt luid; stil op de verkeerde titel
+    bouwen is precies de fout die deze config moet voorkomen."""
+    doc = load_games()
+    game_id = game_id or doc["current"]
+    if game_id not in doc["games"]:
+        raise SystemExit(
+            f"FOUT: onbekende game '{game_id}'; games.json kent {sorted(doc['games'])}"
+        )
+    return game_id, doc["games"][game_id]
 
 
 def log(msg: str) -> None:
@@ -49,13 +70,13 @@ def fetch(url: str) -> str:
     return resp.text
 
 
-def load_html(offline: bool) -> tuple[str, str]:
+def load_html(offline: bool, game: dict) -> tuple[str, str]:
     if offline:
         return (
             (SNAPSHOTS / "stars.html").read_text(encoding="utf-8"),
             (SNAPSHOTS / "best-teams.html").read_text(encoding="utf-8"),
         )
-    return fetch(STARS_URL), fetch(BEST_TEAMS_URL)
+    return fetch(game["starsURL"]), fetch(game["bestTeamsURL"])
 
 
 def dedup_stars(star_rows):
@@ -328,8 +349,18 @@ def load_national_teams():
     return teams
 
 
-def build(offline: bool, skip_colors: bool, skip_crest_check: bool, out_path: Path) -> None:
-    stars_html, best_html = load_html(offline)
+def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
+          out_path: Path | None = None, game_id: str | None = None) -> None:
+    game_id, game = resolve_game(game_id)
+    out_path = out_path or ROOT / game["out"]
+    # --out mag buiten de repo wijzen (tests, losse export), dus relative_to
+    # is hier geen zekerheid.
+    try:
+        toon = out_path.relative_to(ROOT)
+    except ValueError:
+        toon = out_path
+    log(f"GAME: {game_id} ({game['label']}) -> {toon}")
+    stars_html, best_html = load_html(offline, game)
     star_rows = parse_stars(stars_html)
     league_rows = parse_best_teams(best_html)
     log(f"PARSE: {len(star_rows)} sterrenrijen, {len(league_rows)} league-rijen")
@@ -357,7 +388,7 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool, out_path: Pa
 
     payload = {
         "schemaVersion": 1,
-        "game": "FC 26",
+        "game": game["label"],
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "leagues": [
             {
@@ -390,6 +421,7 @@ if __name__ == "__main__":
     ap.add_argument("--offline", action="store_true", help="parse uit pipeline/snapshots/")
     ap.add_argument("--skip-colors", action="store_true")
     ap.add_argument("--skip-crest-check", action="store_true")
-    ap.add_argument("--out", type=Path, default=ROOT / "data" / "teams.json")
+    ap.add_argument("--game", help="titel-id uit games.json; standaard 'current'")
+    ap.add_argument("--out", type=Path, help="overschrijf het uitvoerpad uit games.json")
     args = ap.parse_args()
-    build(args.offline, args.skip_colors, args.skip_crest_check, args.out)
+    build(args.offline, args.skip_colors, args.skip_crest_check, args.out, args.game)

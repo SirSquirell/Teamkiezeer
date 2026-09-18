@@ -163,26 +163,40 @@ scope: automatisch verversen in CI (die zou dan elke dag een app-commit maken).
 
 ## TK-08 FC 27-overgang
 
-*open*
+*deels gebouwd (config + detector), wacht op echte brondata*
 
-**Waarom.** In september verschijnt FC 27. De bron-URL's, het `game`-veld, de
-snapshots en de ankerwaarden in `audit.py` zijn allemaal op FC 26 gepind.
+**Waarom.** FC 27 staat sinds september in early access. De bron-URL's, het
+`game`-veld, de snapshots en de ankers in `audit.py` waren op FC 26 gepind.
 
-**Scope / niet in scope.** In scope: `STARS_URL` en `BEST_TEAMS_URL` in
-`build_teams.py`, `game` in de output, de drie URL's in `snapshot.yml`, verse
-snapshots, de ankers en de `leagues.json`-titels nalopen. Niet in scope: twee
-games naast elkaar ondersteunen.
+**De valkuil die dit ticket vormgeeft.** Op 18-09-2026 gaven alle drie de
+FC 27-bronpagina's netjes een 200. `fc-27-team-star-ratings` leverde 661 rijen
+op die tot op de halve ster identiek waren aan FC 26: 0 verschillen op 654
+gedeelde clubs, `dateModified` 2026-05-18. De bronsite zet de pagina van een
+nieuwe titel weken vooruit online met de tabel van het vorige jaar erin. **Een
+200 op de URL is dus geen bewijs dat de data er is.** Overstappen op zo'n
+pagina zou FC 26-sterren als FC 27 in de app zetten.
 
-**Acceptatiecriteria.**
-- [ ] De build leest de FC 27-pagina's en `teams.json` zegt `"game": "FC 27"`.
-- [ ] De snapshots zijn van de FC 27-pagina's en `pytest` is groen.
-- [ ] Elke ankerwaarde in `audit.py` is tegen de nieuwe lijst gecontroleerd.
-- [ ] De kopregel in de webapp en de app tonen "EA FC 27".
+**Gebouwd.**
+- [x] `pipeline/games.json`: label, drie bron-URL's en uitvoerpad per titel,
+      plus `current` en `next`. Enige plek waar een titel gehardcodeerd staat.
+- [x] `build_teams.py` leest die config en accepteert `--game`.
+- [x] `snapshot.yml` haalt de URL's uit `games.json`.
+- [x] `pipeline/check_next_game.py` vergelijkt de sterren op de `next`-pagina
+      met de huidige dataset en noemt het pas live boven 10 afwijkingen.
+- [x] De dagelijkse build draait die check en opent één issue zodra het zover is.
 
-**Afhankelijkheden.** De bronsites moeten de FC 27-pagina's live hebben.
+**Rest, zodra de detector aanslaat.**
+- [ ] `current` in `games.json` op `fc27`; snapshot-workflow draaien.
+- [ ] Ankers in `audit.py` tegen de FC 27-lijst hertoetsen.
+- [ ] Landenteam-seed valideren tegen de FC 27 leagues-clubs-pagina; de
+      huidige 51 landen zijn tegen de FC 26-lijst gecontroleerd.
+- [ ] `leagues.json`: de drop-entries hertoetsen. Op de FC 27-pagina is
+      ÖSTERREICHISCHE BUNDESLIGA nog steeds een kopie van A-LEAGUE en
+      WOMEN'S SUPER LEAGUE van NWSL, maar dat kan met echte data veranderen.
+- [ ] De kopregel in de webapp en de iOS-app tonen "EA FC 27".
 
-**Test.** Volledige build plus de audit; een handmatige spot-check van tien
-teams in-game.
+**Test.** `python3 pipeline/check_next_game.py` zegt `KOPIE`; met een pagina
+waarin tien sterren verschillen zegt hij `LIVE`. Beide staan in `pytest`.
 
 ## TK-09 Cron terug naar 0 7 bij wintertijd
 
@@ -387,3 +401,27 @@ lettertype.
 ---
 
 **Volgend vrij nummer: TK-19**
+
+## TK-19 Toggle tussen FC 26 en FC 27
+
+*open, geblokkeerd door TK-08*
+
+**Waarom.** In de early-accessperiode speelt de één al FC 27 en de ander nog
+FC 26. De sterren bepalen de eerlijkheid van de loting, dus met de verkeerde
+set klopt de kern van de app niet.
+
+**Scope / niet in scope.** In scope: beide datasets naast elkaar
+(`data/teams.json` voor de actieve titel, een tweede bestand voor de andere),
+een keuze in de Filters-sheet met FC 27 als standaard, en de keuze bewaren in
+`rules`. Niet in scope: de Stand splitsen per titel; die gaat over wie er wint,
+niet over welk spel eronder ligt.
+
+**Acceptatiecriteria.**
+- [ ] De Filters-sheet heeft een titelkeuze; standaard de nieuwste.
+- [ ] Wisselen laadt de andere dataset en herstelt de league-whitelist naar
+      wat in die titel bestaat.
+- [ ] De service worker heeft beide sets in de cache; offline werkt de keuze.
+- [ ] De kopregel toont de gekozen titel.
+
+**Afhankelijkheden.** TK-08 moet af zijn: zolang beide datasets dezelfde
+sterren bevatten is de toggle een knop zonder verschil, en dat leest als een bug.
