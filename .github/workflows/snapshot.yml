@@ -3,6 +3,13 @@ name: Snapshot source pages
 on:
   workflow_dispatch:
   push:
+    # Zonder branch-filter vuurde dit op elke branch die snapshot.yml aanraakt,
+    # en dan commit de job verse snapshots midden in een openstaande PR. Dat
+    # gebeurde op 2026-09-18 in PR #3: 1278 regels HTML-ruis boven op een
+    # pipeline-wijziging, en een head-commit waar geen CI meer overheen ging.
+    # De fixtures in pipeline/snapshots/ verversen is een bewuste daad
+    # (workflow_dispatch), geen bijwerking van het bewerken van een workflow.
+    branches: [main]
     paths:
       - ".github/workflows/snapshot.yml"
 
