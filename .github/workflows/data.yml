@@ -1,4 +1,4 @@
-name: Build teams.json
+name: Build datasets
 
 on:
   schedule:
@@ -41,21 +41,30 @@ jobs:
 
       # De pytest-suite draait in ci.yml en bewaakt merges; hier bewaakt
       # audit.py (in build_teams.py, faalt hard) de live data.
-      - name: Build teams.json (live scrape)
-        run: python pipeline/build_teams.py
+      # Elke titel in games.json krijgt zijn eigen bestand. De webapp kan
+      # ertussen wisselen, dus ze moeten allebei bij blijven; alleen 'current'
+      # bouwen zou de andere set stilletjes laten verouderen.
+      - name: Build alle datasets (live scrape)
+        run: |
+          set -euo pipefail
+          for g in $(jq -r '.games | keys[]' pipeline/games.json); do
+            echo "::group::$g"
+            python pipeline/build_teams.py --game "$g"
+            echo "::endgroup::"
+          done
 
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/teams.json
+          git add data/
           if git diff --cached --quiet; then
-            echo "Geen wijzigingen in data/teams.json"
+            echo "Geen wijzigingen in de datasets"
           else
-            git commit -m "Update teams.json from daily scrape"
+            git commit -m "Update datasets from daily scrape"
             # De snapshot-workflow kan in dezelfde minuut op main hebben gepusht
             # (2026-09-02: build geslaagd, push afgewezen met "fetch first").
-            # Eerst binnenhalen, dan pas pushen; teams.json is het enige bestand
+            # Eerst binnenhalen, dan pas pushen; data/ is het enige pad
             # dat deze job aanraakt, dus de rebase kan niet conflicteren.
             git pull --rebase origin "${GITHUB_REF_NAME:-main}"
             git push
@@ -113,5 +122,5 @@ jobs:
             exit 0
           fi
           BODY="De dagelijkse databuild is mislukt. Zie de run: $RUN_URL"
-          BODY="$BODY"$'\n\n'"De app en de site blijven op de laatste goede data/teams.json staan; er is niets gecommit."
+          BODY="$BODY"$'\n\n'"De app en de site blijven op de laatst geslaagde datasets staan; er is niets gecommit."
           gh issue create --title "$TITEL" --body "$BODY"

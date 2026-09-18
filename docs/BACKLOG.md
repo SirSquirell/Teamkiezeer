@@ -404,24 +404,25 @@ lettertype.
 
 ## TK-19 Toggle tussen FC 26 en FC 27
 
-*open, geblokkeerd door TK-08*
+*gebouwd, 0.04.0*
 
-**Waarom.** In de early-accessperiode speelt de één al FC 27 en de ander nog
+**Waarom.** In de early-accessperiode speelt de een al FC 27 en de ander nog
 FC 26. De sterren bepalen de eerlijkheid van de loting, dus met de verkeerde
 set klopt de kern van de app niet.
 
-**Scope / niet in scope.** In scope: beide datasets naast elkaar
-(`data/teams.json` voor de actieve titel, een tweede bestand voor de andere),
-een keuze in de Filters-sheet met FC 27 als standaard, en de keuze bewaren in
-`rules`. Niet in scope: de Stand splitsen per titel; die gaat over wie er wint,
-niet over welk spel eronder ligt.
-
 **Acceptatiecriteria.**
-- [ ] De Filters-sheet heeft een titelkeuze; standaard de nieuwste.
-- [ ] Wisselen laadt de andere dataset en herstelt de league-whitelist naar
+- [x] De Filters-sheet heeft een titelkeuze; standaard de nieuwste.
+- [x] Wisselen laadt de andere dataset en herstelt de league-whitelist naar
       wat in die titel bestaat.
-- [ ] De service worker heeft beide sets in de cache; offline werkt de keuze.
-- [ ] De kopregel toont de gekozen titel.
+- [x] De service worker heeft beide sets in de cache; offline werkt de keuze.
+- [x] De kopregel toont de gekozen titel.
+- [x] De app zegt erbij hoe hard de FC 27-set is, uit de dataset zelf.
 
-**Afhankelijkheden.** TK-08 moet af zijn: zolang beide datasets dezelfde
-sterren bevatten is de toggle een knop zonder verschil, en dat leest als een bug.
+**Wat er nog niet klopt.** De FC 27-set is FC 26 plus de zestien clubratings
+die EA heeft vrijgegeven. Voor de overige ~640 clubs is het een aanname dat de
+sterren gelijk zijn gebleven; op EA's eigen steekproef hield die aanname stand
+bij veertien van de zestien. `pipeline/check_next_game.py` meldt het zodra de
+volledige FC 27-tabel te scrapen is, en dan kunnen de overrides eruit.
+Inter staat op 4.5 op basis van een afleiding, niet van een publicatie; een
+in-game check is de bedoeling.
+

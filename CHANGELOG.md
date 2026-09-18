@@ -5,6 +5,33 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
+## 0.04.0 — 2026-09-18
+
+- **Keuze tussen FC 26 en FC 27 in de app, standaard FC 27.** De Filters-sheet
+  heeft een titelkeuze; wisselen laadt de andere dataset en zet de
+  league-whitelist terug naar wat in die titel bestaat. De service worker
+  bewaart beide sets, dus de keuze werkt ook offline.
+- **De FC 27-set is eerlijk over wat erin zit.** De bronpagina van FC 27 toont
+  nog de FC 26-tabel: 661 rijen, nul sterrenverschillen, `dateModified`
+  2026-05-18. EA heeft wél een eerste golf clubratings vrijgegeven, en daarvan
+  klopten veertien van de zestien al met FC 26. De drie afwijkingen staan met
+  bronvermelding in `pipeline/overrides-fc27.json`: Atlético Madrid en
+  Manchester City (v) naar 5 sterren, Inter eruit. Onze 5-sterrenlijst komt
+  daarmee exact uit op EA's acht mannen- en zes vrouwenclubs. De app toont
+  onder de titelkeuze dat de rest uit FC 26 komt; die regel zit in de dataset
+  en verdwijnt vanzelf zodra de bron compleet is.
+- **Titel-config op één plek.** `pipeline/games.json` houdt per titel het
+  label, de drie bron-URL's, het uitvoerpad, het overridebestand en die
+  waarschuwing. De build, de snapshot-workflow en de detector lezen daaruit.
+  De dagelijkse build maakt nu elke titel in die config.
+- **`pipeline/check_next_game.py` meldt wanneer de volgende titel echt is.**
+  Vergelijkt de sterren op de opvolgerpagina met de huidige dataset en slaat
+  pas aan boven tien afwijkende clubs, zodat een gekopieerde pagina niet voor
+  een nieuw seizoen doorgaat. De dagelijkse build draait hem en opent één issue.
+- **De snapshot-workflow vuurt niet meer op feature branches.** De push-trigger
+  had geen branch-filter, dus het bewerken van dat bestand in een PR liet de
+  job daar draaien en verse snapshots committen boven op de PR.
+
 ## 0.03.3 — 2026-09-02
 
 - **De databuild en de tests waren stuk door een lege snapshot.** De

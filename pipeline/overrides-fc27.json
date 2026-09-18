@@ -1,0 +1,42 @@
+{
+  "_uitleg": [
+    "Correcties op de FC 27-set, bovenop wat de bronpagina levert.",
+    "",
+    "Waarom dit bestand nodig is: fifagamenews publiceert de FC 27-pagina nog",
+    "met de FC 26-tabel erin (zie pipeline/check_next_game.py). EA heeft wél al",
+    "een eerste golf clubratings vrijgegeven, en daaruit blijkt dat de FC 26-",
+    "waarden voor veertien van de zestien onthulde clubs exact kloppen. Alleen",
+    "de afwijkingen staan hieronder.",
+    "",
+    "Zodra de bron de echte FC 27-tabel toont, logt de build deze regels als",
+    "OVERRIDE OVERBODIG zodra de bron ze inhaalt, en kunnen ze eruit.",
+    "",
+    "Elke regel noemt of de waarde door EA is gepubliceerd of door ons is",
+    "afgeleid. Afgeleid betekent: EA gaf een volledige lijst voor die sterklasse",
+    "en deze club stond er niet in, dus hij is lager, maar EA heeft niet gezegd",
+    "hoeveel lager. Dat is een aanname, geen meting."
+  ],
+  "overrides": [
+    {
+      "id": "esp.atletico-madrid",
+      "starRating": 5.0,
+      "reason": "EA: Atletico Madrid staat in de FC 27 5-sterrenlijst; was 4.5 in FC 26 (gepubliceerd)",
+      "source": "https://sportingtribune.com/full-list-ea-fc-27-club-ratings-revealed/",
+      "checked": "2026-09-18"
+    },
+    {
+      "id": "unk.manchester-city-w",
+      "starRating": 5.0,
+      "reason": "EA: Manchester City (v) staat in de FC 27 5-sterrenlijst voor vrouwen; was 4.5 in FC 26 (gepubliceerd)",
+      "source": "https://www.thespike.gg/fifa/ea-fc-27/best-teams",
+      "checked": "2026-09-18"
+    },
+    {
+      "id": "ita.inter",
+      "starRating": 4.5,
+      "reason": "AFGELEID, niet gepubliceerd: EA's FC 27 5-sterrenlijst telt acht mannenclubs en Inter staat er niet bij, dus lager dan 5.0. 4.5 is de aanname; corrigeer na een in-game check",
+      "source": "https://sportingtribune.com/full-list-ea-fc-27-club-ratings-revealed/",
+      "checked": "2026-09-18"
+    }
+  ]
+}

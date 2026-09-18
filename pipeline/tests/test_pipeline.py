@@ -170,8 +170,10 @@ def test_games_json_is_consistent():
         assert g["starsURL"].startswith("https://")
     paden = [g["out"] for g in games.values()]
     assert len(paden) == len(set(paden)), "twee titels naar hetzelfde bestand"
-    assert games[doc["current"]]["out"] == "data/teams.json", \
-        "de huidige titel hoort op data/teams.json te staan; daar leest de webapp"
+    assert "data/teams.json" in paden, \
+        "één titel moet op data/teams.json uitkomen; dat pad leest de iOS-app"
+    for gid, g in games.items():
+        assert (ROOT / g["overrides"]).exists(), f"{gid} wijst naar een overridebestand dat niet bestaat"
 
 
 def test_no_game_hardcoded_outside_games_json():
@@ -212,3 +214,58 @@ def test_detector_ziet_echte_nieuwe_sterren():
             break
         nieuw[sleutel] = 0.5 if huidig[sleutel] > 2.5 else 5.0
     assert vergelijk(nieuw, huidig)["afwijkend"] >= DRIFT_DREMPEL
+
+
+def test_app_kent_dezelfde_titels_als_de_pipeline():
+    """app.js heeft zijn eigen GAMES-tabel omdat de browser games.json niet
+    leest. Twee lijsten die uit elkaar lopen betekent een 404 op de dataset,
+    dus die divergentie moet een test vangen en geen gebruiker."""
+    import re
+
+    doc = json.loads((ROOT / "pipeline" / "games.json").read_text(encoding="utf-8"))
+    app = (ROOT / "app.js").read_text(encoding="utf-8")
+    blok = re.search(r"const GAMES = \[(.*?)\];", app, re.S)
+    assert blok, "GAMES-tabel niet gevonden in app.js"
+    uit_app = dict(re.findall(r'id:"([^"]+)".*?file:"([^"]+)"', blok.group(1)))
+    assert uit_app, "GAMES-tabel is leeg"
+    assert set(uit_app) == set(doc["games"]), \
+        f"app.js kent {sorted(uit_app)}, games.json kent {sorted(doc['games'])}"
+    for gid, bestand in uit_app.items():
+        verwacht = doc["games"][gid]["out"].removeprefix("data/")
+        assert bestand == verwacht, f"{gid}: app.js zegt {bestand}, games.json zegt {verwacht}"
+        assert (ROOT / "data" / bestand).exists(), f"{bestand} staat niet in data/"
+
+
+def test_fc27_overrides_wijzen_naar_bestaande_teams():
+    """Een override op een id dat niet bestaat doet stil niets. De build
+    waarschuwt, maar een test die faalt is beter dan een regel logtekst."""
+    doc = json.loads((ROOT / "pipeline" / "overrides-fc27.json").read_text(encoding="utf-8"))
+    ids = {t["id"] for t in json.loads(
+        (ROOT / "data" / "teams.json").read_text(encoding="utf-8"))["teams"]}
+    for regel in doc["overrides"]:
+        assert regel["id"] in ids, f"override voor onbekend team: {regel['id']}"
+        assert regel.get("source", "").startswith("http"), f"{regel['id']} mist een bron"
+        assert regel.get("checked"), f"{regel['id']} mist een datum"
+
+
+def test_fc27_set_matcht_de_gepubliceerde_vijfsterrenlijst():
+    """EA gaf een volledige lijst 5-sterrenclubs vrij: acht mannen- en zes
+    vrouwenteams. Onze FC 27-set moet daar exact op uitkomen, anders klopt de
+    kern van de loting niet voor wie FC 27 speelt. Tellen op (naam, vrouwen),
+    want Arsenal en Bayern bestaan in beide varianten."""
+    doc = json.loads((ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))
+    vijf = {(t["name"], t["womens"]) for t in doc["teams"]
+            if t["kind"] == "club" and t["starRating"] == 5.0}
+    mannen = {(n, False) for n in
+              ("Paris Saint-Germain", "Real Madrid", "Manchester City", "Bayern",
+               "FC Barcelona", "Arsenal", "Liverpool", "Atlético Madrid")}
+    vrouwen = {("Arsenal", True), ("Chelsea", True), ("Manchester City", True),
+               ("FC Barcelona", True), ("Bayern", True)}
+    assert mannen <= vijf, f"ontbreekt bij de mannen: {sorted(mannen - vijf)}"
+    assert vrouwen <= vijf, f"ontbreekt bij de vrouwen: {sorted(vrouwen - vijf)}"
+    assert ("Inter", False) not in vijf, "Inter staat niet in EA's FC 27 5-sterrenlijst"
+    # Het zesde vrouwenteam is OL Lyonnes, dat bij ons als niet-vrouwenteam
+    # staat omdat de Premiere Ligue niet op de ratingspagina voorkomt
+    # (bronquirk, zie docs/data-audit.md). Vandaar 8 + 5 + 1 = 14.
+    assert ("OL Lyonnes", False) in vijf
+    assert len(vijf) == 14, f"verwacht 14 clubs op 5.0, kreeg {len(vijf)}: {sorted(vijf)}"

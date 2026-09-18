@@ -378,7 +378,7 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
     upgrade_crests(teams, skip_crest_check)
     dominant_colors(teams, skip_colors)
     teams += load_national_teams()
-    apply_overrides(teams)
+    apply_overrides(teams, ROOT / game["overrides"])
 
     matched = sum(1 for t in teams if t["leagueId"])
     log(f"RESULTAAT: {len(teams)} teams, {matched} met league")
@@ -389,6 +389,10 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
     payload = {
         "schemaVersion": 1,
         "game": game["label"],
+        # Waarschuwing voor de gebruiker; leeg zodra de bron echte data levert.
+        # De webapp toont dit onder de titelkeuze, dus liegen we niet over hoe
+        # hard deze set is.
+        "note": game.get("note", ""),
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "leagues": [
             {
