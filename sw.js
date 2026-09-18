@@ -12,9 +12,16 @@ const PRECACHE = [
   "icon-192.png", "icon-512.png", "apple-touch-icon.png", "favicon.svg",
   "fonts/archivo-400.woff2", "fonts/archivo-900.woff2",
 ];
+/* Beide datasets erbij, zodat de titelkeuze ook offline werkt. Los van
+   PRECACHE omdat addAll alles-of-niets is: een dataset die net herbouwd wordt
+   mag de installatie van de service worker niet laten falen. */
+const PRECACHE_OPTIONEEL = ["data/teams.json", "data/teams-fc27.json"];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then(async c => {
+    await c.addAll(PRECACHE);
+    await Promise.all(PRECACHE_OPTIONEEL.map(u => c.add(u).catch(() => {})));
+  }).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", e => {

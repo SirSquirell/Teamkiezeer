@@ -152,3 +152,120 @@ def test_dedup_keeps_the_row_with_the_most_stars(stars):
     for r in dropped:
         keeper = kept[(normalize(r.name), is_womens_name(r.name))]
         assert r.stars <= keeper.stars, f"{r.name}: {r.stars} gedropt maar {keeper.stars} gehouden"
+
+
+# ── titel-config en de opvolger-detector ──────────────────────────────────
+
+def test_games_json_is_consistent():
+    """games.json is de enige plek waar een EA-titel gehardcodeerd staat;
+    een typo hier stuurt de hele build naar de verkeerde bron."""
+    doc = json.loads((ROOT / "pipeline" / "games.json").read_text(encoding="utf-8"))
+    games = doc["games"]
+    assert doc["current"] in games
+    assert doc.get("next") in games, "'next' moet bestaan; de detector hangt eraan"
+    assert doc["current"] != doc["next"]
+    for gid, g in games.items():
+        for veld in ("label", "starsURL", "bestTeamsURL", "leaguesClubsURL", "out"):
+            assert g.get(veld), f"{gid} mist '{veld}'"
+        assert g["starsURL"].startswith("https://")
+    paden = [g["out"] for g in games.values()]
+    assert len(paden) == len(set(paden)), "twee titels naar hetzelfde bestand"
+    assert "data/teams.json" in paden, \
+        "één titel moet op data/teams.json uitkomen; dat pad leest de iOS-app"
+    for gid, g in games.items():
+        assert (ROOT / g["overrides"]).exists(), f"{gid} wijst naar een overridebestand dat niet bestaat"
+
+
+def test_no_game_hardcoded_outside_games_json():
+    """De reden dat games.json bestaat: een titelwissel mag geen speurtocht
+    door de pipeline zijn."""
+    import re
+
+    for naam in ("build_teams.py", "check_next_game.py"):
+        bron = (ROOT / "pipeline" / naam).read_text(encoding="utf-8")
+        code = "\n".join(
+            r for r in bron.splitlines() if not r.strip().startswith("#")
+        ).split('"""')
+        # even indexen staan buiten docstrings
+        echte_code = "".join(code[i] for i in range(0, len(code), 2))
+        assert not re.search(r"fc-2\d-team-star-ratings|best-teams-fc-2\d", echte_code), \
+            f"{naam} hardcodet een bron-URL; die hoort in games.json"
+
+
+def test_detector_noemt_een_kopie_geen_nieuwe_titel():
+    """Het geval van 2026-09-18: de FC 27-pagina gaf een 200 met exact de
+    FC 26-tabel. Een 200 is geen bewijs; het verschil is dat wel."""
+    from check_next_game import sterren_uit_dataset, sterren_uit_pagina, vergelijk, DRIFT_DREMPEL
+
+    huidig = sterren_uit_dataset(ROOT / "data" / "teams.json")
+    kopie = sterren_uit_pagina((SNAP / "stars.html").read_text(encoding="utf-8"))
+    r = vergelijk(kopie, huidig)
+    assert r["gedeeld"] > 600, "de snapshot hoort tegen dezelfde dataset te matchen"
+    assert r["afwijkend"] < DRIFT_DREMPEL, "eigen snapshot mag nooit als nieuwe titel gelden"
+
+
+def test_detector_ziet_echte_nieuwe_sterren():
+    from check_next_game import sterren_uit_dataset, vergelijk, DRIFT_DREMPEL
+
+    huidig = sterren_uit_dataset(ROOT / "data" / "teams.json")
+    nieuw = dict(huidig)
+    for i, sleutel in enumerate(sorted(nieuw)):
+        if i >= DRIFT_DREMPEL + 5:
+            break
+        nieuw[sleutel] = 0.5 if huidig[sleutel] > 2.5 else 5.0
+    assert vergelijk(nieuw, huidig)["afwijkend"] >= DRIFT_DREMPEL
+
+
+def test_app_kent_dezelfde_titels_als_de_pipeline():
+    """app.js heeft zijn eigen GAMES-tabel omdat de browser games.json niet
+    leest. Twee lijsten die uit elkaar lopen betekent een 404 op de dataset,
+    dus die divergentie moet een test vangen en geen gebruiker."""
+    import re
+
+    doc = json.loads((ROOT / "pipeline" / "games.json").read_text(encoding="utf-8"))
+    app = (ROOT / "app.js").read_text(encoding="utf-8")
+    blok = re.search(r"const GAMES = \[(.*?)\];", app, re.S)
+    assert blok, "GAMES-tabel niet gevonden in app.js"
+    uit_app = dict(re.findall(r'id:"([^"]+)".*?file:"([^"]+)"', blok.group(1)))
+    assert uit_app, "GAMES-tabel is leeg"
+    assert set(uit_app) == set(doc["games"]), \
+        f"app.js kent {sorted(uit_app)}, games.json kent {sorted(doc['games'])}"
+    for gid, bestand in uit_app.items():
+        verwacht = doc["games"][gid]["out"].removeprefix("data/")
+        assert bestand == verwacht, f"{gid}: app.js zegt {bestand}, games.json zegt {verwacht}"
+        assert (ROOT / "data" / bestand).exists(), f"{bestand} staat niet in data/"
+
+
+def test_fc27_overrides_wijzen_naar_bestaande_teams():
+    """Een override op een id dat niet bestaat doet stil niets. De build
+    waarschuwt, maar een test die faalt is beter dan een regel logtekst."""
+    doc = json.loads((ROOT / "pipeline" / "overrides-fc27.json").read_text(encoding="utf-8"))
+    ids = {t["id"] for t in json.loads(
+        (ROOT / "data" / "teams.json").read_text(encoding="utf-8"))["teams"]}
+    for regel in doc["overrides"]:
+        assert regel["id"] in ids, f"override voor onbekend team: {regel['id']}"
+        assert regel.get("source", "").startswith("http"), f"{regel['id']} mist een bron"
+        assert regel.get("checked"), f"{regel['id']} mist een datum"
+
+
+def test_fc27_set_matcht_de_gepubliceerde_vijfsterrenlijst():
+    """EA gaf een volledige lijst 5-sterrenclubs vrij: acht mannen- en zes
+    vrouwenteams. Onze FC 27-set moet daar exact op uitkomen, anders klopt de
+    kern van de loting niet voor wie FC 27 speelt. Tellen op (naam, vrouwen),
+    want Arsenal en Bayern bestaan in beide varianten."""
+    doc = json.loads((ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))
+    vijf = {(t["name"], t["womens"]) for t in doc["teams"]
+            if t["kind"] == "club" and t["starRating"] == 5.0}
+    mannen = {(n, False) for n in
+              ("Paris Saint-Germain", "Real Madrid", "Manchester City", "Bayern",
+               "FC Barcelona", "Arsenal", "Liverpool", "Atlético Madrid")}
+    vrouwen = {("Arsenal", True), ("Chelsea", True), ("Manchester City", True),
+               ("FC Barcelona", True), ("Bayern", True)}
+    assert mannen <= vijf, f"ontbreekt bij de mannen: {sorted(mannen - vijf)}"
+    assert vrouwen <= vijf, f"ontbreekt bij de vrouwen: {sorted(vrouwen - vijf)}"
+    assert ("Inter", False) not in vijf, "Inter staat niet in EA's FC 27 5-sterrenlijst"
+    # Het zesde vrouwenteam is OL Lyonnes, dat bij ons als niet-vrouwenteam
+    # staat omdat de Premiere Ligue niet op de ratingspagina voorkomt
+    # (bronquirk, zie docs/data-audit.md). Vandaar 8 + 5 + 1 = 14.
+    assert ("OL Lyonnes", False) in vijf
+    assert len(vijf) == 14, f"verwacht 14 clubs op 5.0, kreeg {len(vijf)}: {sorted(vijf)}"

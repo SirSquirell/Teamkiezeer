@@ -460,6 +460,9 @@ main{display:flex; flex-direction:column; gap:var(--s-4); flex:1; justify-conten
 
 /* segmented */
 .seg{display:flex; gap:4px; padding:4px; background:var(--ink-2); border-radius:14px; border:1px solid var(--line)}
+/* Eerlijkheid over hoe hard een dataset is. Staat er alleen als teams.json
+   een note meestuurt, dus hij verdwijnt vanzelf als de bron compleet wordt. */
+.gamenote{margin:0; font-size:12px; line-height:1.5; color:var(--tx-3); text-wrap:pretty}
 .seg button{
   flex:1; min-height:44px; border-radius:10px; font-size:14px; font-weight:600; color:var(--tx-2);
   transition:background .14s var(--e-out), color .14s var(--e-out);
@@ -924,6 +927,12 @@ body.scoring .draw{
     </button>
   </div>
   <div class="sbody">
+
+    <div class="group">
+      <span class="lbl">Spel</span>
+      <div class="seg" id="gameSeg"></div>
+      <p class="gamenote" id="gameNote" hidden></p>
+    </div>
 
     <div class="group">
       <span class="lbl">Teams</span>
