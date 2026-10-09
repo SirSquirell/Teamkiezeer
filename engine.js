@@ -9,7 +9,10 @@ const numOrNull = v => typeof v === "number" && Number.isFinite(v) ? v : null;
 const matchKey = m => `${m.ts}|${m.aid || ""}|${m.bid || ""}`;
 function normMatch(m){
   if (!m || typeof m !== "object" || Array.isArray(m)) return null;
-  const score = v => typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= 99 ? v : null;
+  // Afronden in plaats van weggooien: een desktopveld kon voor 0.04.1 "1.5" opslaan,
+  // en een gespeelde wedstrijd hoort niet te verdwijnen om een decimaal.
+  const score = v => { const n = typeof v === "number" && Number.isFinite(v) ? Math.round(v) : null;
+    return n !== null && n >= 0 && n <= 99 ? n : null; };
   const sa = score(m.sa), sb = score(m.sb);
   const ts = typeof m.ts === "number" && Number.isFinite(m.ts) && m.ts > 0 ? m.ts : null;
   const an = str(m.an, MAX_NAAM), bn = str(m.bn, MAX_NAAM);

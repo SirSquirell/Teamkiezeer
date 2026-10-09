@@ -20,6 +20,8 @@ Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
   toestellen bewaakt dit.
 - **Een score met decimalen gaat niet meer stil verloren.** De score wordt bij opslaan
   afgerond op een geheel getal; sync.php controleert ook het type van de overige velden.
+  Een al opgeslagen wedstrijd met een decimale score wordt bij het opstarten afgerond in
+  plaats van weggegooid.
 - **Een kapotte stand breekt de pagina niet meer.** De stand uit sync, import
   en localStorage wordt genormaliseerd: een match met score als tekst of een
   leeg element liet `renderStand` gooien, en omdat dat bij het opstarten
