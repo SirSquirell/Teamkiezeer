@@ -11,7 +11,7 @@ const SLEUTEL = '';
 
 const MAX_MATCHES = 200;
 const MAX_NAAM = 80;
-const MAX_SLEUTEL = 64;
+const MAX_VERWIJDERSLEUTEL = 64;
 const MAX_BODY = 512000;
 
 $file = __DIR__ . '/evenmatch-stand.json';
@@ -76,19 +76,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             if (!geldige_naam($v)) weiger('duo-naam ongeldig');
         }
     }
+    $matches = [];
+    foreach ($doc['matches'] as $m) {
+        $schoon = [];
+        foreach (['ts', 'aid', 'bid', 'an', 'bn', 'ar', 'br', 'stars', 'delta', 'sa', 'sb', 'chair'] as $veld) {
+            if (array_key_exists($veld, $m)) $schoon[$veld] = $m[$veld];
+        }
+        $matches[] = $schoon;
+    }
+    $duos = null;
+    if (isset($doc['duos'])) {
+        $duos = [];
+        foreach (['a', 'b'] as $veld) {
+            if (isset($doc['duos'][$veld])) $duos[$veld] = $doc['duos'][$veld];
+        }
+    }
     $deleted = [];
     if (isset($doc['deleted'])) {
         if (!is_array($doc['deleted']) || $doc['deleted'] !== array_values($doc['deleted'])) weiger('deleted is geen lijst');
         if (count($doc['deleted']) > MAX_MATCHES) weiger('meer dan ' . MAX_MATCHES . ' verwijderde matches');
         foreach ($doc['deleted'] as $k) {
-            if (!is_string($k) || strlen($k) > MAX_SLEUTEL) weiger('verwijderde sleutel ongeldig');
+            if (!is_string($k) || strlen($k) > MAX_VERWIJDERSLEUTEL) weiger('verwijderde sleutel ongeldig');
         }
         $deleted = $doc['deleted'];
     }
     $uit = json_encode([
         'v' => 3,
-        'matches' => $doc['matches'],
-        'duos' => $doc['duos'] ?? null,
+        'matches' => $matches,
+        'duos' => $duos,
         'deleted' => $deleted,
         'updated' => gmdate('c'),
     ], JSON_UNESCAPED_UNICODE);

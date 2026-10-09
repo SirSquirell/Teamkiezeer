@@ -62,3 +62,37 @@ test("mergeStand is idempotent", () => {
   const x = { matches: EM.normMatches([mk(1), mk(2)]), duos, deleted: EM.normDeleted([EM.matchKey(mk(9))]) };
   assert.equal(EM.standDoc(EM.mergeStand(x, x)), EM.standDoc(x));
 });
+
+test("import na wissen brengt de stand terug (herstel)", () => {
+  const stand = [mk(1), mk(2)];
+  const naWissen = { matches: [], duos, deleted: stand.map(EM.matchKey) };
+  const gewoon = EM.mergeStand(naWissen, { matches: stand, duos, deleted: [] });
+  assert.equal(gewoon.matches.length, 0);   // sync: tombstone wint
+  const herstel = EM.mergeStand(naWissen, { matches: stand, duos, deleted: [] }, { herstel: true });
+  assert.deepEqual(herstel.matches.map(x => x.ts).sort(), [1, 2]);
+  assert.deepEqual(herstel.deleted, []);
+});
+
+test("herstel laat tombstones van andere matches staan", () => {
+  const weg = EM.matchKey(mk(9));
+  const m = EM.mergeStand({ matches: [], duos, deleted: [weg, EM.matchKey(mk(1))] }, { matches: [mk(1)], duos, deleted: [] }, { herstel: true });
+  assert.deepEqual(m.matches.map(x => x.ts), [1]);
+  assert.deepEqual(m.deleted, [weg]);
+});
+
+test("normDeleted: houdt de nieuwste 200, ontdubbelt, gooit rommel weg", () => {
+  const sleutels = Array.from({ length: 250 }, (_, i) => `${i + 1}|a|b`);
+  const uit = EM.normDeleted([...sleutels, sleutels[0], 5, null, "x".repeat(65)]);
+  assert.equal(uit.length, 200);
+  assert.equal(uit[0], "250|a|b");
+  assert.equal(uit[199], "51|a|b");
+  assert.equal(new Set(uit).size, 200);
+});
+
+test("pull zonder verschil geeft gelijke standDoc (geen push)", () => {
+  const remote = { matches: EM.normMatches([mk(1), mk(2)]), duos, deleted: [] };
+  const merged = EM.mergeStand({ matches: [mk(2), mk(1)], duos, deleted: [] }, remote);
+  assert.equal(EM.standDoc(merged), EM.standDoc({ ...remote, duos: EM.normDuos(remote.duos, duos) }));
+  const mist = EM.mergeStand({ matches: [mk(3), mk(1)], duos, deleted: [] }, remote);
+  assert.notEqual(EM.standDoc(mist), EM.standDoc(remote));
+});

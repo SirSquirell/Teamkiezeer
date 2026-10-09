@@ -672,7 +672,7 @@ function renderStand(){
     `<span><b style="background:var(--duo-a)"></b>${esc(duos.a)}</span>
      <span><b style="background:var(--duo-b)"></b>${esc(duos.b)}</span>`;
 
-  const fav = t => { const c = {}; for (const m of played){ c[m[t]] = (c[m[t]] || 0) + 1; }
+  const fav = t => { const c = {}; for (const m of played){ if (m[t] == null) continue; c[m[t]] = (c[m[t]] || 0) + 1; }
     const k = Object.keys(c).sort((x,y) => c[y] - c[x])[0];
     return k ? `${k} (${c[k]}×)` : "nog geen"; };
   const chairStats = () => {
@@ -751,7 +751,7 @@ $("doImport").addEventListener("click", () => {
     const o = JSON.parse($("importText").value);
     if (!o || !Array.isArray(o.matches)) throw 0;
     const ingevoerd = { matches: EM.normMatches(o.matches), duos: o.duos, deleted: EM.normDeleted(o.deleted) };
-    const merged = EM.mergeStand({ matches, duos, deleted }, ingevoerd);
+    const merged = EM.mergeStand({ matches, duos, deleted }, ingevoerd, { herstel:true });
     matches = merged.matches; duos = merged.duos; deleted = merged.deleted;
     saveMatches(); saveDuos(); saveDeleted(); syncPush();
     $("duoA").value = duos.a; $("duoB").value = duos.b;
@@ -891,11 +891,13 @@ syncFilters(); renderLeagues(); renderStand(); renderFinal();
    De ingebakken set is de offline fallback en heeft géén crestURL. De
    live bron heeft die wel, en we willen alleen echte logos. Dus:
    proberen, en pas als het lukt de pool vervangen. */
+let drawLabel = null;
 let loadSeq = 0;   // alleen het antwoord op de laatste keuze mag DATA zetten
 async function loadGame(id){
   const seq = ++loadSeq;
   const draw = $("draw");
-  const label = draw.textContent;
+  if (draw.textContent !== "Data laden") drawLabel = draw.textContent;   // een eerdere, nog lopende aanroep heeft de tekst al vervangen
+  const label = drawLabel;
   draw.disabled = true; draw.textContent = "Data laden";
   ghost($("cardA"), duos.a, true); ghost($("cardB"), duos.b, true);
   let loaded = null;

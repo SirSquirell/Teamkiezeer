@@ -66,6 +66,7 @@ De iOS-app leest alleen `data/teams.json` (FC 26); zie TK-20.
 ## Onderhoud
 
 - **Webtests**: `node --test` in de repo-root draait de engine-tests, zonder dependencies.
+  De versiegelijkheidstest (app.js, Xcode, CHANGELOG) zit in `pipeline/tests` en draait met pytest.
 - **Versiebeheer**: versienummers en historie staan in [CHANGELOG.md](CHANGELOG.md).
   De webapp toont zijn versie onderin de Filters-sheet; de iOS-app volgt via
   `MARKETING_VERSION`. Releasen = beide bumpen + changelog-regel + push naar main.

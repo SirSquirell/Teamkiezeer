@@ -21,6 +21,13 @@ Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
   ook bij een volle schijf 204. Nu alleen bekende velden, gehele scores 0-99
   en een bewaarde `deleted`-lijst. Wie zelf host moet het nieuwe `sync.php`
   uploaden. De app toont een melding bij een HTTP-fout van de sync.
+- **Importeren na Alles wissen brengt de stand weer terug.** Een expliciete
+  import heft de verwijdermarkeringen van de ingevoerde matches op; alleen de
+  sync laat verwijderen winnen. Het kopieer/importeer-paar blijft zo de back-upweg.
+- **De knop zegt na snel wisselen weer Draw** in plaats van blijvend "Data laden".
+- **`sync.php` bewaart per match en per duo alleen de bekende velden**, niet
+  alleen op het hoogste niveau.
+- **Sterrating-favoriet toont niet meer "null ster"** bij matches zonder sterren.
 - **Snel wisselen van titel laat de verkeerde set niet meer staan**, en een
   mislukte laadbeurt zegt welke set actief blijft.
 - iOS-versie op hetzelfde nummer gezet (stond op 0.03.3). De iOS-app zelf is
