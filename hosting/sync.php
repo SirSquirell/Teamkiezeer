@@ -80,8 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $matches = [];
     foreach ($doc['matches'] as $m) {
         $schoon = [];
-        foreach (['ts', 'aid', 'bid', 'an', 'bn', 'ar', 'br', 'stars', 'delta', 'sa', 'sb', 'chair'] as $veld) {
-            if (array_key_exists($veld, $m)) $schoon[$veld] = $m[$veld];
+        foreach (['ts', 'an', 'bn', 'sa', 'sb'] as $veld) $schoon[$veld] = $m[$veld];
+        foreach (['aid', 'bid', 'chair'] as $veld) {
+            if (isset($m[$veld]) && is_string($m[$veld]) && strlen($m[$veld]) <= MAX_NAAM) $schoon[$veld] = $m[$veld];
+        }
+        foreach (['ar', 'br', 'stars', 'delta'] as $veld) {
+            if (isset($m[$veld]) && (is_int($m[$veld]) || is_float($m[$veld])) && is_finite($m[$veld])) $schoon[$veld] = $m[$veld];
         }
         $matches[] = $schoon;
     }
@@ -109,9 +113,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         'updated' => gmdate('c'),
     ], JSON_UNESCAPED_UNICODE);
     // Eigen tijdelijk bestand per verzoek: gelijktijdige PUTs delen dan geen inode.
-    $tmp = tempnam(__DIR__, 'stand');
-    if ($uit === false || $tmp === false || file_put_contents($tmp, $uit) === false || !rename($tmp, $file)) {
-        if ($tmp !== false) @unlink($tmp);
+    // Expliciet in de eigen map ('x' faalt als hij al bestaat), zonder stille terugval
+    // naar de systeemmap; 0644 zodat een FTP-gebruiker de stand kan blijven ophalen.
+    $tmp = $file . '.' . bin2hex(random_bytes(6)) . '.tmp';
+    $fh = @fopen($tmp, 'x');
+    $ok = $uit !== false && $fh !== false && fwrite($fh, $uit) !== false;
+    if ($fh !== false) fclose($fh);
+    if (!$ok || !@chmod($tmp, 0644) || !@rename($tmp, $file)) {
+        @unlink($tmp);
         http_response_code(500);
         header('Content-Type: text/plain; charset=utf-8');
         echo "Opslaan mislukt: de map naast sync.php is niet schrijfbaar of vol.\n";

@@ -11,6 +11,14 @@ test("normMatches gooit kapotte elementen weg", () => {
   assert.deepEqual(EM.normMatches(slecht), []);
 });
 
+test("normMatch weigert een score met decimalen", () => {
+  assert.deepEqual(EM.normMatches([mk(1, { sa: 1.5 })]), []);
+});
+
+test("normMatch maakt van een onbekende chair none", () => {
+  assert.equal(EM.normMatches([mk(2, { chair: "x" })])[0].chair, "none");
+});
+
 test("normMatches houdt alleen bekende velden", () => {
   const [m] = EM.normMatches([mk(5, { rommel: 1 })]);
   assert.deepEqual(Object.keys(m).sort(),

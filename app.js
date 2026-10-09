@@ -475,7 +475,7 @@ $("openScore").addEventListener("click", () => {
 document.querySelectorAll("[data-s]").forEach(b => b.addEventListener("click", () => {
   const [id, d] = b.dataset.s.split(":");
   const el = $(id);
-  el.value = Math.max(0, Math.min(99, (Number(el.value) || 0) + Number(d)));
+  el.value = Math.max(0, Math.min(99, Math.round(Number(el.value) || 0) + Number(d)));
 }));
 $("saveScore").addEventListener("click", () => {
   if (!pending) return;
@@ -484,8 +484,8 @@ $("saveScore").addEventListener("click", () => {
     $("chairBtns").scrollIntoView({ block:"nearest", behavior:"smooth" });
     return;
   }
-  pending.sa = Math.max(0, Math.min(99, Number($("sA").value) || 0));
-  pending.sb = Math.max(0, Math.min(99, Number($("sB").value) || 0));
+  pending.sa = Math.max(0, Math.min(99, Math.round(Number($("sA").value) || 0)));
+  pending.sb = Math.max(0, Math.min(99, Math.round(Number($("sB").value) || 0)));
   matches.unshift(pending);
   saveMatches(); syncPush();
   pending = null; savePending();
