@@ -11,25 +11,29 @@ Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
   Twee toestellen die elk een score opsloegen verloren er één, en een
   verwijderde match kwam terug zodra het andere toestel zijn langere lijst
   terugstuurde. Nu is het een unie op match, verwijderen werkt door op alle
-  toestellen (via een lijst `deleted`), en Importeren voegt samen in plaats van
-  te vervangen.
+  toestellen (via een lijst `deleted`, tot 2000 sleutels), en Importeren voegt
+  samen in plaats van te vervangen.
+- **Importeren na Alles wissen brengt de stand weer terug, op alle toestellen.**
+  Een teruggezette match die een verwijdermarkering raakt krijgt een nieuwe
+  identiteit (tijdstip 1 ms later); de markering blijft staan en reist mee,
+  dus ook een toestel dat hem al had laat de match staan. Een test met twee
+  toestellen bewaakt dit.
 - **Een kapotte stand breekt de pagina niet meer.** De stand uit sync, import
   en localStorage wordt genormaliseerd: een match met score als tekst of een
   leeg element liet `renderStand` gooien, en omdat dat bij het opstarten
-  draait bleef de pagina stuk tot localStorage gewist was.
-- **`sync.php` geeft 500 als opslaan mislukt**, sloeg de ruwe body op en meldde
-  ook bij een volle schijf 204. Nu alleen bekende velden, gehele scores 0-99
-  en een bewaarde `deleted`-lijst. Wie zelf host moet het nieuwe `sync.php`
-  uploaden. De app toont een melding bij een HTTP-fout van de sync.
-- **Importeren na Alles wissen brengt de stand weer terug.** Een expliciete
-  import heft de verwijdermarkeringen van de ingevoerde matches op; alleen de
-  sync laat verwijderen winnen. Het kopieer/importeer-paar blijft zo de back-upweg.
+  draait bleef de pagina stuk tot localStorage gewist was. Weggelaten matches
+  worden gemeld (console bij opstarten, melding bij importeren).
+- **`sync.php` gaf 204 terwijl opslaan kon mislukken en bewaarde de ruwe body.**
+  Nu geeft het 500 als schrijven mislukt (map niet schrijfbaar of schijf vol),
+  bewaart het per match en per duo alleen bekende velden, eist gehele scores
+  0-99 en bewaart de `deleted`-lijst. Elke PUT schrijft naar een eigen
+  tijdelijk bestand, zodat twee gelijktijdige pushes elkaar niet laten falen.
+  Wie zelf host moet het nieuwe `sync.php` uploaden. De app toont een melding
+  bij een HTTP-fout van de sync.
 - **De knop zegt na snel wisselen weer Draw** in plaats van blijvend "Data laden".
-- **`sync.php` bewaart per match en per duo alleen de bekende velden**, niet
-  alleen op het hoogste niveau.
-- **Sterrating-favoriet toont niet meer "null ster"** bij matches zonder sterren.
 - **Snel wisselen van titel laat de verkeerde set niet meer staan**, en een
   mislukte laadbeurt zegt welke set actief blijft.
+- **Sterrating-favoriet toont niet meer "null ster"** bij matches zonder sterren.
 - iOS-versie op hetzelfde nummer gezet (stond op 0.03.3). De iOS-app zelf is
   onveranderd en kent alleen FC 26, zie TK-20. Een test bewaakt voortaan dat
   app.js, Xcode en deze changelog hetzelfde nummer hebben.

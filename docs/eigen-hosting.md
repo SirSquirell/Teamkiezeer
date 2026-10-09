@@ -41,7 +41,7 @@ op verzoeken vanaf `https://evenmatch.prulwerk.nl`; host je de app zelf
 onder een ander domein, pas dan de `Access-Control-Allow-Origin`-regel in
 `sync.php` aan.
 
-De stand bevat naast de matches ook een lijst `deleted`, zodat verwijderde matches op elk toestel weg blijven. Het script antwoordt 500 als het bestand niet geschreven kan worden (map niet schrijfbaar of schijf vol). Een bestaand `evenmatch-stand.json` zonder dat veld blijft werken.
+De stand bevat naast de matches ook een lijst `deleted`, zodat verwijderde matches op elk toestel weg blijven. Het script antwoordt 500 als het bestand niet geschreven kan worden (map niet schrijfbaar of schijf vol). Een bestaand `evenmatch-stand.json` zonder dat veld blijft werken. Importeren na Alles wissen zet de matches terug met een nieuw tijdstip (1 ms later), zodat de herstelde stand ook op andere toestellen blijft staan.
 
 ## Bijwerken
 

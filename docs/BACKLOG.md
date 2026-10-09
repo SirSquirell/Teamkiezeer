@@ -71,7 +71,7 @@ Niet in scope: accounts, per-speler-rechten, een database.
 - [x] Een verkeerde of ontbrekende sleutel geeft 403.
 - [x] Een PUT zonder `matches`-lijst, met meer dan 200 matches, met niet-numerieke `sa`/`sb`/`ts` of met een naam langer dan 80 tekens of met `<`/`>` geeft 400.
 - [x] `docs/eigen-hosting.md` beschrijft de sleutelstap en de URL-vorm met `?key=`.
-- [x] (0.04.1) Scores zijn gehele getallen 0-99, `ts` een eindig getal, `deleted` een lijst strings tot 64 tekens; mislukt het schrijven dan antwoordt het script 500.
+- [x] (0.04.1) Scores zijn gehele getallen 0-99, `ts` een eindig getal, `deleted` een lijst strings tot 64 tekens; mislukt het schrijven dan antwoordt het script 500. Elke PUT schrijft naar een eigen tijdelijk bestand. `deleted` mag tot 2000 sleutels bevatten; een toestel dat langer dan 2000 verwijderingen achterloopt kan een oude match nog terugbrengen (bekende rand, niet bereikbaar bij normaal gebruik).
 
 **Afhankelijkheden.** Wie al synct moet de sleutel invullen en de URL in de
 app aanpassen.

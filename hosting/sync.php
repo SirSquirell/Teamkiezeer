@@ -12,6 +12,7 @@ const SLEUTEL = '';
 const MAX_MATCHES = 200;
 const MAX_NAAM = 80;
 const MAX_VERWIJDERSLEUTEL = 64;
+const MAX_TOMBSTONES = 2000;
 const MAX_BODY = 512000;
 
 $file = __DIR__ . '/evenmatch-stand.json';
@@ -94,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $deleted = [];
     if (isset($doc['deleted'])) {
         if (!is_array($doc['deleted']) || $doc['deleted'] !== array_values($doc['deleted'])) weiger('deleted is geen lijst');
-        if (count($doc['deleted']) > MAX_MATCHES) weiger('meer dan ' . MAX_MATCHES . ' verwijderde matches');
+        if (count($doc['deleted']) > MAX_TOMBSTONES) weiger('meer dan ' . MAX_TOMBSTONES . ' verwijderde matches');
         foreach ($doc['deleted'] as $k) {
             if (!is_string($k) || strlen($k) > MAX_VERWIJDERSLEUTEL) weiger('verwijderde sleutel ongeldig');
         }
@@ -107,9 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         'deleted' => $deleted,
         'updated' => gmdate('c'),
     ], JSON_UNESCAPED_UNICODE);
-    $tmp = $file . '.tmp';
-    if ($uit === false || file_put_contents($tmp, $uit, LOCK_EX) === false || !rename($tmp, $file)) {
-        @unlink($tmp);
+    // Eigen tijdelijk bestand per verzoek: gelijktijdige PUTs delen dan geen inode.
+    $tmp = tempnam(__DIR__, 'stand');
+    if ($uit === false || $tmp === false || file_put_contents($tmp, $uit) === false || !rename($tmp, $file)) {
+        if ($tmp !== false) @unlink($tmp);
         http_response_code(500);
         header('Content-Type: text/plain; charset=utf-8');
         echo "Opslaan mislukt: de map naast sync.php is niet schrijfbaar of vol.\n";

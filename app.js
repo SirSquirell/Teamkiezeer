@@ -65,7 +65,8 @@ if (matches === null) {
   }));
   store.set("matches", matches);
 }
-matches = EM.normMatches(matches); store.set("matches", matches);
+{ const voor = matches.length; matches = EM.normMatches(matches); store.set("matches", matches);
+  if (matches.length < voor) console.info("Stand genormaliseerd: " + (voor - matches.length) + " ongeldige of dubbele match(es) weggelaten"); }
 
 /* sync: één JSON-blob GET/PUT (bijv. hosting/sync.php?key=...). Pull bij
    openen, push na elke mutatie. */
@@ -756,7 +757,8 @@ $("doImport").addEventListener("click", () => {
     saveMatches(); saveDuos(); saveDeleted(); syncPush();
     $("duoA").value = duos.a; $("duoB").value = duos.b;
     $("importBox").hidden = true; $("importErr").hidden = true;
-    renderStand(); renderFinal(); toast("Stand geïmporteerd");
+    const weg = o.matches.length - ingevoerd.matches.length;
+    renderStand(); renderFinal(); toast(weg > 0 ? "Stand geïmporteerd, " + weg + " ongeldige of dubbele match(es) overgeslagen" : "Stand geïmporteerd");
   }catch{ $("importErr").hidden = false; }
 });
 $("wipeAsk").addEventListener("click", () => { $("wipeRow").hidden = true; $("wipeConfirm").hidden = false; });

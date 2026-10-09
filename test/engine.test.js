@@ -69,24 +69,65 @@ test("import na wissen brengt de stand terug (herstel)", () => {
   const gewoon = EM.mergeStand(naWissen, { matches: stand, duos, deleted: [] });
   assert.equal(gewoon.matches.length, 0);   // sync: tombstone wint
   const herstel = EM.mergeStand(naWissen, { matches: stand, duos, deleted: [] }, { herstel: true });
-  assert.deepEqual(herstel.matches.map(x => x.ts).sort(), [1, 2]);
-  assert.deepEqual(herstel.deleted, []);
+  assert.equal(herstel.matches.length, 2);
+  assert.deepEqual(herstel.deleted.slice().sort(), stand.map(EM.matchKey).sort());   // tombstones blijven staan
 });
 
 test("herstel laat tombstones van andere matches staan", () => {
   const weg = EM.matchKey(mk(9));
   const m = EM.mergeStand({ matches: [], duos, deleted: [weg, EM.matchKey(mk(1))] }, { matches: [mk(1)], duos, deleted: [] }, { herstel: true });
-  assert.deepEqual(m.matches.map(x => x.ts), [1]);
-  assert.deepEqual(m.deleted, [weg]);
+  assert.equal(m.matches.length, 1);
+  assert.deepEqual(m.matches.map(x => x.sa), [mk(1).sa]);
+  assert.ok(m.deleted.includes(weg));
 });
 
-test("normDeleted: houdt de nieuwste 200, ontdubbelt, gooit rommel weg", () => {
-  const sleutels = Array.from({ length: 250 }, (_, i) => `${i + 1}|a|b`);
+test("twee toestellen: wissen op A, pull op B, import op A, pull op B en A houdt de stand", () => {
+  const stand = [mk(1000), mk(2000)];
+  const A0 = { matches: stand, duos, deleted: [] };
+  // A wist en pusht
+  let A = { matches: [], duos, deleted: stand.map(EM.matchKey) };
+  let server = { ...A };
+  // B (had de stand) pullt en krijgt de tombstones
+  let B = EM.mergeStand({ matches: stand, duos, deleted: [] }, server);
+  assert.equal(B.matches.length, 0);
+  // A importeert de back-up (herstel) en pusht
+  A = EM.mergeStand(A, A0, { herstel: true });
+  assert.equal(A.matches.length, 2);
+  server = A;
+  // B pullt gewoon
+  B = EM.mergeStand(B, server);
+  assert.equal(B.matches.length, 2);
+  // A pullt wat B terugstuurt
+  A = EM.mergeStand(A, B);
+  assert.equal(A.matches.length, 2);
+  assert.equal(EM.standDoc(A), EM.standDoc(B));
+  // opnieuw importeren is idempotent
+  const dubbel = EM.mergeStand(A, A0, { herstel: true });
+  assert.equal(dubbel.matches.length, 2);
+});
+
+test("normDeleted: niet-numerieke sleutels geven een stabiele volgorde", () => {
+  const a = EM.normDeleted(["x", "5|a|b", "y", "9|a|b"]);
+  const b = EM.normDeleted(["y", "9|a|b", "x", "5|a|b"]);
+  assert.deepEqual(a.slice(0, 2), ["9|a|b", "5|a|b"]);
+  assert.deepEqual(a.slice().sort(), b.slice().sort());
+});
+
+test("tombstones: Alles wissen op een volle lijst verliest er geen", () => {
+  const stand = Array.from({ length: EM.MAX_MATCHES }, (_, i) => mk(i + 1));
+  const sleutels = stand.map(EM.matchKey);
+  const nog = EM.normDeleted([...sleutels, EM.matchKey(mk(999))]);
+  assert.equal(nog.length, EM.MAX_MATCHES + 1);
+  assert.ok(nog.includes(sleutels[0]));
+});
+
+test("normDeleted: houdt de nieuwste 2000, ontdubbelt, gooit rommel weg", () => {
+  const sleutels = Array.from({ length: 2050 }, (_, i) => `${i + 1}|a|b`);
   const uit = EM.normDeleted([...sleutels, sleutels[0], 5, null, "x".repeat(65)]);
-  assert.equal(uit.length, 200);
-  assert.equal(uit[0], "250|a|b");
-  assert.equal(uit[199], "51|a|b");
-  assert.equal(new Set(uit).size, 200);
+  assert.equal(uit.length, 2000);
+  assert.equal(uit[0], "2050|a|b");
+  assert.equal(uit[1999], "51|a|b");
+  assert.equal(new Set(uit).size, 2000);
 });
 
 test("pull zonder verschil geeft gelijke standDoc (geen push)", () => {
