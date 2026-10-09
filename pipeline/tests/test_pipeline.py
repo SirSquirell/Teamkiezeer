@@ -269,3 +269,17 @@ def test_fc27_set_matcht_de_gepubliceerde_vijfsterrenlijst():
     # (bronquirk, zie docs/data-audit.md). Vandaar 8 + 5 + 1 = 14.
     assert ("OL Lyonnes", False) in vijf
     assert len(vijf) == 14, f"verwacht 14 clubs op 5.0, kreeg {len(vijf)}: {sorted(vijf)}"
+
+
+def test_webapp_ios_en_changelog_hebben_dezelfde_versie():
+    """README belooft dat beide versies samen gebumpt worden; dat was in 0.04.0
+    vergeten (iOS bleef op 0.03.3). Een test vangt dat, een afspraak niet."""
+    import re
+    app = (ROOT / "app.js").read_text(encoding="utf-8")
+    web = re.search(r'const APP_VERSION = "([^"]+)"', app).group(1)
+    pbx = (ROOT / "app" / "Teamkiezeer.xcodeproj" / "project.pbxproj").read_text(encoding="utf-8")
+    ios = set(re.findall(r"MARKETING_VERSION = ([0-9.]+);", pbx))
+    assert ios == {web}, f"app.js zegt {web}, Xcode zegt {sorted(ios)}"
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    bovenste = re.search(r"^## ([0-9.]+)", changelog, re.M).group(1)
+    assert bovenste == web, f"CHANGELOG begint met {bovenste}, app.js zegt {web}"

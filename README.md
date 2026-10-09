@@ -15,13 +15,15 @@ Puur voor eigen gebruik, nooit voor de App Store.
 ```
 /pipeline      Python scraper, draait dagelijks in GitHub Actions
 index.html     de webapp — GitHub Pages serveert de repo-root van main
+engine.js      pure stand-logica: normalisatie en merge, getest met node --test
+/test          node-tests voor engine.js
 /app           Xcode project (SwiftUI, iOS 17+)
 /data          gegenereerde teams.json + handmatige national-teams.json
 ```
 
 ## Data
 
-- Sterren: fifagamenews.com FC 26 team star ratings
+- Sterren: fifagamenews.com team star ratings, per titel (FC 26 en FC 27, zie pipeline/games.json)
 - Squad rating + league: fifauteam.com best teams
 - Landenteams: handmatig in `data/national-teams.json`
 - Crests: runtime gefetcht via URL, nooit gecommit (EA/club-IP)
@@ -59,8 +61,11 @@ Vernieuw af en toe de ingebouwde offline-snapshot:
 cp data/teams.json app/Teamkiezeer/Resources/bundled-teams.json
 ```
 
+De iOS-app leest alleen `data/teams.json` (FC 26); zie TK-20.
+
 ## Onderhoud
 
+- **Webtests**: `node --test` in de repo-root draait de engine-tests, zonder dependencies.
 - **Versiebeheer**: versienummers en historie staan in [CHANGELOG.md](CHANGELOG.md).
   De webapp toont zijn versie onderin de Filters-sheet; de iOS-app volgt via
   `MARKETING_VERSION`. Releasen = beide bumpen + changelog-regel + push naar main.
@@ -81,5 +86,5 @@ cp data/teams.json app/Teamkiezeer/Resources/bundled-teams.json
 - Naam-mismatch tussen de twee bronpagina's? Vul `pipeline/aliases.json`
   (de build logt elke unmatched naam).
 - Landenteams: handmatig bijwerken in `data/national-teams.json`.
-- FC 27 in september: pas de twee bron-URL's aan in `pipeline/build_teams.py`
-  en het `game`-veld; ververs daarna de snapshots voor de tests.
+- Nieuwe EA-titel: zie `pipeline/games.json` en TK-08 in docs/BACKLOG.md; hardcode
+  geen bron-URL buiten dat bestand.

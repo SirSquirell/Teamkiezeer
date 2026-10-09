@@ -11,6 +11,7 @@ const SLEUTEL = '';
 
 const MAX_MATCHES = 200;
 const MAX_NAAM = 80;
+const MAX_SLEUTEL = 64;
 const MAX_BODY = 512000;
 
 $file = __DIR__ . '/evenmatch-stand.json';
@@ -61,9 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     if (count($doc['matches']) > MAX_MATCHES) weiger('meer dan ' . MAX_MATCHES . ' matches');
     foreach ($doc['matches'] as $i => $m) {
         if (!is_array($m)) weiger("match $i is geen object");
-        foreach (['sa', 'sb', 'ts'] as $veld) {
-            if (!isset($m[$veld]) || !is_numeric($m[$veld])) weiger("match $i: $veld geen getal");
+        foreach (['sa', 'sb'] as $veld) {
+            if (!isset($m[$veld]) || !is_int($m[$veld]) || $m[$veld] < 0 || $m[$veld] > 99) weiger("match $i: $veld geen score 0-99");
         }
+        if (!isset($m['ts']) || !(is_int($m['ts']) || is_float($m['ts'])) || !is_finite($m['ts']) || $m['ts'] <= 0) weiger("match $i: ts geen tijdstip");
         foreach (['an', 'bn'] as $veld) {
             if (!isset($m[$veld]) || !geldige_naam($m[$veld])) weiger("match $i: $veld ongeldig");
         }
@@ -74,7 +76,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             if (!geldige_naam($v)) weiger('duo-naam ongeldig');
         }
     }
-    file_put_contents($file, $body, LOCK_EX);
+    $deleted = [];
+    if (isset($doc['deleted'])) {
+        if (!is_array($doc['deleted']) || $doc['deleted'] !== array_values($doc['deleted'])) weiger('deleted is geen lijst');
+        if (count($doc['deleted']) > MAX_MATCHES) weiger('meer dan ' . MAX_MATCHES . ' verwijderde matches');
+        foreach ($doc['deleted'] as $k) {
+            if (!is_string($k) || strlen($k) > MAX_SLEUTEL) weiger('verwijderde sleutel ongeldig');
+        }
+        $deleted = $doc['deleted'];
+    }
+    $uit = json_encode([
+        'v' => 3,
+        'matches' => $doc['matches'],
+        'duos' => $doc['duos'] ?? null,
+        'deleted' => $deleted,
+        'updated' => gmdate('c'),
+    ], JSON_UNESCAPED_UNICODE);
+    $tmp = $file . '.tmp';
+    if ($uit === false || file_put_contents($tmp, $uit, LOCK_EX) === false || !rename($tmp, $file)) {
+        @unlink($tmp);
+        http_response_code(500);
+        header('Content-Type: text/plain; charset=utf-8');
+        echo "Opslaan mislukt: de map naast sync.php is niet schrijfbaar of vol.\n";
+        exit;
+    }
     http_response_code(204);
     exit;
 }

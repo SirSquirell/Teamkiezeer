@@ -36,10 +36,12 @@ back-up is een kwestie van downloaden.
 De sleutel is het enige slot: wie de URL kent kan de stand lezen en
 overschrijven. Deel de URL dus alleen met wie meespeelt, en zet er geen
 gevoelige data in. Het script accepteert alleen een stand in het verwachte
-formaat (maximaal 200 matches, namen zonder `<` of `>`) en antwoordt alleen
+formaat (maximaal 200 matches, gehele scores 0-99, namen zonder `<` of `>`) en antwoordt alleen
 op verzoeken vanaf `https://evenmatch.prulwerk.nl`; host je de app zelf
 onder een ander domein, pas dan de `Access-Control-Allow-Origin`-regel in
 `sync.php` aan.
+
+De stand bevat naast de matches ook een lijst `deleted`, zodat verwijderde matches op elk toestel weg blijven. Het script antwoordt 500 als het bestand niet geschreven kan worden (map niet schrijfbaar of schijf vol). Een bestaand `evenmatch-stand.json` zonder dat veld blijft werken.
 
 ## Bijwerken
 

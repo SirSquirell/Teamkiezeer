@@ -71,6 +71,7 @@ Niet in scope: accounts, per-speler-rechten, een database.
 - [x] Een verkeerde of ontbrekende sleutel geeft 403.
 - [x] Een PUT zonder `matches`-lijst, met meer dan 200 matches, met niet-numerieke `sa`/`sb`/`ts` of met een naam langer dan 80 tekens of met `<`/`>` geeft 400.
 - [x] `docs/eigen-hosting.md` beschrijft de sleutelstap en de URL-vorm met `?key=`.
+- [x] (0.04.1) Scores zijn gehele getallen 0-99, `ts` een eindig getal, `deleted` een lijst strings tot 64 tekens; mislukt het schrijven dan antwoordt het script 500.
 
 **Afhankelijkheden.** Wie al synct moet de sleutel invullen en de URL in de
 app aanpassen.
@@ -293,6 +294,8 @@ weg. Niet in scope: een ander dataformaat.
 
 **Afhankelijkheden.** TK-05.
 
+**Stand 0.04.1.** De melding noemt nu eerlijk welke set actief blijft als de gekozen titel niet laadt, maar het echte antwoord blijft: de literal eruit.
+
 **Test.** Vliegtuigmodus na één bezoek; de datadatum in de kopregel is die van
 het laatste bezoek.
 
@@ -400,8 +403,6 @@ lettertype.
 
 ---
 
-**Volgend vrij nummer: TK-19**
-
 ## TK-19 Toggle tussen FC 26 en FC 27
 
 *gebouwd, 0.04.0*
@@ -426,3 +427,84 @@ volledige FC 27-tabel te scrapen is, en dan kunnen de overrides eruit.
 Inter staat op 4.5 op basis van een afleiding, niet van een publicatie; een
 in-game check is de bedoeling.
 
+## TK-20 iOS-app: FC 27 erbij of expliciet bevroren op FC 26
+
+*open, beslissing eigenaar*
+
+**Waarom.** De webapp staat sinds 0.04.0 standaard op FC 27 met een eigen
+dataset; de iOS-app leest alleen `data/teams.json` (FC 26, `TeamStore.swift`
+regel 40) en heeft geen titelkeuze. Twee spelers in dezelfde avond, een op
+web en een op iOS, loten met andere sterren. README en CHANGELOG zeggen dat
+de versies gelijk lopen; sinds 0.04.1 bewaakt een test het nummer, maar niet
+het gedrag.
+
+**Scope / niet in scope.** In scope: óf een titelkeuze in de iOS-app die
+dezelfde `GAMES`-lijst volgt en beide sets als bundled snapshot meedraagt, óf
+een zin in README en CHANGELOG dat iOS op FC 26 blijft tot de FC 27-bron
+compleet is (TK-08). Niet in scope: App Store, nieuwe features in de
+iOS-app.
+
+**Acceptatiecriteria.**
+- [ ] De eigenaar heeft gekozen en de keuze staat in dit kopje.
+- [ ] Bij "erbij": `swift test` dekt de titelkeuze en `bundled-teams.json` is er per titel.
+- [ ] Bij "bevroren": README en CHANGELOG zeggen het, met de voorwaarde waarop het eindigt.
+
+**Afhankelijkheden.** TK-08 (echte FC 27-data) bepaalt of de keuze de
+moeite is.
+
+**Test.** `swift test` in `app/TeamkiezeerKit`; `cmp` van de bundled
+snapshots met `data/`.
+
+## TK-21 Sync-sleutel in een header in plaats van de query string
+
+*open*
+
+**Waarom.** `?key=` staat in elke GET en PUT en daarmee in de accesslogs van
+de webserver en van elke proxy ertussen; de volledige URL met sleutel staat
+in localStorage onder `syncUrl`. Een header staat in geen van beide.
+
+**Scope / niet in scope.** In scope: `sync.php` leest de sleutel uit
+`X-Sleutel` (en `Access-Control-Allow-Headers` krijgt die header), de app
+krijgt een apart sleutelveld naast de Sync-URL, en één release lang
+accepteert het script beide vormen zodat bestaande URL's blijven werken;
+daarna gaat `$_GET['key']` eruit. Niet in scope: `connect-src` beperken (de
+sync-host is per gebruiker instelbaar), accounts.
+
+**Acceptatiecriteria.**
+- [ ] Een PUT met de sleutel alleen in de header geeft 204; alleen in de query geeft na de overgangsrelease 403.
+- [ ] `syncUrl` in localStorage bevat geen sleutel meer; een oude URL met `?key=` wordt bij het opstarten eenmalig gesplitst.
+- [ ] `docs/eigen-hosting.md` beschrijft het sleutelveld.
+
+**Afhankelijkheden.** TK-03.
+
+**Test.** `php -l`; `curl` met en zonder header; `node --test` voor de
+URL-splitsing.
+
+## TK-22 Draw-engine naar engine.js met node-tests
+
+*open*
+
+**Waarom.** `poolFilter`, `attempt`, `recentDraws` en `drawPair` zijn de
+tweede implementatie van `DrawEngine.swift` en de enige die dagelijks draait,
+maar ze staan als top-level code in `app.js` en zijn vanuit Node niet te
+laden. Swift heeft 20 tests op dezelfde regels; de JS-kopie heeft er nul.
+Sinds 0.04.1 bestaat `engine.js` met `node --test` en een CI-job, dus de
+plek is er.
+
+**Scope / niet in scope.** In scope: de vier functies naar `engine.js`, met
+`rules`, `data`, `history` en `rng` als argumenten; `app.js` roept ze aan met
+zijn eigen state; tests voor: vaste ster mengt nooit buckets of soorten, het
+venster krimpt en meldt `relax`, een paar dat gerold én gespeeld is telt één
+keer in `recentDraws`. Niet in scope: andere trekkingsregels, de ceremony.
+
+**Acceptatiecriteria.**
+- [ ] `drawPair` in `engine.js` is pure: geen DOM, geen `Math.random` zonder injectie, geen globale state.
+- [ ] `node --test` dekt de drie regels hierboven en faalt als een ervan breekt.
+- [ ] `python pipeline/draw_audit.py` geeft dezelfde kansen als vóór de verhuizing.
+
+**Afhankelijkheden.** engine.js en de CI-job uit 0.04.1.
+
+**Test.** `node --test`; handmatig tien draws in de demo met een vaste
+ster.
+
+**Volgend vrij nummer: TK-23**

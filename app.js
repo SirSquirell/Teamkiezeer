@@ -30,7 +30,7 @@ const store = {
   del(k){ try{ localStorage.removeItem(k); }catch{} },
 };
 
-const APP_VERSION = "0.04.0";   // bump bij elke release; historie in CHANGELOG.md
+const APP_VERSION = "0.04.1";   // bump bij elke release; historie in CHANGELOG.md
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
 const defaults = () => ({ cooldown:6, pinned:4, kind:"mixed", womens:false,
@@ -48,10 +48,11 @@ store.del("rules5");
 if (!GAMES.some(g => g.id === rules.game)) rules.game = GAMES[0].id;
 if (!Array.isArray(rules.whitelist) || !rules.whitelist.length) rules.whitelist = [...DEFAULT_WHITELIST];
 
-let duos = Object.assign({ a:"W/M", b:"J/J" }, store.get("duos", null) || {});
+let duos = EM.normDuos(store.get("duos", null), { a:"W/M", b:"J/J" });
 let matches = store.get("matches", null);          // persistent, alleen gekozen eindmatches
 let rolls = [];                                    // sessie, vluchtig
 let pending = store.get("pending", null);          // gekozen maar nog niet gespeeld
+let deleted = EM.normDeleted(store.get("deleted", []));   // sleutels ts|aid|bid van verwijderde matches, voor de sync-merge
 
 /* migratie van de oude `history`-key: alles met een score was een echte match,
    de rest waren rolls en die horen niet persistent te zijn. */
@@ -64,32 +65,37 @@ if (matches === null) {
   }));
   store.set("matches", matches);
 }
+matches = EM.normMatches(matches); store.set("matches", matches);
 
 /* sync: één JSON-blob GET/PUT (bijv. hosting/sync.php?key=...). Pull bij
    openen, push na elke mutatie. */
 function syncPush(){
   const url = (store.get("syncUrl", "") || "").trim(); if (!url) return;
   fetch(url, { method:"PUT", headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ v:2, matches, duos, updated:new Date().toISOString() }) }).catch(()=>{});
+    body: JSON.stringify({ v:3, matches, duos, deleted, updated:new Date().toISOString() }) })
+    .then(r => { if (!r.ok) toast("Sync mislukt (" + r.status + ")"); }).catch(()=>{});
 }
 async function syncPull(){
   const url = (store.get("syncUrl", "") || "").trim(); if (!url) return;
   try{
     const r = await fetch(url, { cache:"no-cache" });
-    if (!r.ok) return;
+    if (!r.ok){ toast("Sync mislukt (" + r.status + ")"); return; }
     const doc = await r.json();
-    if (!doc || !Array.isArray(doc.matches)) return;
-    const rm = doc.matches, rd = doc.duos;
-    if (rm.length >= matches.length){
-      matches = rm; store.set("matches", matches);
-      if (rd && rd.a){ duos = rd; store.set("duos", duos); }
-      renderStand(); renderFinal();
-    } else syncPush();
+    if (!doc || typeof doc !== "object") return;
+    const remote = { matches: EM.normMatches(doc.matches), duos: doc.duos, deleted: EM.normDeleted(doc.deleted) };
+    const merged = EM.mergeStand({ matches, duos, deleted }, remote);
+    matches = merged.matches; duos = merged.duos; deleted = merged.deleted;
+    saveMatches(); saveDuos(); saveDeleted();
+    $("duoA").value = duos.a; $("duoB").value = duos.b;
+    renderStand(); renderFinal();
+    // Alleen terugpushen als de server iets mist; anders is elke pull een schrijfactie.
+    if (EM.standDoc(merged) !== EM.standDoc({ ...remote, duos: EM.normDuos(remote.duos, duos) })) syncPush();
   }catch{ /* offline of endpoint down: lokaal blijft leidend */ }
 }
 
 const saveRules = () => store.set("rules6", rules);
-const saveMatches = () => store.set("matches", matches = matches.slice(0, 200));
+const saveMatches = () => store.set("matches", matches = EM.normMatches(matches));
+const saveDeleted = () => store.set("deleted", deleted = EM.normDeleted(deleted));
 const savePending = () => pending ? store.set("pending", pending) : store.del("pending");
 const saveDuos = () => store.set("duos", duos);
 
@@ -529,8 +535,8 @@ function syncFilters(){
   seg($("gameSeg"), GAMES.map(g => [g.id, g.label]), rules.game, v => {
     if (v === rules.game) return;
     rules.game = v; saveRules(); syncFilters();
-    loadGame(v).then(ok => toast(ok ? gameById(v).label + " geladen"
-                                    : gameById(v).label + " niet gevonden"));
+    loadGame(v).then(ok => { if (ok === null) return; toast(ok ? gameById(v).label + " geladen"
+                                    : gameById(v).label + " niet gevonden"); });
   });
   // De note komt uit de dataset zelf, niet uit de app: zodra de bron compleet
   // is verdwijnt de waarschuwing vanzelf met de volgende build.
@@ -707,6 +713,8 @@ function renderStand(){
 $("playedList").addEventListener("click", e => {
   const b = e.target.closest("[data-del]");
   if (!b) return;
+  const weg = matches[Number(b.dataset.del)];
+  if (weg){ deleted.unshift(EM.matchKey(weg)); saveDeleted(); }
   matches.splice(Number(b.dataset.del), 1);
   saveMatches(); syncPush(); renderStand();
 });
@@ -731,7 +739,7 @@ $("syncUrl").value = store.get("syncUrl", "");
 $("syncUrl").addEventListener("change", e => { store.set("syncUrl", e.target.value.trim()); syncPull(); });
 
 $("copyStand").addEventListener("click", async () => {
-  const blob = JSON.stringify({ v:2, matches, duos });
+  const blob = JSON.stringify({ v:3, matches, duos, deleted });
   try{ await navigator.clipboard.writeText(blob); toast("Stand gekopieerd"); }
   catch{ $("showImport").click(); $("importText").value = blob; $("importText").select();
          toast("Kopieer de tekst hieronder"); }
@@ -742,8 +750,11 @@ $("doImport").addEventListener("click", () => {
   try{
     const o = JSON.parse($("importText").value);
     if (!o || !Array.isArray(o.matches)) throw 0;
-    matches = o.matches; saveMatches(); syncPush();
-    if (o.duos){ duos = o.duos; saveDuos(); $("duoA").value = duos.a; $("duoB").value = duos.b; }
+    const ingevoerd = { matches: EM.normMatches(o.matches), duos: o.duos, deleted: EM.normDeleted(o.deleted) };
+    const merged = EM.mergeStand({ matches, duos, deleted }, ingevoerd);
+    matches = merged.matches; duos = merged.duos; deleted = merged.deleted;
+    saveMatches(); saveDuos(); saveDeleted(); syncPush();
+    $("duoA").value = duos.a; $("duoB").value = duos.b;
     $("importBox").hidden = true; $("importErr").hidden = true;
     renderStand(); renderFinal(); toast("Stand geïmporteerd");
   }catch{ $("importErr").hidden = false; }
@@ -751,6 +762,7 @@ $("doImport").addEventListener("click", () => {
 $("wipeAsk").addEventListener("click", () => { $("wipeRow").hidden = true; $("wipeConfirm").hidden = false; });
 $("wipeNo").addEventListener("click", () => { $("wipeRow").hidden = false; $("wipeConfirm").hidden = true; });
 $("wipeYes").addEventListener("click", () => {
+  deleted = [...matches.map(EM.matchKey), ...deleted]; saveDeleted();
   matches = []; saveMatches(); syncPush(); pending = null; savePending(); rolls = [];
   $("wipeRow").hidden = false; $("wipeConfirm").hidden = true;
   renderStand(); renderFinal(); toast("Alles gewist");
@@ -879,7 +891,9 @@ syncFilters(); renderLeagues(); renderStand(); renderFinal();
    De ingebakken set is de offline fallback en heeft géén crestURL. De
    live bron heeft die wel, en we willen alleen echte logos. Dus:
    proberen, en pas als het lukt de pool vervangen. */
+let loadSeq = 0;   // alleen het antwoord op de laatste keuze mag DATA zetten
 async function loadGame(id){
+  const seq = ++loadSeq;
   const draw = $("draw");
   const label = draw.textContent;
   draw.disabled = true; draw.textContent = "Data laden";
@@ -892,15 +906,19 @@ async function loadGame(id){
       const resp = await fetch(src, { cache:"no-cache" });
       if (!resp.ok) continue;
       const json = await resp.json();
-      if (json && Array.isArray(json.teams) && json.teams.length){ loaded = json; break; }
+      if (json && Array.isArray(json.teams) && json.teams.length && Array.isArray(json.leagues)){ loaded = json; break; }
     }catch{ /* volgende bron */ }
   }
+  if (seq !== loadSeq) return null;   // een nieuwere keuze is onderweg en rondt zelf af
   draw.disabled = false; draw.textContent = label;
   ghost($("cardA"), duos.a); ghost($("cardB"), duos.b);
   if (!loaded){
     renderMeta(); syncFilters();
     const withCrest = DATA.teams.filter(t => t.crestURL).length;
-    $("stageNote").innerHTML = withCrest
+    const g = gameById(id);
+    $("stageNote").innerHTML = DATA.game !== g.label
+      ? `<b>${esc(g.label)} kon niet geladen worden.</b><br>De ${esc(DATA.game)}-set blijft actief; de sterren zijn van die titel.`
+      : withCrest
       ? "Twee teams, altijd evenveel sterren."
       : `<b>Offline set actief.</b><br>Deze kopie heeft geen clublogo's. ` +
         `Zet <code>teams.json</code> naast deze pagina of ga online voor de echte crests.`;

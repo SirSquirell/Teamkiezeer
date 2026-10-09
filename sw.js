@@ -8,7 +8,7 @@
 const VERSION = new URL(self.location.href).searchParams.get("v") || "dev";
 const CACHE = "evenmatch-" + VERSION;
 const PRECACHE = [
-  "./", "index.html", "app.js", "manifest.json",
+  "./", "index.html", "engine.js", "app.js", "manifest.json",
   "icon-192.png", "icon-512.png", "apple-touch-icon.png", "favicon.svg",
   "fonts/archivo-400.woff2", "fonts/archivo-900.woff2",
 ];

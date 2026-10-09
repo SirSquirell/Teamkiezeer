@@ -5,6 +5,29 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
+## 0.04.1 — 2026-10-09
+
+- **De sync voegt samen in plaats van de langste lijst te laten winnen.**
+  Twee toestellen die elk een score opsloegen verloren er één, en een
+  verwijderde match kwam terug zodra het andere toestel zijn langere lijst
+  terugstuurde. Nu is het een unie op match, verwijderen werkt door op alle
+  toestellen (via een lijst `deleted`), en Importeren voegt samen in plaats van
+  te vervangen.
+- **Een kapotte stand breekt de pagina niet meer.** De stand uit sync, import
+  en localStorage wordt genormaliseerd: een match met score als tekst of een
+  leeg element liet `renderStand` gooien, en omdat dat bij het opstarten
+  draait bleef de pagina stuk tot localStorage gewist was.
+- **`sync.php` geeft 500 als opslaan mislukt**, sloeg de ruwe body op en meldde
+  ook bij een volle schijf 204. Nu alleen bekende velden, gehele scores 0-99
+  en een bewaarde `deleted`-lijst. Wie zelf host moet het nieuwe `sync.php`
+  uploaden. De app toont een melding bij een HTTP-fout van de sync.
+- **Snel wisselen van titel laat de verkeerde set niet meer staan**, en een
+  mislukte laadbeurt zegt welke set actief blijft.
+- iOS-versie op hetzelfde nummer gezet (stond op 0.03.3). De iOS-app zelf is
+  onveranderd en kent alleen FC 26, zie TK-20. Een test bewaakt voortaan dat
+  app.js, Xcode en deze changelog hetzelfde nummer hebben.
+- `engine.js` met node-tests en een CI-job voor de webapp.
+
 ## 0.04.0 — 2026-09-18
 
 - **Keuze tussen FC 26 en FC 27 in de app, standaard FC 27.** De Filters-sheet

@@ -6,6 +6,13 @@ on:
       - "app/TeamkiezeerKit/**"
       - "pipeline/**"
       - ".github/workflows/ci.yml"
+      - "app.js"
+      - "engine.js"
+      - "sw.js"
+      - "index.html"
+      - "test/**"
+      - "hosting/**"
+      - "app/Teamkiezeer.xcodeproj/project.pbxproj"
   workflow_dispatch:
 
 permissions:
@@ -32,3 +39,15 @@ jobs:
         run: pip install -r pipeline/requirements.txt
       - name: Run pipeline tests (against committed snapshots)
         run: python -m pytest pipeline/tests -q
+
+  web-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run engine tests
+        run: node --test
+      - name: Lint sync.php
+        run: php -l hosting/sync.php
