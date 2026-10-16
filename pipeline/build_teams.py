@@ -17,6 +17,7 @@ rij wordt gelogd; stil weglaten is een bug.
 from __future__ import annotations
 
 import argparse
+import difflib
 import io
 import json
 import sys
@@ -27,7 +28,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from normalize import is_womens_name, match_name, normalize, slugify, strip_womens_marker
-from parse import parse_best_teams, parse_stars
+from parse import crest_key, parse_best_teams, parse_roster, parse_stars
 
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOTS = ROOT / "pipeline" / "snapshots"
@@ -108,12 +109,18 @@ def group_leagues(league_rows, league_meta):
     if unknown:
         raise SystemExit(f"FOUT: onbekende league-titels op bronpagina: {sorted(unknown)}")
 
+    rosters = {t: tuple(sorted(normalize(r.name) for r in rows)) for t, rows in by_title.items()}
+    # Alleen droppen als de kopie er nu ook echt staat: de FC 26-pagina heeft
+    # de bug, de FC 27-pagina niet, en leagues.json geldt voor beide.
     for title, meta in league_meta.items():
-        if meta.get("drop") and title in by_title:
+        if not (meta.get("drop") and title in by_title):
+            continue
+        if any(rosters[title] == r for t, r in rosters.items() if t != title):
             log(f"DROP LEAGUE: '{title}' ({meta['drop']}), {len(by_title[title])} rijen")
             del by_title[title]
-
-    rosters = {t: tuple(sorted(normalize(r.name) for r in rows)) for t, rows in by_title.items()}
+            del rosters[title]
+        else:
+            log(f"KOPIE-BUG WEG: '{title}' heeft een eigen teamlijst, league blijft erin")
     by_roster = defaultdict(list)
     for title, roster in rosters.items():
         by_roster[roster].append(title)
@@ -136,6 +143,20 @@ def join(star_rows, by_title, league_meta, aliases):
                 log(f"WAARSCHUWING: league-pagina dubbel: {row.name} in {title}")
                 continue
             league_index[key] = (row, meta)
+    # Beide bronnen linken dezelfde fifauteam-crests. Een crest die precies
+    # één league-rij heeft is een betere sleutel dan fuzzy op naam
+    # ("Villarreal CF" vs "Villareal"); een gedeelde crest (Sporting CP en
+    # Real Sporting) beslist niets en valt terug op de naam.
+    by_crest = defaultdict(list)
+    for key, (row, _meta) in league_index.items():
+        ck = crest_key(row.crest_url)
+        if ck:
+            by_crest[(ck, key[1])].append(key[0])
+
+    # Een league-rij die al een sterrenrij met exact dezelfde naam heeft, is
+    # bezet; anders koppelt de crest het FC 26-vrouwenteam "Nantes" (zonder
+    # (W) op de bron) aan de mannen van "FC Nantes".
+    exact = {(normalize(s.name), is_womens_name(s.name)) for s in star_rows} & set(league_index)
 
     teams = []
     unmatched = []
@@ -145,6 +166,11 @@ def join(star_rows, by_title, league_meta, aliases):
         star_key = normalize(star.name)
         pool = [k for (k, w) in league_index if w == womens]
         matched, how = match_name(star_key, pool, aliases)
+        if how not in ("exact", "alias"):
+            via_crest = [k for k in by_crest.get((crest_key(star.crest_url), womens), [])
+                         if (k, womens) not in exact]
+            if len(via_crest) == 1:
+                matched, how = via_crest[0], "crest"
         display = strip_womens_marker(star.name)
         if matched is None:
             unmatched.append((star, how))
@@ -202,6 +228,86 @@ def join(star_rows, by_title, league_meta, aliases):
     if dup_ids:
         raise SystemExit(f"FOUT: dubbele team-ids na join: {dup_ids}")
     return teams
+
+
+ROSTER_WOMENS = ("WOMEN", "FEMALE", "FRAUEN", "LIGA F", "NWSL", "ARKEMA")
+
+
+def roster_check(teams, roster_rows, aliases: dict[str, str]) -> set[str]:
+    """Leg de clubs naast de officiële teamlijst van de titel en geef de ids
+    terug van clubs die er niet op staan. Een club op de teamlijst zonder ster
+    op de bron wordt alleen gelogd: zonder ster kunnen we hem niet eerlijk
+    loten."""
+    clubs = [t for t in teams if t["kind"] == "club"]
+    by_id = {t["id"]: t for t in clubs}
+    by_name = {(normalize(t["name"]), t["womens"]): t for t in clubs}
+    by_crest = defaultdict(list)
+    for t in clubs:
+        if crest_key(t["crestURL"]):
+            by_crest[(crest_key(t["crestURL"]), t["womens"])].append(t)
+    seen = set()
+    rest = []
+    for row in roster_rows:
+        womens = any(w in row.league_title for w in ROSTER_WOMENS)
+        hit = by_name.get((normalize(row.name), womens))
+        if hit is None:
+            cands = by_crest.get((crest_key(row.crest_url), womens), [])
+            hit = cands[0] if len(cands) == 1 and cands[0]["id"] not in seen else None
+        if hit is None:
+            rest.append((row, womens))
+        else:
+            seen.add(hit["id"])
+    # Tweede ronde op wat overblijft: een handmatige koppeling (aliases.json,
+    # 'teamlijst'), of dezelfde crest, of de ene naam bevat de andere
+    # ("Celta" / "Celta Vigo"), of bijna dezelfde spelling. Alleen bij precies
+    # één kandidaat.
+    missing = []
+    for row, womens in rest:
+        rk = normalize(row.name)
+        alias = aliases.get(rk + (" w" if womens else ""))
+        if alias in by_id and alias not in seen:
+            seen.add(alias)
+            continue
+        rt = set(rk.split())
+        cands = []
+        for t in clubs:
+            if t["id"] in seen or t["womens"] != womens:
+                continue
+            tk = normalize(t["name"])
+            tt = set(tk.split())
+            if ((crest_key(row.crest_url) and crest_key(row.crest_url) == crest_key(t["crestURL"]))
+                    or (rt and tt and (rt <= tt or tt <= rt))
+                    or difflib.SequenceMatcher(None, rk, tk).ratio() >= 0.85):
+                cands.append(t)
+        if len(cands) == 1:
+            seen.add(cands[0]["id"])
+            log(f"TEAMLIJST: '{row.name}' herkend als {cands[0]['id']}")
+        else:
+            missing.append(f"{row.name}{' (W)' if womens else ''} [{row.league_title}]")
+    for m in missing:
+        log(f"TEAMLIJST: in de game, geen ster op de bron (niet lootbaar): {m}")
+    weg = {t["id"] for t in clubs if t["id"] not in seen}
+    log(f"TEAMLIJST: {len(roster_rows)} clubs in de game, {len(seen)} herkend in de dataset, "
+        f"{len(missing)} zonder ster, {len(weg)} niet op de teamlijst")
+    return weg
+
+
+ROSTER_MAX_DROP = 25
+
+
+def drop_not_in_game(teams, weg: set[str]):
+    """Haal clubs weg die niet op de officiële teamlijst staan. Boven
+    ROSTER_MAX_DROP is eerder de koppeling of de pagina stuk dan dat EA zoveel
+    clubs schrapte: dan niets weghalen en luid waarschuwen."""
+    if len(weg) > ROSTER_MAX_DROP:
+        log(f"TEAMLIJST WAARSCHUWING: {len(weg)} clubs niet herkend (> {ROSTER_MAX_DROP}); "
+            "koppeling verdacht, niets weggehaald")
+        return teams
+    for t in teams:
+        if t["id"] in weg:
+            log(f"TEAMLIJST DROP: {t['id']} ({t['name']}, {t['starRating']}★) staat niet "
+                "op de teamlijst van deze titel; klopt dat niet, koppel hem in aliases.json")
+    return [t for t in teams if t["id"] not in weg]
 
 
 def _count(items):
@@ -313,14 +419,17 @@ def load_flags() -> dict:
     return json.loads(path.read_text(encoding="utf-8"))["flags"]
 
 
-def load_national_teams():
+def load_national_teams(game: dict | None = None):
     """Landenteams komen uit een handmatige seed omdat fifauteam/fifagamenews
     ze als platte tekst tonen, zonder crest per team. Vlaggen (via
     pipeline/flags.json -> flagcdn.com) zijn wél altijd beschikbaar en geen
-    EA/club-IP, dus die vullen crestURL i.p.v. de initialen-fallback."""
-    path = ROOT / "data" / "national-teams.json"
+    EA/club-IP, dus die vullen crestURL i.p.v. de initialen-fallback.
+    Elke titel heeft een eigen seed (games.json 'nationalTeams'): welke landen
+    erin zitten verschilt per jaar."""
+    rel = (game or {}).get("nationalTeams", "data/national-teams.json")
+    path = ROOT / rel
     if not path.exists():
-        log("NATIONAL: data/national-teams.json ontbreekt, geen landenteams opgenomen")
+        log(f"NATIONAL: {rel} ontbreekt, geen landenteams opgenomen")
         return []
     doc = json.loads(path.read_text(encoding="utf-8"))
     teams = doc["teams"]
@@ -368,23 +477,32 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
     league_meta = json.loads((ROOT / "pipeline" / "leagues.json").read_text(encoding="utf-8"))[
         "leagues"
     ]
-    aliases = json.loads((ROOT / "pipeline" / "aliases.json").read_text(encoding="utf-8"))[
-        "aliases"
-    ]
+    alias_doc = json.loads((ROOT / "pipeline" / "aliases.json").read_text(encoding="utf-8"))
+    aliases = alias_doc["aliases"]
+    aliases_teamlijst = alias_doc.get("teamlijst", {})
 
     star_rows = dedup_stars(star_rows)
     by_title = group_leagues(league_rows, league_meta)
     teams = join(star_rows, by_title, league_meta, aliases)
+    try:
+        roster_html = ((SNAPSHOTS / "leagues-clubs.html").read_text(encoding="utf-8")
+                       if offline else fetch(game["leaguesClubsURL"]))
+        weg = roster_check(teams, parse_roster(roster_html), aliases_teamlijst)
+        if game.get("rosterDrop"):
+            teams = drop_not_in_game(teams, weg)
+    except Exception as e:  # noqa: BLE001
+        # Een signaal naast de build, geen poortwachter.
+        log(f"TEAMLIJST: check overgeslagen ({e})")
     upgrade_crests(teams, skip_crest_check)
     dominant_colors(teams, skip_colors)
-    teams += load_national_teams()
+    teams += load_national_teams(game)
     apply_overrides(teams, ROOT / game["overrides"])
 
     matched = sum(1 for t in teams if t["leagueId"])
     log(f"RESULTAAT: {len(teams)} teams, {matched} met league")
 
     from audit import run_audit
-    run_audit(teams, log)
+    run_audit(teams, log, game.get("auditMinStarLevels", 8))
 
     payload = {
         "schemaVersion": 1,
@@ -403,7 +521,7 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
                 "defaultWhitelist": m["defaultWhitelist"],
             }
             for title, m in league_meta.items()
-            if not m.get("drop") and title in by_title
+            if title in by_title
         ],
         "teams": teams,
     }

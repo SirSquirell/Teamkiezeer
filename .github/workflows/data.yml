@@ -44,14 +44,23 @@ jobs:
       # Elke titel in games.json krijgt zijn eigen bestand. De webapp kan
       # ertussen wisselen, dus ze moeten allebei bij blijven; alleen 'current'
       # bouwen zou de andere set stilletjes laten verouderen.
+      # Een titel die faalt houdt de andere niet tegen: van 2026-09-20 tot
+      # 2026-10-16 blokkeerde een nieuwe FC 27-league ook elke FC 26-commit.
+      # De job faalt wel aan het eind, zodat het faal-issue opengaat.
       - name: Build alle datasets (live scrape)
+        id: build
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          mislukt=""
           for g in $(jq -r '.games | keys[]' pipeline/games.json); do
             echo "::group::$g"
-            python pipeline/build_teams.py --game "$g"
+            if ! python pipeline/build_teams.py --game "$g"; then
+              echo "::error::build van $g mislukt"
+              mislukt="$mislukt $g"
+            fi
             echo "::endgroup::"
           done
+          echo "mislukt=$mislukt" >> "$GITHUB_OUTPUT"
 
       - name: Commit if changed
         run: |
@@ -69,6 +78,12 @@ jobs:
             git pull --rebase origin "${GITHUB_REF_NAME:-main}"
             git push
           fi
+
+      - name: Faal als een titel niet bouwde
+        if: steps.build.outputs.mislukt != ''
+        run: |
+          echo "::error::mislukt:${{ steps.build.outputs.mislukt }}"
+          exit 1
 
       # De bronsite zet de pagina van een nieuwe titel weken voor de release
       # online, gevuld met de tabel van het vorige jaar. Deze stap kijkt of er

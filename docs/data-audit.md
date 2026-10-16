@@ -1,5 +1,7 @@
 # Data-audit: kloppen de sterren?
 
+Dit is de FC 26-audit. FC 27: zie [data-audit-fc27.md](data-audit-fc27.md).
+
 Datum: 2026-08-21 · Dataset: FC 26, 654 clubs + 51 landenteams
 
 ## Wat is gecontroleerd

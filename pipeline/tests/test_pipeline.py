@@ -241,34 +241,80 @@ def test_fc27_overrides_wijzen_naar_bestaande_teams():
     waarschuwt, maar een test die faalt is beter dan een regel logtekst."""
     doc = json.loads((ROOT / "pipeline" / "overrides-fc27.json").read_text(encoding="utf-8"))
     ids = {t["id"] for t in json.loads(
-        (ROOT / "data" / "teams.json").read_text(encoding="utf-8"))["teams"]}
+        (ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))["teams"]}
     for regel in doc["overrides"]:
         assert regel["id"] in ids, f"override voor onbekend team: {regel['id']}"
         assert regel.get("source", "").startswith("http"), f"{regel['id']} mist een bron"
         assert regel.get("checked"), f"{regel['id']} mist een datum"
 
 
-def test_fc27_set_matcht_de_gepubliceerde_vijfsterrenlijst():
-    """EA gaf een volledige lijst 5-sterrenclubs vrij: acht mannen- en zes
-    vrouwenteams. Onze FC 27-set moet daar exact op uitkomen, anders klopt de
-    kern van de loting niet voor wie FC 27 speelt. Tellen op (naam, vrouwen),
-    want Arsenal en Bayern bestaan in beide varianten."""
+def test_fc27_set_bevat_de_gepubliceerde_vijfsterrenclubs():
+    """EA gaf voor de release acht mannen- en zes vrouwenclubs op 5 sterren vrij.
+    De echte FC 27-tabel zet er meer op 5.0 (in-game bevestigd: Newcastle en
+    Galatasaray), maar EA's lijst moet er minstens in zitten. Bayern (v)
+    ontbreekt: de bron heeft geen sterren voor de Frauen-Bundesliga."""
     doc = json.loads((ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))
     vijf = {(t["name"], t["womens"]) for t in doc["teams"]
             if t["kind"] == "club" and t["starRating"] == 5.0}
     mannen = {(n, False) for n in
-              ("Paris Saint-Germain", "Real Madrid", "Manchester City", "Bayern",
-               "FC Barcelona", "Arsenal", "Liverpool", "Atlético Madrid")}
-    vrouwen = {("Arsenal", True), ("Chelsea", True), ("Manchester City", True),
-               ("FC Barcelona", True), ("Bayern", True)}
+              ("Paris Saint-Germain", "Real Madrid", "Manchester City", "Bayern Munich",
+               "FC Barcelona", "Arsenal", "Liverpool", "Atlético de Madrid")}
+    vrouwen = {(n, True) for n in
+               ("Arsenal", "Chelsea", "Manchester City", "FC Barcelona", "OL Lyonnes")}
     assert mannen <= vijf, f"ontbreekt bij de mannen: {sorted(mannen - vijf)}"
     assert vrouwen <= vijf, f"ontbreekt bij de vrouwen: {sorted(vrouwen - vijf)}"
-    assert ("Inter", False) not in vijf, "Inter staat niet in EA's FC 27 5-sterrenlijst"
-    # Het zesde vrouwenteam is OL Lyonnes, dat bij ons als niet-vrouwenteam
-    # staat omdat de Premiere Ligue niet op de ratingspagina voorkomt
-    # (bronquirk, zie docs/data-audit.md). Vandaar 8 + 5 + 1 = 14.
-    assert ("OL Lyonnes", False) in vijf
-    assert len(vijf) == 14, f"verwacht 14 clubs op 5.0, kreeg {len(vijf)}: {sorted(vijf)}"
+
+
+def test_fc27_landen_volgen_de_fc27_lijst():
+    """Elke titel heeft een eigen landenseed. Oekraïne staat op fifauteams
+    FC 27-lijst maar zit niet in de game (in-game check 2026-10-16)."""
+    doc = json.loads((ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))
+    landen = {(t["countryCode"], t["womens"]) for t in doc["teams"] if t["kind"] == "national"}
+    assert ("UKR", False) not in landen
+    assert ("CHN", False) not in landen and ("CHN", True) not in landen
+    assert {("BEL", False), ("JPN", False), ("TUR", False), ("BRA", True)} <= landen
+    assert len([1 for _, w in landen if not w]) == 50
+    assert len([1 for _, w in landen if w]) == 18
+
+
+def test_crest_key_negeert_het_placeholderplaatje():
+    from parse import crest_key
+
+    assert crest_key("https://fifauteam.com/images/teams/small/Sporting.webp") == "sporting"
+    assert crest_key("/images/teams/Sporting.webp") == "sporting"
+    assert crest_key("/images/teams/small/Default.webp") is None
+    assert crest_key(None) is None
+
+
+def test_teamlijst_snapshot_parst():
+    from parse import parse_roster
+
+    rows = parse_roster((SNAP / "leagues-clubs.html").read_text(encoding="utf-8"))
+    assert len(rows) > 600
+    assert any(r.league_title == "PREMIER LEAGUE" and r.name == "Arsenal" for r in rows)
+    assert not any(r.name.endswith(":") for r in rows)
+
+
+def test_kopie_league_blijft_als_de_bug_weg_is():
+    """leagues.json geldt voor elke titel; een drop-vlag mag alleen een league
+    weghalen die nu echt een kopie is."""
+    from build_teams import group_leagues
+    from parse import LeagueRow
+
+    meta = {"A": {"id": "a.1"}, "B": {"id": "b.1", "drop": "kopie van A"}}
+    rij = lambda lg, n: LeagueRow(league_title=lg, name=n, squad_rating=70, crest_url=None)
+    kopie = [rij("A", "x"), rij("A", "y"), rij("B", "x"), rij("B", "y")]
+    assert set(group_leagues(kopie, meta)) == {"A"}
+    eigen = [rij("A", "x"), rij("A", "y"), rij("B", "p"), rij("B", "q")]
+    assert set(group_leagues(eigen, meta)) == {"A", "B"}
+
+
+def test_teamlijst_haalt_niet_alles_weg_bij_een_kapotte_koppeling():
+    from build_teams import ROSTER_MAX_DROP, drop_not_in_game
+
+    teams = [{"id": f"t{i}", "name": f"T{i}", "starRating": 3.0} for i in range(40)]
+    assert len(drop_not_in_game(teams, {"t1", "t2"})) == 38
+    assert len(drop_not_in_game(teams, {f"t{i}" for i in range(ROSTER_MAX_DROP + 1)})) == 40
 
 
 def test_webapp_ios_en_changelog_hebben_dezelfde_versie():

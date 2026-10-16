@@ -4,10 +4,14 @@
 - fifauteam best teams: Elementor-tabs, per league een tab-titel en een tabel
   met squad rating / naam. Tab-titels en tabellen staan in documentvolgorde
   en matchen 1-op-1.
+- fifauteam leagues-clubs-national-teams: de officiële teamlijst van de titel,
+  per league een toggle met een tabel van clubnamen. Bepaalt wat er echt in
+  de game zit; sterren staan er niet op.
 """
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from bs4 import BeautifulSoup
@@ -18,6 +22,13 @@ class StarRow:
     rank: int
     name: str
     stars: float
+    crest_url: str | None
+
+
+@dataclass
+class RosterRow:
+    league_title: str
+    name: str
     crest_url: str | None
 
 
@@ -45,6 +56,19 @@ def _crest_from_cell(cell) -> str | None:
         return None
     src = img.get("data-lazy-src") or img.get("src") or ""
     return src if src.startswith("http") else None
+
+
+def crest_key(url: str | None) -> str | None:
+    """Bestandsnaam van een fifauteam-crest, zonder small/ en extensie. Beide
+    bronnen linken dezelfde plaatjes, dus dit koppelt rijen waar de namen
+    uiteenlopen ("Sporting" vs "Sporting CP")."""
+    if not url:
+        return None
+    m = re.search(r"/teams/(?:small/)?([^/?#]+?)\.(?:webp|png|jpe?g)", url)
+    # "Default" is het placeholder-plaatje voor clubs zonder logo, geen sleutel.
+    if m is None or m.group(1).lower() == "default":
+        return None
+    return m.group(1).lower()
 
 
 def parse_stars(html: str) -> list[StarRow]:
@@ -115,4 +139,39 @@ def parse_best_teams(html: str) -> list[LeagueRow]:
             )
         if len(rows) - count_before < 8:
             raise ValueError(f"best-teams: league '{title}' heeft verdacht weinig teams")
+    return rows
+
+
+# Toggles op de teamlijst die geen clubleague zijn: landenteams per
+# continent en de "FC 26 VS FC 27"-samenvattingen.
+ROSTER_SKIP = {"AFRICA", "ASIA", "EUROPE", "NORTH AMERICA", "OCEANIA", "SOUTH AMERICA",
+               "FC 26 VS FC 27"}
+
+
+def parse_roster(html: str) -> list[RosterRow]:
+    soup = BeautifulSoup(html, "lxml")
+    rows: list[RosterRow] = []
+    for item in soup.select("div.elementor-toggle-item"):
+        title_el = item.select_one(".elementor-toggle-title")
+        table = item.select_one(".elementor-tab-content table")
+        if title_el is None or table is None:
+            continue
+        for small in title_el.find_all("small"):
+            small.extract()
+        title = " ".join(title_el.get_text(" ", strip=True).split())
+        if title in ROSTER_SKIP:
+            continue
+        for td in table.find_all("td"):
+            img = td.find("img")
+            src = (img.get("data-lazy-src") or img.get("src")) if img else None
+            # De links in een cel zijn markeringen (Promoted, New Team, …).
+            for a in td.find_all("a"):
+                a.extract()
+            name = " ".join(td.get_text(" ", strip=True).split())
+            if not name or name.endswith(":") or name == "Rest of World":
+                continue
+            rows.append(RosterRow(league_title=title, name=_check_name(name, "teamlijst"),
+                                  crest_url=src))
+    if len(rows) < 400:
+        raise ValueError(f"teamlijst: maar {len(rows)} clubs, structuur veranderd?")
     return rows

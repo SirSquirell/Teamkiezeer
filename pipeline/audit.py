@@ -26,7 +26,7 @@ ANCHORS = [
 ]
 
 
-def run_audit(teams: list[dict], log) -> None:
+def run_audit(teams: list[dict], log, min_star_levels: int = 8) -> None:
     clubs = [t for t in teams if t["kind"] == "club"]
     matched = [t for t in clubs if t["leagueId"]]
 
@@ -38,7 +38,8 @@ def run_audit(teams: list[dict], log) -> None:
     hard(len(matched) / len(clubs) > 0.85, "minder dan 85% clubs met league")
 
     stars = Counter(t["starRating"] for t in clubs)
-    hard(len(stars) >= 8, f"maar {len(stars)} sterrenniveaus, verwacht >=8")
+    hard(len(stars) >= min_star_levels,
+         f"maar {len(stars)} sterrenniveaus, verwacht >={min_star_levels}")
     hard(all(s * 2 == int(s * 2) and 0.5 <= s <= 5.0 for s in stars), "ster buiten 0.5-stappen")
     hard(3 <= stars.get(5.0, 0) <= 30, f"{stars.get(5.0, 0)} teams op 5.0 sterren, verwacht 3..30")
 

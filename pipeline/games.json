@@ -16,7 +16,15 @@
     "check_next_game.py voor de toets die dat wél is.",
     "",
     "'note' komt als veld mee in teams.json en toont de webapp onder de",
-    "titelkeuze. Leegmaken zodra de bron echte data levert."
+    "titelkeuze. Leegmaken zodra de bron echte data levert.",
+    "",
+    "'nationalTeams' is de handmatige landenteam-seed van die titel; welke",
+    "landen erin zitten verschilt per jaar. 'auditMinStarLevels' (standaard 8)",
+    "is het minimum aantal sterniveaus dat de audit eist: FC 27 loopt van 2.0",
+    "tot 5.0, dus 7 niveaus. 'rosterDrop' haalt clubs weg die niet op de",
+    "officiële teamlijst (leaguesClubsURL) staan; zonder die vlag logt de build",
+    "het verschil alleen. FC 26 laat het uit: daar staan de Franse vrouwenclubs",
+    "zonder (W) op de bron en zouden ze onterecht verdwijnen."
   ],
   "current": "fc26",
   "next": "fc27",
@@ -28,6 +36,7 @@
       "leaguesClubsURL": "https://fifauteam.com/fc-26-leagues-clubs-national-teams/",
       "out": "data/teams.json",
       "overrides": "pipeline/overrides.json",
+      "nationalTeams": "data/national-teams.json",
       "note": ""
     },
     "fc27": {
@@ -37,7 +46,10 @@
       "leaguesClubsURL": "https://fifauteam.com/fc-27-leagues-clubs-national-teams/",
       "out": "data/teams-fc27.json",
       "overrides": "pipeline/overrides-fc27.json",
-      "note": "EA heeft nog niet alle clubratings vrijgegeven. De zestien onthulde topclubs zijn verwerkt; de rest komt uit FC 26."
+      "nationalTeams": "data/national-teams-fc27.json",
+      "auditMinStarLevels": 7,
+      "rosterDrop": true,
+      "note": "Sterren van landenteams zijn geschat. Liga MX en de Frauen-Bundesliga ontbreken: de bron heeft er geen sterren voor."
     }
   }
 }

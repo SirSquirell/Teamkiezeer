@@ -1,4 +1,16 @@
 {
   "_note": "Handmatige override map: genormaliseerde naam op de sterrenpagina -> genormaliseerde naam op de league-pagina. Alleen nodig waar exact + fuzzy matching faalt; de build logt alle unmatched namen zodat dit bestand gericht gevuld kan worden.",
-  "aliases": {}
+  "aliases": {},
+  "_note_teamlijst": "Koppelingen van een naam op de officiële teamlijst (genormaliseerd, '(W)' als ' w' erachter) naar een team-id in de dataset, voor waar crest, naam en fuzzy niet volstaan. Zonder koppeling telt een club als 'niet in de game' en valt hij uit de set; de build logt elk geval.",
+  "teamlijst": {
+    "villareal": "esp.villarreal-cf",
+    "sporting": "por.sporting-cp",
+    "sporting de gijon": "esp.r-sporting",
+    "1899 hoffenheim": "ger.tsg-hoffenheim",
+    "tgs hoffenheim ii": "ger.tsg-hoffenheim-ii",
+    "racing santander": "esp.r-racing-club",
+    "sabadel": "esp.ce-sabadell",
+    "union sg": "bel.r-union-saint-gilloise",
+    "udg tenerife w": "esp.c-adeje-tenerife-w"
+  }
 }

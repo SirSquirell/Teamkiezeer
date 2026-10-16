@@ -1,5 +1,5 @@
 {
-  "_note": "Mapping van fifauteam tab-titels naar league-metadata. 'drop' markeert leagues waarvan de bronpagina een kopie van een andere league toont (bekende bug); de build assert dat er daarna geen identieke teamlijsten meer zijn.",
+  "_note": "Mapping van fifauteam tab-titels naar league-metadata. 'drop' markeert leagues waarvan de bronpagina een kopie van een andere league toont (bekende bug). De build dropt alleen als de teamlijst nu echt identiek is aan een andere league (op de FC 27-pagina is de bug weg) en assert daarna dat er geen identieke teamlijsten meer zijn.",
   "leagues": {
     "PREMIER LEAGUE":             { "id": "eng.1",  "name": "Premier League",        "country": "ENG", "womens": false, "defaultWhitelist": true },
     "EFL CHAMPIONSHIP":           { "id": "eng.2",  "name": "EFL Championship",      "country": "ENG", "womens": false, "defaultWhitelist": false },
@@ -30,6 +30,7 @@
     "HERO ISL":                   { "id": "ind.1",  "name": "Indian Super League",   "country": "IND", "womens": false, "defaultWhitelist": false },
     "K LEAGUE":                   { "id": "kor.1",  "name": "K League",              "country": "KOR", "womens": false, "defaultWhitelist": false },
     "LIGA I":                     { "id": "rou.1",  "name": "Liga I",                "country": "ROU", "womens": false, "defaultWhitelist": false },
+    "ARKEMA PL":                  { "id": "fra.w1", "name": "Arkema Première Ligue", "country": "FRA", "womens": true,  "defaultWhitelist": false },
     "LIGA F":                     { "id": "esp.w1", "name": "Liga F",                "country": "ESP", "womens": true,  "defaultWhitelist": false },
     "LIGA PROFESIONAL DE FUTBOL": { "id": "arg.1",  "name": "Liga Profesional",      "country": "ARG", "womens": false, "defaultWhitelist": false },
     "NWSL":                       { "id": "usa.w1", "name": "NWSL",                  "country": "USA", "womens": true,  "defaultWhitelist": false },

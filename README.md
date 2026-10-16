@@ -18,14 +18,15 @@ index.html     de webapp — GitHub Pages serveert de repo-root van main
 engine.js      pure stand-logica: normalisatie en merge, getest met node --test
 /test          node-tests voor engine.js
 /app           Xcode project (SwiftUI, iOS 17+)
-/data          gegenereerde teams.json + handmatige national-teams.json
+/data          gegenereerde teams.json / teams-fc27.json + handmatige landenteam-seeds
 ```
 
 ## Data
 
 - Sterren: fifagamenews.com team star ratings, per titel (FC 26 en FC 27, zie pipeline/games.json)
 - Squad rating + league: fifauteam.com best teams
-- Landenteams: handmatig in `data/national-teams.json`
+- Landenteams: handmatig, per titel een seed (`data/national-teams.json`, `data/national-teams-fc27.json`)
+- Welke clubs in een titel zitten: fifauteam leagues-clubs-national-teams; voor FC 27 valt een club die daar niet op staat uit de set (audit: docs/data-audit-fc27.md)
 - Crests: runtime gefetcht via URL, nooit gecommit (EA/club-IP)
 
 De GitHub Action draait de scraper dagelijks (08:00 Europe/Amsterdam) en commit `data/teams.json` alleen
@@ -86,6 +87,6 @@ De iOS-app leest alleen `data/teams.json` (FC 26); zie TK-20.
   aan `pipeline/leagues.json`.
 - Naam-mismatch tussen de twee bronpagina's? Vul `pipeline/aliases.json`
   (de build logt elke unmatched naam).
-- Landenteams: handmatig bijwerken in `data/national-teams.json`.
+- Landenteams: handmatig bijwerken in de seed van de titel (`nationalTeams` in `pipeline/games.json`).
 - Nieuwe EA-titel: zie `pipeline/games.json` en TK-08 in docs/BACKLOG.md; hardcode
   geen bron-URL buiten dat bestand.
