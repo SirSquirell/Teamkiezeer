@@ -427,6 +427,9 @@ def load_national_teams(game: dict | None = None):
     Elke titel heeft een eigen seed (games.json 'nationalTeams'): welke landen
     erin zitten verschilt per jaar."""
     rel = (game or {}).get("nationalTeams", "data/national-teams.json")
+    if rel is None:
+        log("NATIONAL: geen seed voor deze titel, geen landenteams opgenomen")
+        return []
     path = ROOT / rel
     if not path.exists():
         log(f"NATIONAL: {rel} ontbreekt, geen landenteams opgenomen")

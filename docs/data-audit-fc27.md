@@ -1,10 +1,10 @@
 # Data-audit FC 27
 
-Datum: 2026-10-16 · Dataset: `data/teams-fc27.json`, 622 clubs + 68 landenteams
+Datum: 2026-10-16 · Dataset: `data/teams-fc27.json`, 622 clubs, geen landenteams
 
 ## Aanleiding
 
-Sporting klopte niet en Oekraïne zat in de set terwijl het niet in de game zit. Oorzaak: de FC 27-set was sinds 18 september een kopie van de FC 26-tabel met drie correcties. De dagelijkse build faalde vanaf 20 september op een nieuwe league (`ARKEMA PL`) en nam daarbij ook de FC 26-build mee, dus de echte FC 27-sterren kwamen nooit binnen. Landenteams kwamen voor beide titels uit één seed.
+Sporting klopte niet en Oekraïne zat in de set. Oorzaak: de FC 27-set was sinds 18 september een kopie van de FC 26-tabel met drie correcties. De dagelijkse build faalde vanaf 20 september op een nieuwe league (`ARKEMA PL`) en nam daarbij ook de FC 26-build mee, dus de echte FC 27-sterren kwamen nooit binnen. Landenteams kwamen voor beide titels uit één seed.
 
 ## Wat er nu staat
 
@@ -55,33 +55,9 @@ Wil je er een paar in hebben, zoek ze in-game op en geef de ster door; dan komen
 
 ## Landenteams
 
-Eigen seed per titel: `data/national-teams-fc27.json`, 50 mannen en 18 vrouwen volgens de officiële FC 27-lijst. Oekraïne staat op die lijst maar zit niet in de game en is weggelaten. Weg ten opzichte van FC 26: China (m/v), Canada (m), Oekraïne.
+Niet in de FC 27-set. Geen enkele bereikbare bron publiceert sterren voor FC 27-landenteams (fifagamenews heeft alleen clubs, EA en fcratings tonen spelerratings, fifaindex en cmtracker blokkeren). De set moet kloppen met wat online staat, dus schatten doen we niet. De filter "Landen" geeft bij FC 27 een lege pool. Komt er een bron, dan krijgt FC 27 een eigen seed via `nationalTeams` in `pipeline/games.json`.
 
-Sterren van landenteams zijn **schattingen**, er is geen bron. Overgenomen uit FC 26 waar het land al bestond; geschat voor deze nieuwe landen:
-
-| Land | Sterren | Rating |
-| --- | --- | --- |
-| België | 4.5 | 81 |
-| Uruguay | 4.0 | 79 |
-| Colombia | 4.0 | 79 |
-| Zwitserland | 4.0 | 78 |
-| Turkije | 4.0 | 78 |
-| Japan | 4.0 | 78 |
-| Oostenrijk | 4.0 | 78 |
-| Zuid-Korea | 3.5 | 76 |
-| Griekenland | 3.5 | 75 |
-| Paraguay | 3.5 | 75 |
-| Egypte | 3.5 | 74 |
-| Kameroen | 3.5 | 74 |
-| Chili | 3.0 | 73 |
-| DR Congo | 3.0 | 73 |
-| Australië | 3.0 | 73 |
-| Peru | 3.0 | 72 |
-| Venezuela | 3.0 | 72 |
-| Saoedi-Arabië | 3.0 | 72 |
-| Indonesië | 2.0 | 66 |
-| Vietnam | 2.0 | 64 |
-| India | 1.5 | 62 |
+Ter info, de officiële FC 27-lijst (fifauteam, 2026-10-01) noemt 51 mannen- en 18 vrouwenteams, Oekraïne inbegrepen.
 
 ## Geborgd
 

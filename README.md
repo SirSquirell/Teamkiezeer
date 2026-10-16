@@ -25,7 +25,7 @@ engine.js      pure stand-logica: normalisatie en merge, getest met node --test
 
 - Sterren: fifagamenews.com team star ratings, per titel (FC 26 en FC 27, zie pipeline/games.json)
 - Squad rating + league: fifauteam.com best teams
-- Landenteams: handmatig, per titel een seed (`data/national-teams.json`, `data/national-teams-fc27.json`)
+- Landenteams: handmatig, per titel een seed (`nationalTeams` in pipeline/games.json); FC 27 heeft er geen, want er is online geen bron voor hun sterren
 - Welke clubs in een titel zitten: fifauteam leagues-clubs-national-teams; voor FC 27 valt een club die daar niet op staat uit de set (audit: docs/data-audit-fc27.md)
 - Crests: runtime gefetcht via URL, nooit gecommit (EA/club-IP)
 

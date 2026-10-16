@@ -265,16 +265,11 @@ def test_fc27_set_bevat_de_gepubliceerde_vijfsterrenclubs():
     assert vrouwen <= vijf, f"ontbreekt bij de vrouwen: {sorted(vrouwen - vijf)}"
 
 
-def test_fc27_landen_volgen_de_fc27_lijst():
-    """Elke titel heeft een eigen landenseed. Oekraïne staat op fifauteams
-    FC 27-lijst maar zit niet in de game (in-game check 2026-10-16)."""
+def test_fc27_heeft_geen_geschatte_landenteams():
+    """De set moet kloppen met wat online staat. Voor FC 27-landenteams
+    publiceert geen bron sterren, dus ze zitten er niet in."""
     doc = json.loads((ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))
-    landen = {(t["countryCode"], t["womens"]) for t in doc["teams"] if t["kind"] == "national"}
-    assert ("UKR", False) not in landen
-    assert ("CHN", False) not in landen and ("CHN", True) not in landen
-    assert {("BEL", False), ("JPN", False), ("TUR", False), ("BRA", True)} <= landen
-    assert len([1 for _, w in landen if not w]) == 50
-    assert len([1 for _, w in landen if w]) == 18
+    assert not [t for t in doc["teams"] if t["kind"] == "national"]
 
 
 def test_crest_key_negeert_het_placeholderplaatje():
