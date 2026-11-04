@@ -16,14 +16,14 @@ Sporting klopte niet. Onderzoek liet zien dat de oude FC 27-set op drogzand ston
 | --- | --- | --- |
 | `ea-officieel` | 32 | EA's eigen sterrenlijst (top 16 mannen en 16 vrouwen) |
 | `in-game` | 23 | uit de game afgelezen (Vandal, 365Scores Liga MX, allthings.how) |
-| `ovr-gemeten` | 173 | echte FC 27-team-OVR uit de gamedatabase (cmtracker, fctoolshub, fifaindex, sofifa via zoekresultaten), omgezet met EA's grenzen |
-| `model` | 526 | team-OVR berekend uit EA's officiële FC 27-spelersratings (beste elftal, lijngemiddelden), zelfde grenzen |
+| `ovr-gemeten` | 266 | echte FC 27-team-OVR uit de gamedatabase (cmtracker, fctoolshub, fifaindex, sofifa via zoekresultaten), omgezet met EA's grenzen |
+| `model` | 433 | team-OVR berekend uit EA's officiële FC 27-spelersratings (beste elftal, lijngemiddelden), zelfde grenzen |
 
 Sterrengrenzen op team-OVR: 83 = 5★, 79 = 4,5★, 75 = 4★, 72 = 3,5★, 68 = 3★, 64 = 2,5★, 60 = 2★. De bovenste twee zijn vastgepind door EA's lijst naast gemeten OVR: Liverpool 83 = 5★, Dortmund en Spurs 81 = 4,5★, Aston Villa 79 = 4,5★.
 
 ## Hoe goed is het model
 
-Twee agents bouwden onafhankelijk een model (een op de bekende teamrating-methode, een puur op de data). Op de 201 clubs met gemeten OVR zit het gecombineerde model gemiddeld 0,5 OVR naast de echte waarde en geeft het in 83% exact dezelfde ster; elke misser is een halve ster. Clubs met basis `model` zijn dus meestal goed maar niet gegarandeerd. Elke in-game check die afwijkt hoort in `pipeline/overrides-fc27.json`.
+Twee agents bouwden onafhankelijk een model (een op de bekende teamrating-methode, een puur op de data). Op de 201 clubs met gemeten OVR uit ronde 1 zat het gecombineerde model gemiddeld 0,5 OVR naast de echte waarde en gaf het in 83% exact dezelfde ster. Ronde 2 mat 93 clubs die juist dicht bij een stergrens lagen: daar klopte het model bij 80 (86%). Elke misser is een halve ster. Clubs met basis `model` zijn dus meestal goed maar niet gegarandeerd. Elke in-game check die afwijkt hoort in `pipeline/overrides-fc27.json`.
 
 ## Wat afwijkt van eerdere meldingen
 
