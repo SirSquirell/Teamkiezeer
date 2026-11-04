@@ -19,7 +19,7 @@ Sporting klopte niet. Onderzoek liet zien dat de oude FC 27-set op drogzand ston
 | `ovr-gemeten` | 266 | echte FC 27-team-OVR uit de gamedatabase (cmtracker, fctoolshub, fifaindex, sofifa via zoekresultaten), omgezet met EA's grenzen |
 | `model` | 433 | team-OVR berekend uit EA's officiële FC 27-spelersratings (beste elftal, lijngemiddelden), zelfde grenzen |
 
-Sterrengrenzen op team-OVR: 83 = 5★, 79 = 4,5★, 75 = 4★, 72 = 3,5★, 68 = 3★, 64 = 2,5★, 60 = 2★. De bovenste twee zijn vastgepind door EA's lijst naast gemeten OVR: Liverpool 83 = 5★, Dortmund en Spurs 81 = 4,5★, Aston Villa 79 = 4,5★.
+Sterrengrenzen op team-OVR: 83 = 5★, 80 = 4,5★, 75 = 4★, 72 = 3,5★, 68 = 3★, 64 = 2,5★, 60 = 2★. De bovenste twee zijn vastgepind door EA's lijst naast gemeten OVR (Liverpool 83 = 5★, Dortmund en Spurs 81 = 4,5★) en een in-game check: Newcastle 79 = 4★. EA zette Aston Villa (nu 79) in augustus nog op 4,5★; die lijst is van voor de release, dus bij mannenclubs wint de huidige gemeten OVR.
 
 ## Hoe goed is het model
 
@@ -28,7 +28,7 @@ Twee agents bouwden onafhankelijk een model (een op de bekende teamrating-method
 ## Wat afwijkt van eerdere meldingen
 
 - Sporting CP: 4★ (gemeten OVR 77), niet 4,5★.
-- Newcastle en Galatasaray: 4,5★ (beide gemeten 79). Een eerdere in-game melding van 5★ klopt met geen enkele FC 27-bron; die waarden kwamen alleen van fifagamenews.
+- Newcastle: 4★ (in-game gecheckt, OVR 79). Daarmee gingen alle clubs op 79 van 4,5★ naar 4★, onder meer Galatasaray, Fenerbahçe, Leverkusen, Leipzig, Porto, Villa en Forest.
 - Atlético Madrid: EA's lijst zegt 5★ (OVR 83), Vandal 4,5★; de set volgt EA.
 - Liga MX: 365Scores (in-game) en cmtracker verschillen 1–2 OVR; de set volgt de in-game sterren.
 

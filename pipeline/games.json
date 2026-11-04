@@ -61,7 +61,7 @@
       "auditAnchors": [
         ["fra.paris-sg", 5.0, 4.0], ["esp.real-madrid", 5.0, 4.0], ["esp.fc-barcelona", 5.0, 4.0],
         ["eng.arsenal", 5.0, 4.0], ["eng.liverpool", 5.0, 4.0], ["ger.fc-bayern-munchen", 5.0, 4.0],
-        ["ger.borussia-dortmund", 4.5, 4.0], ["eng.aston-villa", 4.5, 4.0]
+        ["ger.borussia-dortmund", 4.5, 4.0], ["eng.aston-villa", 4.0, 3.5]
       ],
       "note": "Clubs en competities komen van EA. Sterren: EA-lijst of gemeten waar online te vinden, anders berekend uit EA's spelersratings. Geen landenteams."
     }
