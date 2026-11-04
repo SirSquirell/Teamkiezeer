@@ -1,64 +1,41 @@
 # Data-audit FC 27
 
-Datum: 2026-10-16 · Dataset: `data/teams-fc27.json`, 622 clubs, geen landenteams
+Datum: 2026-11-04 · Dataset: `data/teams-fc27.json`, 754 clubs in 43 competities plus Rest of World, geen landenteams
 
 ## Aanleiding
 
-Sporting klopte niet en Oekraïne zat in de set. Oorzaak: de FC 27-set was sinds 18 september een kopie van de FC 26-tabel met drie correcties. De dagelijkse build faalde vanaf 20 september op een nieuwe league (`ARKEMA PL`) en nam daarbij ook de FC 26-build mee, dus de echte FC 27-sterren kwamen nooit binnen. Landenteams kwamen voor beide titels uit één seed.
+Sporting klopte niet. Onderzoek liet zien dat de oude FC 27-set op drogzand stond: fifagamenews' "FC 27"-sterren zijn een formule (vaste banden op team-OVR, 5★ vanaf 81) op fifauteams teamratings van seizoen 2025/26. De pagina bevat zelfs een verborgen regel "we'll keep this page updated with FC 26 values", mist Liga MX en de Frauen-Bundesliga, en zet Dortmund, United, Chelsea, Roma, Napoli en Spurs op 5★ waar EA zelf 4,5★ publiceerde.
 
-## Wat er nu staat
+## Bronnen nu
 
-Sterren komen van fifagamenews FC 27 (bijgewerkt 2026-09-20). Een in-game steekproef bevestigde die waarden, ook waar ze afwijken van EA's pre-release lijst (Newcastle en Galatasaray op 5★). Lidmaatschap wordt getoetst aan fifauteams officiële FC 27-teamlijst (bijgewerkt 2026-10-01, "final"): een club die daar niet op staat valt uit de set.
+**Clubs en competities: EA zelf.** EA's FC 27-ratingsite (ea.com/games/ea-sports-fc/ratings) bevat per competitie de clubs, met mannen/vrouwen per groep: 754 clubs, 63 groepen. De dagelijkse build leest die pagina; de koppeling naar onze league-ids staat in `pipeline/ea-leagues-fc27.json`. Groepjes van een paar clubs (Olympiacos, Shakhtar, Slavia, …) zijn EA's Rest of World en staan onder "Rest of World". Een nieuwe EA-competitie laat de build bewust falen.
 
-De schaal is verschoven: FC 27 loopt van 2,0 tot 5,0, er zijn geen clubs meer onder 2 sterren. Van de clubs die in beide sets voorkomen gingen er ruim 350 omhoog en 8 omlaag.
+**Sterren: `pipeline/stars-fc27.json`, per club met zijn basis.** Een complete online lijst met echte FC 27-sterren bestaat niet (de sites die de gamedatabase lezen, zoals fifaindex, sofifa, cmtracker en futbin, blokkeren automatische toegang). Daarom per club de hardste beschikbare bron, in deze volgorde:
 
-| Sterren | Clubs |
-| --- | --- |
-| 5.0 | 28 |
-| 4.5 | 43 |
-| 4.0 | 72 |
-| 3.5 | 154 |
-| 3.0 | 210 |
-| 2.5 | 101 |
-| 2.0 | 14 |
+| Basis | Clubs | Wat |
+| --- | --- | --- |
+| `ea-officieel` | 32 | EA's eigen sterrenlijst (top 16 mannen en 16 vrouwen) |
+| `in-game` | 23 | uit de game afgelezen (Vandal, 365Scores Liga MX, allthings.how) |
+| `ovr-gemeten` | 173 | echte FC 27-team-OVR uit de gamedatabase (cmtracker, fctoolshub, fifaindex, sofifa via zoekresultaten), omgezet met EA's grenzen |
+| `model` | 526 | team-OVR berekend uit EA's officiële FC 27-spelersratings (beste elftal, lijngemiddelden), zelfde grenzen |
 
-## Uit de set: op de bron, niet in de game
+Sterrengrenzen op team-OVR: 83 = 5★, 79 = 4,5★, 75 = 4★, 72 = 3,5★, 68 = 3★, 64 = 2,5★, 60 = 2★. De bovenste twee zijn vastgepind door EA's lijst naast gemeten OVR: Liverpool 83 = 5★, Dortmund en Spurs 81 = 4,5★, Aston Villa 79 = 4,5★.
 
-- US Saint-Malo (3.0★), `fra.us-saint-malo-w`
-- Wieczysta Kraków (3.0★), `pol.wieczysta-krakow`
-- Toulouse FC (3.0★), `fra.toulouse-fc-w`
-- Zagłębie Lubin (3.0★), `pol.zag-ebie-lubin`
-- RC Lens (3.0★), `fra.rc-lens-w`
+## Hoe goed is het model
 
-Klopt een van deze niet, koppel hem dan in `pipeline/aliases.json` onder `teamlijst`.
+Twee agents bouwden onafhankelijk een model (een op de bekende teamrating-methode, een puur op de data). Op de 201 clubs met gemeten OVR zit het gecombineerde model gemiddeld 0,5 OVR naast de echte waarde en geeft het in 83% exact dezelfde ster; elke misser is een halve ster. Clubs met basis `model` zijn dus meestal goed maar niet gegarandeerd. Elke in-game check die afwijkt hoort in `pipeline/overrides-fc27.json`.
 
-## In de game, maar zonder ster (niet lootbaar)
+## Wat afwijkt van eerdere meldingen
 
-De bron heeft voor deze 110 clubs geen ster. Zonder ster kan de app ze niet eerlijk loten, dus ze zitten niet in de set.
-
-- **Zonder licentie (mannen)** (35): AEK Athens, Al Ain FC, APOEL FC, Atlético Nacional, Bahia, Buriram United, Dinamo Kiev, Dinamo Zagreb, Ferencvárosi TC, Hajduk Split, Ludogorets, HJK Helsinki, Olympiacos FC, Omonia Nicosia, Panathinaikos, PAOK, Qarabağ FK, Shakhtar Donetsk, Slavia Praha, Sparta Praha, Viktoria Plzeň, MLS All-Star, Classic League, Bundesliga XI, Chelsea XI, Classic XI, FC Bayern XI, Juventus XI, Liverpool XI, Real Madrid XI, LaLiga XI, Ligue 1 XI, Premier League XI, Serie A XI, Soccer Aid
-- **Liga MX** (18): America, Atlas, Atlante, Atlético San Luis, Cruz Azul, Guadalajara, FC Juárez, León, Monterrey, Necaxa, Pachuca, Puebla, Querétaro, Santos Laguna, Tijuana, Toluca, UANL, UNAM
-- **Frauen-Bundesliga** (14): 1. FC Köln (W), 1. FC Nürnberg (W), 1899 Hoffenheim (W), Bayer Leverkusen (W), Bayern Munich (W), Eintracht Frankfurt (W), Hamburger SV (W), SC Freiburg (W), Mainz 05 (W), RB Leipzig (W), Stuttgart (W), Union Berlin (W), VfL Wolfsburg (W), Werder Bremen (W)
-- **Indian Super League** (14): ATK Mohun Bagan, Bengaluru, Chennaiyin, Diamond Harbour, East Bengal, Goa, SC Delhi, Jamshedpur, Kerala Blasters, Mumbai City, NorthEast United, Odisha, RoundGlass Punjab, United Tigers
-- **Zonder licentie (vrouwen)** (13): AFC Richmond (W), Ajax (W), BK Häcken (W), Brann (W), Breidablik (W), FC Zurich (W), Glasgow City (W), Juventus (W), Roma (W), Rosengård (W), Slavia Praha (W), SL Benfica (W), Twente (W)
-- **EFL League One** (4): Bromley, Cambridge United, Milton Keynes Dons, Notts County
-- **Arkema Première Ligue** (3): Dijon (W), Stade de Reims (W), Thonon Evian (W)
-- **Women's Super League** (2): Everton (W), West Ham (W)
-- **Ekstraklasa** (2): Arka Gdynia, Polonia Warszawa
-- **Liga Profesional** (1): Newell’s
-- **Serie A** (1): Udinese
-- **Serie B** (1): Vicenza
-- **Saudi Pro League** (1): Al Khaleej
-- **Swiss Super League** (1): Grasshopper
-
-Wil je er een paar in hebben, zoek ze in-game op en geef de ster door; dan komen ze er handmatig bij.
+- Sporting CP: 4★ (gemeten OVR 77), niet 4,5★.
+- Newcastle en Galatasaray: 4,5★ (beide gemeten 79). Een eerdere in-game melding van 5★ klopt met geen enkele FC 27-bron; die waarden kwamen alleen van fifagamenews.
+- Atlético Madrid: EA's lijst zegt 5★ (OVR 83), Vandal 4,5★; de set volgt EA.
+- Liga MX: 365Scores (in-game) en cmtracker verschillen 1–2 OVR; de set volgt de in-game sterren.
 
 ## Landenteams
 
-Niet in de FC 27-set. Geen enkele bereikbare bron publiceert sterren voor FC 27-landenteams (fifagamenews heeft alleen clubs, EA en fcratings tonen spelerratings, fifaindex en cmtracker blokkeren). De set moet kloppen met wat online staat, dus schatten doen we niet. De filter "Landen" geeft bij FC 27 een lege pool. Komt er een bron, dan krijgt FC 27 een eigen seed via `nationalTeams` in `pipeline/games.json`.
+Niet in de FC 27-set: geen enkele bron publiceert FC 27-sterren voor landenteams, en EA's ratingsite toont ze niet. De filter "Landen" geeft bij FC 27 een lege pool.
 
-Ter info, de officiële FC 27-lijst (fifauteam, 2026-10-01) noemt 51 mannen- en 18 vrouwenteams, Oekraïne inbegrepen.
+## Uitbreiden
 
-## Geborgd
-
-De dagelijkse build bouwt elke titel los: faalt FC 27, dan wordt FC 26 nog steeds gecommit (en andersom), en de job meldt de fout. De build logt bij elke run wat er op de teamlijst staat zonder ster en wat er wegvalt (`TEAMLIJST`).
+Meer clubs van `model` naar `ovr-gemeten` brengen: per club de FC 27-OVR opzoeken (zoekterm "<club> FC 27 career mode overall rating cmtracker" werkt het best) en in `stars-fc27.json` zetten met `basis: ovr-gemeten` en de bron.

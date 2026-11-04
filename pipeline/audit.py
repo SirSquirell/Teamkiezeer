@@ -26,7 +26,7 @@ ANCHORS = [
 ]
 
 
-def run_audit(teams: list[dict], log, min_star_levels: int = 8) -> None:
+def run_audit(teams: list[dict], log, min_star_levels: int = 8, anchors=None) -> None:
     clubs = [t for t in teams if t["kind"] == "club"]
     matched = [t for t in clubs if t["leagueId"]]
 
@@ -51,7 +51,7 @@ def run_audit(teams: list[dict], log, min_star_levels: int = 8) -> None:
         hard(count >= 8, f"league {league} heeft maar {count} teams")
 
     by_id = {t["id"]: t for t in teams}
-    for team_id, expected, floor in ANCHORS:
+    for team_id, expected, floor in (anchors or ANCHORS):
         team = by_id.get(team_id)
         if team is None:
             log(f"AUDIT WARN: anker {team_id} niet in dataset")

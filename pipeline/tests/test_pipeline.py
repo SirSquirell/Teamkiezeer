@@ -250,19 +250,19 @@ def test_fc27_overrides_wijzen_naar_bestaande_teams():
 
 def test_fc27_set_bevat_de_gepubliceerde_vijfsterrenclubs():
     """EA gaf voor de release acht mannen- en zes vrouwenclubs op 5 sterren vrij.
-    De echte FC 27-tabel zet er meer op 5.0 (in-game bevestigd: Newcastle en
-    Galatasaray), maar EA's lijst moet er minstens in zitten. Bayern (v)
-    ontbreekt: de bron heeft geen sterren voor de Frauen-Bundesliga."""
+    Precies die clubs staan in de set op 5.0 (namen zoals EA ze schrijft)."""
     doc = json.loads((ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))
     vijf = {(t["name"], t["womens"]) for t in doc["teams"]
             if t["kind"] == "club" and t["starRating"] == 5.0}
     mannen = {(n, False) for n in
-              ("Paris Saint-Germain", "Real Madrid", "Manchester City", "Bayern Munich",
+              ("Paris SG", "Real Madrid", "Manchester City", "FC Bayern München",
                "FC Barcelona", "Arsenal", "Liverpool", "Atlético de Madrid")}
     vrouwen = {(n, True) for n in
-               ("Arsenal", "Chelsea", "Manchester City", "FC Barcelona", "OL Lyonnes")}
+               ("Arsenal", "Chelsea", "Manchester City", "FC Barcelona", "OL Lyonnes",
+                "FC Bayern München")}
     assert mannen <= vijf, f"ontbreekt bij de mannen: {sorted(mannen - vijf)}"
     assert vrouwen <= vijf, f"ontbreekt bij de vrouwen: {sorted(vrouwen - vijf)}"
+    assert vijf == mannen | vrouwen, f"onverwacht op 5.0: {sorted(vijf - mannen - vrouwen)}"
 
 
 def test_fc27_heeft_geen_geschatte_landenteams():
@@ -324,3 +324,27 @@ def test_webapp_ios_en_changelog_hebben_dezelfde_versie():
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     bovenste = re.search(r"^## ([0-9.]+)", changelog, re.M).group(1)
     assert bovenste == web, f"CHANGELOG begint met {bovenste}, app.js zegt {web}"
+
+
+def test_ea_bron_offline_bouwt_fc27(tmp_path):
+    """FC 27 komt uit EA's competitie-indeling plus het sterrenbestand; de
+    offline snapshot moet elke club een competitie en een ster geven."""
+    from build_teams import build
+
+    out = tmp_path / "fc27.json"
+    build(offline=True, skip_colors=True, skip_crest_check=True, out_path=out, game_id="fc27")
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    clubs = [t for t in doc["teams"] if t["kind"] == "club"]
+    assert len(clubs) > 700 and all(t["leagueId"] for t in clubs)
+    sporting = next(t for t in clubs if t["name"] == "Sporting CP")
+    assert sporting["leagueId"] == "por.1"
+    ligamx = [t for t in clubs if t["leagueId"] == "mex.1"]
+    assert len(ligamx) == 18
+
+
+def test_sterrenbestand_noemt_voor_elke_club_zijn_basis():
+    doc = json.loads((ROOT / "pipeline" / "stars-fc27.json").read_text(encoding="utf-8"))
+    for ea_id, c in doc["clubs"].items():
+        assert c["basis"] in ("ea-officieel", "in-game", "in-game-conflict", "ovr-gemeten", "model"), ea_id
+        assert c["source"], ea_id
+        assert 0.5 <= c["stars"] <= 5.0 and c["stars"] * 2 == int(c["stars"] * 2), ea_id

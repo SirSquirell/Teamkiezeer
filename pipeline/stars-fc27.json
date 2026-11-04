@@ -1,0 +1,7595 @@
+{
+ "_uitleg": [
+  "Sterren per FC 27-club, op EA-id (zie pipeline/ea-leagues-fc27.json en ea_source.py).",
+  "'basis' zegt hoe hard de waarde is, in volgorde van voorrang:",
+  "  ea-officieel  EA's eigen sterrenlijst (top 16 mannen + 16 vrouwen, aug 2026)",
+  "  in-game       sterren afgelezen uit de game (Vandal, 365Scores Liga MX, allthings.how)",
+  "  ovr-gemeten   echte FC 27-teamrating uit de gamedatabase (cmtracker, fctoolshub, fifaindex,",
+  "                sofifa) omgezet met EA's sterrengrenzen",
+  "  model         teamrating berekend uit EA's officiële FC 27-spelersratings, zelfde grenzen;",
+  "                op 201 gemeten clubs gaf dat in 83% dezelfde ster",
+  "Sterrengrenzen op team-OVR: 83=5, 79=4.5, 75=4, 72=3.5, 68=3, 64=2.5, 60=2, 56=1.5, 52=1;",
+  "5 en 4.5 vastgepind door EA's lijst (Liverpool 83=5, Dortmund 81=4.5, Villa 79=4.5).",
+  "Zie docs/data-audit-fc27.md. Een in-game check die afwijkt: zet hem in overrides-fc27.json."
+ ],
+ "thresholds": [
+  [
+   83,
+   5.0
+  ],
+  [
+   79,
+   4.5
+  ],
+  [
+   75,
+   4.0
+  ],
+  [
+   72,
+   3.5
+  ],
+  [
+   68,
+   3.0
+  ],
+  [
+   64,
+   2.5
+  ],
+  [
+   60,
+   2.0
+  ],
+  [
+   56,
+   1.5
+  ],
+  [
+   52,
+   1.0
+  ]
+ ],
+ "clubs": {
+  "229": {
+   "name": "RSC Anderlecht",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 72,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "230": {
+   "name": "Royal Antwerp FC",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "231": {
+   "name": "Club Brugge",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 75,
+   "mid": 75,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "232": {
+   "name": "Standard Liège",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "670": {
+   "name": "Sp. Charleroi",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 67,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "673": {
+   "name": "KRC Genk",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 74,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "674": {
+   "name": "KAA Gent",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 70,
+   "mid": 71,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "680": {
+   "name": "STVV",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 68,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "681": {
+   "name": "KVC Westerlo",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 71,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1750": {
+   "name": "Cercle Brugge",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "2014": {
+   "name": "R. Union St.-G.",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 72,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100081": {
+   "name": "KV Kortrijk",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 70,
+   "mid": 69,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100087": {
+   "name": "OH Leuven",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 68,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110724": {
+   "name": "KV Mechelen",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15005": {
+   "name": "Zulte Waregem",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 67,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132231": {
+   "name": "RAAL La Louvière",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "37": {
+   "name": "Lommel SK",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 69,
+   "mid": 68,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110913": {
+   "name": "Waasland-Beveren",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "492": {
+   "name": "Wehen Wiesbaden",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "523": {
+   "name": "Saarbrücken",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "526": {
+   "name": "Rot-Weiss Essen",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1826": {
+   "name": "Aleman. Aachen",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 69,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110501": {
+   "name": "SC Verl",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 66,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110532": {
+   "name": "SV Waldhof",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110645": {
+   "name": "Viktoria Köln",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110697": {
+   "name": "VfB Stuttgart II",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 61,
+   "mid": 63,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111239": {
+   "name": "FC Ingolstadt 04",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1825": {
+   "name": "MSV Duisburg",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110685": {
+   "name": "TSG Hoffenheim II",
+   "stars": 2.0,
+   "ovr": 60,
+   "att": 63,
+   "mid": 63,
+   "def": 60,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "27": {
+   "name": "FC Hansa Rostock",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "543": {
+   "name": "Jahn Regensburg",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110597": {
+   "name": "SV Meppen",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 63,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "531": {
+   "name": "Preußen Münster",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110169": {
+   "name": "SC Fortuna Köln",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 63,
+   "def": 63,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/110169/fortuna-koln"
+  },
+  "110197": {
+   "name": "FC Würzburger Kickers",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 64,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110636": {
+   "name": "Düsseldorf",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110678": {
+   "name": "TSV Havelse",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 64,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111379": {
+   "name": "SG Sonnenhof Großaspach",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 65,
+   "mid": 64,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "269": {
+   "name": "Brøndby IF",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 67,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26091500/269/brondby-if"
+  },
+  "270": {
+   "name": "Silkeborg IF",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 63,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "271": {
+   "name": "AGF",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 71,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "819": {
+   "name": "F.C. København",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 70,
+   "mid": 70,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/819/fc-kobenhavn"
+  },
+  "1443": {
+   "name": "Viborg FF",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 69,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1447": {
+   "name": "Sønderjyske",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1516": {
+   "name": "FC Midtjylland",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 66,
+   "mid": 72,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1516/fc-midtjylland"
+  },
+  "1786": {
+   "name": "Randers FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 68,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1788": {
+   "name": "FC Nordsjælland",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15001": {
+   "name": "Lyngby BK",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "272": {
+   "name": "Odense BK",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 69,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1446": {
+   "name": "AC Horsens",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 66,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "319": {
+   "name": "IFK Göteborg",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 65,
+   "def": 65,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/319/ifk-goteborg"
+  },
+  "320": {
+   "name": "Malmö FF",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 67,
+   "mid": 65,
+   "def": 67,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/320/malmo-ff"
+  },
+  "321": {
+   "name": "Halmstads BK",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 64,
+   "def": 64,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/321/halmstads-bk"
+  },
+  "433": {
+   "name": "AIK",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 64,
+   "mid": 66,
+   "def": 65,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/433/aik"
+  },
+  "700": {
+   "name": "IF Elfsborg",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 65,
+   "mid": 68,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/700/if-elfsborg"
+  },
+  "708": {
+   "name": "Hammarby IF",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 69,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/708/hammarby-if"
+  },
+  "710": {
+   "name": "Djurgårdens IF",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 66,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/710/djurgardens-if"
+  },
+  "711": {
+   "name": "BK Häcken",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 64,
+   "mid": 66,
+   "def": 66,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/711/bk-hacken"
+  },
+  "1439": {
+   "name": "Kalmar FF",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 62,
+   "mid": 64,
+   "def": 63,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1439/kalmar-ff"
+  },
+  "111594": {
+   "name": "GAIS",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 66,
+   "mid": 66,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/111594/gais"
+  },
+  "111705": {
+   "name": "Brommapojkarna",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 64,
+   "def": 66,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/111705/if-brommapojkarna"
+  },
+  "112072": {
+   "name": "Mjällby AIF",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 66,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/320/112072"
+  },
+  "112180": {
+   "name": "Västerås SK",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 62,
+   "mid": 64,
+   "def": 64,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/112180/vasteras-sk"
+  },
+  "113458": {
+   "name": "IK Sirius",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 67,
+   "def": 66,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/113458/ik-sirius"
+  },
+  "113892": {
+   "name": "Degerfors IF",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 63,
+   "mid": 65,
+   "def": 63,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/113892/degerfors-if"
+  },
+  "706": {
+   "name": "Örgryte IS",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 64,
+   "def": 63,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/706/orgryte-is"
+  },
+  "116033": {
+   "name": "OL Lyonnes",
+   "stars": 5.0,
+   "ovr": 84,
+   "att": 86,
+   "mid": 84,
+   "def": 82,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116034": {
+   "name": "Paris SG",
+   "stars": 4.5,
+   "ovr": 80,
+   "att": 81,
+   "mid": 81,
+   "def": 80,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116035": {
+   "name": "Paris FC",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 78,
+   "mid": 79,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116036": {
+   "name": "FC Fleury 91",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116037": {
+   "name": "Montpellier FC",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 69,
+   "mid": 74,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116416": {
+   "name": "Havre AC",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116417": {
+   "name": "FC Nantes",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 71,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131724": {
+   "name": "Strasbourg",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 77,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132370": {
+   "name": "Les Marseillaises",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 78,
+   "mid": 74,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132831": {
+   "name": "Toulouse FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 69,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132861": {
+   "name": "US Saint-Malo",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 70,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132588": {
+   "name": "RC Lens",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 67,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116009": {
+   "name": "Arsenal",
+   "stars": 5.0,
+   "ovr": 84,
+   "att": 86,
+   "mid": 84,
+   "def": 85,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116010": {
+   "name": "Chelsea",
+   "stars": 5.0,
+   "ovr": 83,
+   "att": 84,
+   "mid": 82,
+   "def": 83,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116011": {
+   "name": "Spurs",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 75,
+   "mid": 76,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/116011/tottenham-hotspur"
+  },
+  "116013": {
+   "name": "Brighton",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 77,
+   "mid": 78,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/116013/brighton-hove-albion"
+  },
+  "116015": {
+   "name": "Aston Villa",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 76,
+   "mid": 74,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/116015/aston-villa"
+  },
+  "116343": {
+   "name": "Liverpool",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 74,
+   "mid": 76,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/116343/liverpool"
+  },
+  "131725": {
+   "name": "Crystal Palace",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 76,
+   "mid": 72,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132176": {
+   "name": "London City",
+   "stars": 4.5,
+   "ovr": 82,
+   "att": 83,
+   "mid": 83,
+   "def": 82,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116014": {
+   "name": "West Ham",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 77,
+   "mid": 76,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116016": {
+   "name": "Everton",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 77,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116017": {
+   "name": "Manchester City",
+   "stars": 5.0,
+   "ovr": 83,
+   "att": 90,
+   "mid": 83,
+   "def": 82,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116019": {
+   "name": "Birmingham City",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 71,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132867": {
+   "name": "Charlton Athletic",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116012": {
+   "name": "Manchester Utd",
+   "stars": 4.5,
+   "ovr": 81,
+   "att": 83,
+   "mid": 81,
+   "def": 80,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "322": {
+   "name": "GC Zürich",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "324": {
+   "name": "Servette FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 72,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "894": {
+   "name": "FC Zürich",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "896": {
+   "name": "FC Basel 1893",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "897": {
+   "name": "FC Luzern",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "898": {
+   "name": "FC St. Gallen",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 71,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "900": {
+   "name": "BSC Young Boys",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 72,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1862": {
+   "name": "Lausanne-Sport",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "10032": {
+   "name": "FC Lugano",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110770": {
+   "name": "FC Sion",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1715": {
+   "name": "FC Thun",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "286": {
+   "name": "FC Vaduz",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 64,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112172": {
+   "name": "RB Leipzig",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 78,
+   "mid": 78,
+   "def": 80,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/112172/rb-leipzig"
+  },
+  "28": {
+   "name": "Hamburger SV",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 72,
+   "mid": 75,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/28/hamburger-sv"
+  },
+  "31": {
+   "name": "1. FC Köln",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "21": {
+   "name": "FC Bayern München",
+   "stars": 5.0,
+   "ovr": 84,
+   "att": 90,
+   "mid": 84,
+   "def": 84,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "22": {
+   "name": "Borussia Dortmund",
+   "stars": 4.5,
+   "ovr": 81,
+   "att": 85,
+   "mid": 80,
+   "def": 80,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "32": {
+   "name": "Leverkusen",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 83,
+   "mid": 79,
+   "def": 79,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/32/21"
+  },
+  "23": {
+   "name": "M'gladbach",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 80,
+   "mid": 74,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/23/borussia-m-gladbach"
+  },
+  "25": {
+   "name": "SC Freiburg",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 77,
+   "mid": 76,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/25/sc-freiburg"
+  },
+  "36": {
+   "name": "VfB Stuttgart",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 77,
+   "mid": 79,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/36/vfb-stuttgart"
+  },
+  "38": {
+   "name": "SV Werder Bremen",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 76,
+   "mid": 73,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/38/werder-bremen"
+  },
+  "169": {
+   "name": "1. FSV Mainz 05",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 74,
+   "mid": 77,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1824": {
+   "name": "Frankfurt",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 76,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/29/1824"
+  },
+  "1831": {
+   "name": "Union Berlin",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 72,
+   "mid": 74,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1831/union-berlin"
+  },
+  "10029": {
+   "name": "TSG Hoffenheim",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 77,
+   "mid": 77,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/10029/1899-hoffenheim"
+  },
+  "100409": {
+   "name": "FC Augsburg",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 76,
+   "mid": 75,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/100409/fc-augsburg"
+  },
+  "34": {
+   "name": "FC Schalke 04",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 73,
+   "def": 72,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/34/166"
+  },
+  "580": {
+   "name": "SV Elversberg",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 70,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/580/sv-elversberg"
+  },
+  "10030": {
+   "name": "SC Paderborn 07",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 68,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "29": {
+   "name": "Kaiserslautern",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 69,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/29/kaiserslautern"
+  },
+  "166": {
+   "name": "Hertha BSC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 67,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/166/hertha-bsc"
+  },
+  "171": {
+   "name": "1. FC Nürnberg",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 71,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "485": {
+   "name": "Hannover 96",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 69,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/485/hannover-96"
+  },
+  "1832": {
+   "name": "Karlsruher SC",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 67,
+   "mid": 67,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/1832/36"
+  },
+  "110500": {
+   "name": "Braunschweig",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110502": {
+   "name": "SV Darmstadt 98",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110588": {
+   "name": "1. FC Magdeburg",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "165": {
+   "name": "Fürth",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 69,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "160": {
+   "name": "VfL Bochum 1848",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 68,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/160/vfl-bochum"
+  },
+  "576": {
+   "name": "Holstein Kiel",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "159": {
+   "name": "Arminia Bielefeld",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 68,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/485/159"
+  },
+  "503": {
+   "name": "Dynamo Dresden",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "175": {
+   "name": "VfL Wolfsburg",
+   "stars": 3.5,
+   "ovr": 75,
+   "att": 76,
+   "mid": 76,
+   "def": 74,
+   "basis": "in-game",
+   "source": "https://allthings.how/fc-27-career-mode-the-best-teams-to-manage/ (identical table: gamerant.com 2026-09-19, games.gg 2026-09-21, keengamer 2026-09-28)"
+  },
+  "487": {
+   "name": "VfL Osnabrück",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 68,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110329": {
+   "name": "FC St. Pauli",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 69,
+   "mid": 71,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/110329/fc-st-pauli"
+  },
+  "162": {
+   "name": "Energie Cottbus",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 69,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111235": {
+   "name": "Heidenheim",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 71,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116280": {
+   "name": "Juventus",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 78,
+   "mid": 77,
+   "def": 77,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116282": {
+   "name": "Roma",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 77,
+   "mid": 80,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131360": {
+   "name": "Slavia Praha",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101100": {
+   "name": "Atl. Nacional",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 75,
+   "mid": 72,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110986": {
+   "name": "LDU Quito",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110981": {
+   "name": "Barcelona SC",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 68,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111008": {
+   "name": "Libertad",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111014": {
+   "name": "Universitario",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111325": {
+   "name": "Nacional",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112908": {
+   "name": "IDV",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112716": {
+   "name": "Cerro Porteño",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111013": {
+   "name": "Sporting Cristal",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101110": {
+   "name": "Peñarol",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110968": {
+   "name": "Bolívar",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110991": {
+   "name": "Carabobo FC",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101108": {
+   "name": "Olimpia",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101105": {
+   "name": "Millonarios",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 72,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101101": {
+   "name": "Junior",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111722": {
+   "name": "Deportes Tolima",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112659": {
+   "name": "Cusco FC",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 69,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101104": {
+   "name": "Indep. Santa Fe",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 74,
+   "mid": 69,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/101104/santa-fe"
+  },
+  "112705": {
+   "name": "Coquimbo Unido",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 66,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112853": {
+   "name": "Dep. La Guaira",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 68,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114577": {
+   "name": "Always Ready",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "115693": {
+   "name": "UCV FC",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110975": {
+   "name": "Uni. Católica",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 72,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111011": {
+   "name": "Cienciano",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 71,
+   "mid": 66,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112868": {
+   "name": "Boston River",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114611": {
+   "name": "Puerto Cabello",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101099": {
+   "name": "América de Cali",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110982": {
+   "name": "Dep. Cuenca",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101103": {
+   "name": "Indep. Medellín",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110989": {
+   "name": "Caracas FC",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111328": {
+   "name": "Palestino",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "517": {
+   "name": "Botafogo",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111012": {
+   "name": "Alianza Atltico",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 64,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112112": {
+   "name": "Juventud",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112116": {
+   "name": "O'Higgins",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113143": {
+   "name": "City Torque",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114578": {
+   "name": "Macar",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "115517": {
+   "name": "Ind. Petrolero",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 60,
+   "mid": 67,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131826": {
+   "name": "Recoleta",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101097": {
+   "name": "Audax Italiano",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110967": {
+   "name": "Blooming",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110955": {
+   "name": "Shanghai Shenhua",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111724": {
+   "name": "Shandong Taishan",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 72,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111768": {
+   "name": "Beijing FC",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 70,
+   "mid": 69,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111774": {
+   "name": "Tianjin JMT FC",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 72,
+   "mid": 65,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111779": {
+   "name": "Henan FC",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112163": {
+   "name": "Zhejiang Pro",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 64,
+   "mid": 69,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112540": {
+   "name": "Shanghai Port FC",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 68,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116360": {
+   "name": "Chengdu FC",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 70,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116361": {
+   "name": "Wuhan Three Towns",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 72,
+   "mid": 64,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131173": {
+   "name": "Qingdao Hainiu",
+   "stars": 2.0,
+   "ovr": 60,
+   "att": 68,
+   "mid": 62,
+   "def": 60,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131487": {
+   "name": "SZ Peng City",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131488": {
+   "name": "Qingdao W. Coast",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 71,
+   "mid": 65,
+   "def": 62,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131531": {
+   "name": "Yunnan Yukun",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 68,
+   "mid": 68,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132305": {
+   "name": "Dalian Yingbo",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 69,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132139": {
+   "name": "Liaoning FC",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 70,
+   "mid": 63,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132784": {
+   "name": "Chongqing FC",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 56,
+   "mid": 64,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "88": {
+   "name": "Birmingham City",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 72,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/88/birmingham-city"
+  },
+  "89": {
+   "name": "Charlton Ath",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 67,
+   "mid": 69,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/89/charlton-ath"
+  },
+  "1947": {
+   "name": "Wrexham",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 71,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1947/wrexham"
+  },
+  "109": {
+   "name": "West Brom",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 68,
+   "mid": 69,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/109/110"
+  },
+  "1790": {
+   "name": "Portsmouth",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1792": {
+   "name": "Norwich",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 72,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1794": {
+   "name": "Sheffield Utd",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 70,
+   "mid": 70,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/1794/sheffield-united"
+  },
+  "1795": {
+   "name": "Watford",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 69,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1795/watford"
+  },
+  "1801": {
+   "name": "Preston",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 69,
+   "mid": 70,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/1801/preston-north-end"
+  },
+  "1806": {
+   "name": "Stoke City",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1919": {
+   "name": "Bristol City",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 68,
+   "mid": 70,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/1919/bristol-city"
+  },
+  "1960": {
+   "name": "Swansea City",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "17": {
+   "name": "Southampton",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 75,
+   "mid": 73,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/1943/17"
+  },
+  "3": {
+   "name": "Blackburn Rovers",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "12": {
+   "name": "Middlesbrough",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 73,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15": {
+   "name": "QPR",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 72,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "91": {
+   "name": "Derby County",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "97": {
+   "name": "Millwall",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 71,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/1799/97"
+  },
+  "149": {
+   "name": "Lincoln City",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1796": {
+   "name": "Burnley",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 74,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1961": {
+   "name": "Cardiff City",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "4": {
+   "name": "Bolton",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 70,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "19": {
+   "name": "West Ham",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 80,
+   "mid": 75,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110": {
+   "name": "Wolves",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 75,
+   "mid": 75,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/109/110"
+  },
+  "361": {
+   "name": "Stevenage",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1793": {
+   "name": "Reading",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1917": {
+   "name": "Wigan Athletic",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1926": {
+   "name": "Blackpool",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1931": {
+   "name": "Stockport",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1932": {
+   "name": "Barnsley",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 62,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1933": {
+   "name": "Wycombe",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 66,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1939": {
+   "name": "Huddersfield",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1938": {
+   "name": "Peterborough",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 66,
+   "mid": 65,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1940": {
+   "name": "Mansfield Town",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1958": {
+   "name": "Leyton Orient",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15015": {
+   "name": "Burton Albion",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 65,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1923": {
+   "name": "Luton Town",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1929": {
+   "name": "Plymouth Argyle",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1804": {
+   "name": "Bradford City",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112259": {
+   "name": "AFC Wimbledon",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "142": {
+   "name": "Doncaster",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "95": {
+   "name": "Leicester City",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 70,
+   "def": 71,
+   "basis": "in-game",
+   "source": "https://allthings.how/fc-27-career-mode-the-best-teams-to-manage/ (identical table: gamerant.com 2026-09-19, games.gg 2026-09-21, keengamer 2026-09-28)"
+  },
+  "1937": {
+   "name": "Notts County",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 65,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1951": {
+   "name": "Oxford United",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1798": {
+   "name": "MK Dons",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1807": {
+   "name": "Sheffield Wed",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1944": {
+   "name": "Cambridge Utd",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112764": {
+   "name": "Bromley FC",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 64,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1802": {
+   "name": "Gillingham",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 63,
+   "mid": 63,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1803": {
+   "name": "Walsall",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 62,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1924": {
+   "name": "Chesterfield",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1934": {
+   "name": "Swindon Town",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1935": {
+   "name": "Colchester",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 59,
+   "mid": 64,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1936": {
+   "name": "Cheltenham Town",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 64,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15048": {
+   "name": "Tranmere Rovers",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 61,
+   "mid": 64,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110313": {
+   "name": "Accrington",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 62,
+   "mid": 61,
+   "def": 62,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112254": {
+   "name": "Newport County",
+   "stars": 2.0,
+   "ovr": 60,
+   "att": 61,
+   "mid": 61,
+   "def": 62,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112260": {
+   "name": "Fleetwood Town",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 62,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113926": {
+   "name": "Salford City",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "135": {
+   "name": "Barnet",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 62,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1920": {
+   "name": "Oldham Athletic",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 62,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "92": {
+   "name": "Grimsby Town",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 62,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "121": {
+   "name": "Crewe Alexandra",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 63,
+   "mid": 63,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "127": {
+   "name": "Shrewsbury",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 61,
+   "mid": 62,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1962": {
+   "name": "Bristol Rovers",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 63,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110890": {
+   "name": "Crawley Town",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 62,
+   "mid": 63,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "143": {
+   "name": "Exeter City",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 67,
+   "mid": 63,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1797": {
+   "name": "Rotherham Utd",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 64,
+   "mid": 64,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1928": {
+   "name": "Port Vale",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1930": {
+   "name": "Northampton",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1948": {
+   "name": "York City",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 63,
+   "mid": 63,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1955": {
+   "name": "Rochdale",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 61,
+   "mid": 63,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "298": {
+   "name": "Rosenborg BK",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 66,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/298/rosenborg-bk"
+  },
+  "299": {
+   "name": "Lillestrøm SK",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 68,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "300": {
+   "name": "Viking FK",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "417": {
+   "name": "Molde FK",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "418": {
+   "name": "Tromsø IL",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 63,
+   "mid": 66,
+   "def": 64,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/418/tromso-il"
+  },
+  "918": {
+   "name": "FK Bodø/Glimt",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 69,
+   "mid": 72,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/918/fk-bodo-glimt"
+  },
+  "919": {
+   "name": "SK Brann",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 67,
+   "mid": 69,
+   "def": 67,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/919/sk-brann"
+  },
+  "1756": {
+   "name": "HamKam Fotball",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1757": {
+   "name": "Sandefjord",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "2041": {
+   "name": "Fredrikstad FK",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 65,
+   "def": 64,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/2041/fredrikstad-fk?db=26091500"
+  },
+  "112199": {
+   "name": "Sarpsborg 08",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113459": {
+   "name": "Kristiansund BK",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 63,
+   "mid": 64,
+   "def": 63,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/113459/kristiansund-bk"
+  },
+  "131491": {
+   "name": "KFUM-Kameratene",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 64,
+   "mid": 68,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "920": {
+   "name": "Vålerenga Fotball",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1524": {
+   "name": "IK Start",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1755": {
+   "name": "Aalesunds FK",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 62,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "245": {
+   "name": "Ajax",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 76,
+   "mid": 78,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/245/ajax"
+  },
+  "246": {
+   "name": "Feyenoord",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "247": {
+   "name": "PSV",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 78,
+   "mid": 77,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/247/psv"
+  },
+  "634": {
+   "name": "Fortuna Sittard",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 66,
+   "mid": 68,
+   "def": 67,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/634/fortuna-sittard"
+  },
+  "1903": {
+   "name": "FC Utrecht",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 69,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1903/fc-utrecht"
+  },
+  "1906": {
+   "name": "AZ",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 74,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1906/az"
+  },
+  "1908": {
+   "name": "FC Twente",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 69,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1908/fc-twente"
+  },
+  "1910": {
+   "name": "N.E.C. Nijmegen",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 74,
+   "mid": 72,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/1910/nec-nijmegen"
+  },
+  "1913": {
+   "name": "sc Heerenveen",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1914": {
+   "name": "PEC Zwolle",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 66,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1971": {
+   "name": "Excelsior",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100632": {
+   "name": "Go Ahead Eagles",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 66,
+   "mid": 69,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/100632/go-ahead-eagles"
+  },
+  "100646": {
+   "name": "Sparta Rotterdam",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "647": {
+   "name": "SC Cambuur",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 64,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "650": {
+   "name": "ADO Den Haag",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1907": {
+   "name": "Willem II",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 68,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1915": {
+   "name": "FC Groningen",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 67,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100638": {
+   "name": "SC Telstar",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 64,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100325": {
+   "name": "HJK Helsinki",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "115995": {
+   "name": "FC Bayern München",
+   "stars": 5.0,
+   "ovr": 82,
+   "att": 83,
+   "mid": 82,
+   "def": 82,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "115996": {
+   "name": "Leverkusen",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 76,
+   "mid": 75,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/it/teams/115996/bayer-04-leverkusen"
+  },
+  "115997": {
+   "name": "Frankfurt",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 75,
+   "mid": 79,
+   "def": 79,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "115998": {
+   "name": "VfL Wolfsburg",
+   "stars": 4.5,
+   "ovr": 80,
+   "att": 82,
+   "mid": 79,
+   "def": 79,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "115999": {
+   "name": "TSG Hoffenheim",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 70,
+   "mid": 72,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/115999/tsg-1899-hoffenheim"
+  },
+  "116002": {
+   "name": "SC Freiburg",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 73,
+   "mid": 76,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116003": {
+   "name": "1. FC Köln",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116004": {
+   "name": "SV Werder Bremen",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 73,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116021": {
+   "name": "RB Leipzig",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 72,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131386": {
+   "name": "1. FC Nürnberg",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 72,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132533": {
+   "name": "Hamburger SV",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132589": {
+   "name": "Union Berlin",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 76,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132865": {
+   "name": "VfB Stuttgart",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 73,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132866": {
+   "name": "1. FSV Mainz 05",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 70,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/132866/1-fsv-mainz-05"
+  },
+  "278": {
+   "name": "AEK Athens",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "280": {
+   "name": "Olympiacos FC",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 81,
+   "mid": 78,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "393": {
+   "name": "PAOK FC",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 74,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1884": {
+   "name": "Panathinaikos",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 74,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113040": {
+   "name": "NorthEast United",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 64,
+   "mid": 65,
+   "def": 58,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113146": {
+   "name": "Mohun Bagan SG",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113257": {
+   "name": "Odisha FC",
+   "stars": 1.5,
+   "ovr": 57,
+   "att": 56,
+   "mid": 58,
+   "def": 58,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113297": {
+   "name": "Chennaiyin FC",
+   "stars": 2.0,
+   "ovr": 60,
+   "att": 65,
+   "mid": 60,
+   "def": 62,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113298": {
+   "name": "FC Goa",
+   "stars": 1.5,
+   "ovr": 59,
+   "att": 60,
+   "mid": 60,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113299": {
+   "name": "Kerala Blasters",
+   "stars": 1.5,
+   "ovr": 56,
+   "att": 55,
+   "mid": 58,
+   "def": 57,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113300": {
+   "name": "Mumbai City FC",
+   "stars": 1.5,
+   "ovr": 58,
+   "att": 62,
+   "mid": 61,
+   "def": 57,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113301": {
+   "name": "Hyderabad FC",
+   "stars": 1.0,
+   "ovr": 55,
+   "att": 55,
+   "mid": 59,
+   "def": 57,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113302": {
+   "name": "Bengaluru FC",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 61,
+   "mid": 65,
+   "def": 60,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "115202": {
+   "name": "Punjab FC",
+   "stars": 1.0,
+   "ovr": 54,
+   "att": 52,
+   "mid": 57,
+   "def": 56,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131461": {
+   "name": "Inter Kashi",
+   "stars": 1.5,
+   "ovr": 56,
+   "att": 59,
+   "mid": 58,
+   "def": 58,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111393": {
+   "name": "Adelaide United",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111395": {
+   "name": "Brisbane Roar",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 63,
+   "mid": 62,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111396": {
+   "name": "Central Coast",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 60,
+   "mid": 62,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111397": {
+   "name": "Melb. Victory",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111398": {
+   "name": "Newcastle Jets",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 62,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111399": {
+   "name": "Perth Glory",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 65,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111400": {
+   "name": "Sydney FC",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 63,
+   "mid": 65,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111766": {
+   "name": "Well. Phoenix",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 61,
+   "mid": 62,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112224": {
+   "name": "Melbourne City",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 67,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112427": {
+   "name": "WS Wanderers",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114604": {
+   "name": "Macarthur FC",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 59,
+   "mid": 65,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131739": {
+   "name": "Auckland FC",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 67,
+   "mid": 65,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "980": {
+   "name": "Daejeon Hana",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "982": {
+   "name": "FC Seoul",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1473": {
+   "name": "Ulsan HD FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 71,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1474": {
+   "name": "Pohang Steelers",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1477": {
+   "name": "Jeonbuk Hyundai",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1478": {
+   "name": "Jeju United",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "2055": {
+   "name": "Gimcheon Sangmu",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110765": {
+   "name": "Incheon United",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 70,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112115": {
+   "name": "Gangwon FC",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 68,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112258": {
+   "name": "Gwangju FC",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 65,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112555": {
+   "name": "FC Anyang",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 69,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112554": {
+   "name": "Bucheon FC 1995",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "240": {
+   "name": "Atlético de Madrid",
+   "stars": 5.0,
+   "ovr": 83,
+   "att": 83,
+   "mid": 82,
+   "def": 82,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "241": {
+   "name": "FC Barcelona",
+   "stars": 5.0,
+   "ovr": 85,
+   "att": 85,
+   "mid": 87,
+   "def": 83,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "242": {
+   "name": "RC Deportivo",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 72,
+   "mid": 74,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/242/rc-deportivo"
+  },
+  "243": {
+   "name": "Real Madrid",
+   "stars": 5.0,
+   "ovr": 85,
+   "att": 87,
+   "mid": 86,
+   "def": 83,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "448": {
+   "name": "Athletic Club",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 78,
+   "mid": 78,
+   "def": 79,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/clubs/448-athletic-club"
+  },
+  "449": {
+   "name": "Real Betis",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 79,
+   "mid": 80,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26091500/449/real-betis-balompie"
+  },
+  "450": {
+   "name": "Celta",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 78,
+   "mid": 76,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/laliga-ea-sports"
+  },
+  "452": {
+   "name": "RCD Espanyol",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 75,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/452/rcd-espanyol"
+  },
+  "456": {
+   "name": "R. Racing Club",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 75,
+   "mid": 75,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "457": {
+   "name": "Real Sociedad",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 81,
+   "mid": 78,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/clubs/457-real-sociedad"
+  },
+  "461": {
+   "name": "Valencia CF",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 75,
+   "mid": 76,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/ro/teams/fc27/461/valencia-cf"
+  },
+  "463": {
+   "name": "D. Alavés",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 76,
+   "mid": 74,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/463/deportivo-alaves"
+  },
+  "468": {
+   "name": "Elche CF",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 72,
+   "mid": 73,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/laliga-ea-sports"
+  },
+  "479": {
+   "name": "CA Osasuna",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 78,
+   "mid": 75,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/laliga-ea-sports"
+  },
+  "480": {
+   "name": "Rayo Vallecano",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 75,
+   "mid": 78,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/clubs/480-rayo-vallecano"
+  },
+  "481": {
+   "name": "Sevilla FC",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 75,
+   "mid": 74,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/481/sevilla-fc"
+  },
+  "483": {
+   "name": "Villarreal CF",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 80,
+   "mid": 79,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/483/villarreal-cf"
+  },
+  "573": {
+   "name": "Málaga CF",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 72,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/573/malaga-cf"
+  },
+  "1853": {
+   "name": "Levante UD",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 73,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/laliga-ea-sports"
+  },
+  "1860": {
+   "name": "Getafe CF",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 74,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://fifaindex.com/teams/1860-getafe-cf"
+  },
+  "260": {
+   "name": "CD Tenerife",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 67,
+   "def": 66,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/clubs/260-cd-tenerife"
+  },
+  "453": {
+   "name": "RCD Mallorca",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 72,
+   "mid": 74,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "459": {
+   "name": "R. Sporting",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 69,
+   "mid": 73,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "462": {
+   "name": "R. Valladolid CF",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "467": {
+   "name": "SD Eibar",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "472": {
+   "name": "UD Las Palmas",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 73,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1854": {
+   "name": "Albacete BP",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1861": {
+   "name": "UD Almería",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 73,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1867": {
+   "name": "Córdoba CF",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1894": {
+   "name": "AD Ceuta FC",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1968": {
+   "name": "Cádiz CF",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "10846": {
+   "name": "Burgos CF",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15021": {
+   "name": "CE Sabadell FC",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 67,
+   "mid": 64,
+   "def": 63,
+   "basis": "in-game",
+   "source": "https://allthings.how/fc-27-career-mode-the-best-teams-to-manage/ (identical table: gamerant.com 2026-09-19, games.gg 2026-09-21, keengamer 2026-09-28)"
+  },
+  "100852": {
+   "name": "CD Castellón",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 69,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100888": {
+   "name": "CD Leganés",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110062": {
+   "name": "Girona FC",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 72,
+   "def": 72,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/clubs/110062-girona-fc"
+  },
+  "110711": {
+   "name": "Real Sociedad B",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110716": {
+   "name": "Celta Fortuna",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 60,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110827": {
+   "name": "R. Oviedo",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 71,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110832": {
+   "name": "Granada CF",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114554": {
+   "name": "FC Andorra",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131110": {
+   "name": "CD Eldense",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 67,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113888": {
+   "name": "Qarabağ FK",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 66,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1032": {
+   "name": "Monterrey",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 77,
+   "mid": 77,
+   "def": 75,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "1878": {
+   "name": "CF Cruz Azul",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 75,
+   "mid": 76,
+   "def": 75,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "1879": {
+   "name": "Club América",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 76,
+   "mid": 76,
+   "def": 75,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "1880": {
+   "name": "Club Guadalajara",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 74,
+   "def": 74,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "1882": {
+   "name": "Toluca FC",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 75,
+   "def": 73,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "1970": {
+   "name": "Club Tigres",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 76,
+   "mid": 76,
+   "def": 75,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "101114": {
+   "name": "Atlas FC",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 72,
+   "def": 72,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "101116": {
+   "name": "Atlante FC",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 69,
+   "def": 67,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "101121": {
+   "name": "Club Necaxa",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 70,
+   "def": 70,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "110144": {
+   "name": "Santos Laguna",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 72,
+   "def": 71,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "110147": {
+   "name": "Club Pachuca",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 73,
+   "def": 72,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "110150": {
+   "name": "Quertaro FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 69,
+   "def": 68,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "110152": {
+   "name": "Club Puebla",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 70,
+   "def": 69,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "110781": {
+   "name": "Club Len",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 73,
+   "mid": 73,
+   "def": 73,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "111678": {
+   "name": "Club Tijuana",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 71,
+   "def": 71,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "112678": {
+   "name": "Atltico de SL",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 71,
+   "def": 71,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "113134": {
+   "name": "FC Jurez",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 71,
+   "def": 70,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "1881": {
+   "name": "Pumas",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 74,
+   "def": 73,
+   "basis": "in-game",
+   "source": "https://www.365scores.com/es/news/liga-mx-en-fc27-rankings-y-medias/"
+  },
+  "112372": {
+   "name": "PFC Ludogorets",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 73,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100135": {
+   "name": "APOEL FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "264": {
+   "name": "Omonia FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1598": {
+   "name": "Bahia",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 73,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116325": {
+   "name": "FC Barcelona",
+   "stars": 5.0,
+   "ovr": 84,
+   "att": 88,
+   "mid": 85,
+   "def": 80,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116326": {
+   "name": "Real Madrid",
+   "stars": 4.5,
+   "ovr": 81,
+   "att": 83,
+   "mid": 81,
+   "def": 80,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116327": {
+   "name": "Atlético de Madrid",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 79,
+   "mid": 78,
+   "def": 79,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116328": {
+   "name": "Athletic Club",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116331": {
+   "name": "SD Eibar",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 72,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116332": {
+   "name": "C. Adeje Tenerife",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 73,
+   "mid": 73,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116334": {
+   "name": "Madrid CFF",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 73,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116336": {
+   "name": "Real Sociedad",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 79,
+   "mid": 76,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/es/teams/fc27/116336/real-sociedad"
+  },
+  "116337": {
+   "name": "Sevilla FC",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 76,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116339": {
+   "name": "Valencia CF",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131125": {
+   "name": "Badalona Women",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 77,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131391": {
+   "name": "Granada CF",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 68,
+   "mid": 69,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131720": {
+   "name": "RC Deportivo",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 73,
+   "mid": 73,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131733": {
+   "name": "RCD Espanyol",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 72,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132629": {
+   "name": "Logroño United",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 73,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116329": {
+   "name": "Deportivo Alavés",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 76,
+   "mid": 66,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "211": {
+   "name": "Dinamo Zagreb",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 73,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "263": {
+   "name": "Hajduk Split",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "234": {
+   "name": "SL Benfica",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 80,
+   "mid": 78,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "236": {
+   "name": "FC Porto",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 77,
+   "mid": 79,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "237": {
+   "name": "Sporting CP",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 79,
+   "mid": 75,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/clubs/237-sporting-cp"
+  },
+  "718": {
+   "name": "Estrela Amadora",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "744": {
+   "name": "Rio Ave FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 68,
+   "mid": 69,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "1438": {
+   "name": "Santa Clara",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 68,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "1887": {
+   "name": "Vitória SC",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 71,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "1888": {
+   "name": "Gil Vicente",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 70,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "1891": {
+   "name": "Nacional",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 64,
+   "mid": 68,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "1896": {
+   "name": "SC Braga",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 77,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "1900": {
+   "name": "Moreirense FC",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 65,
+   "mid": 67,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "10020": {
+   "name": "Estoril Praia",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 73,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "112513": {
+   "name": "Arouca",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 71,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "112809": {
+   "name": "FC Famalicão",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 74,
+   "mid": 70,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "114510": {
+   "name": "Casa Pia AC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 70,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "717": {
+   "name": "FC Alverca",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 67,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "1893": {
+   "name": "Marítimo da Madeira",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 66,
+   "mid": 68,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "112587": {
+   "name": "Académico de Viseu FC",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 72,
+   "mid": 67,
+   "def": 64,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/leagues/liga-portugal"
+  },
+  "131358": {
+   "name": "SL Benfica",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 75,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101084": {
+   "name": "Gimnasia",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 67,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101088": {
+   "name": "Vélez Sarsfield",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 71,
+   "mid": 73,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110093": {
+   "name": "Independiente",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 74,
+   "mid": 73,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110396": {
+   "name": "Newell's",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110404": {
+   "name": "Banfield",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 67,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110953": {
+   "name": "Instituto",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111020": {
+   "name": "Ind. Rivadavia",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 75,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111708": {
+   "name": "Atlético Tucumán",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111711": {
+   "name": "Huracán",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111715": {
+   "name": "Tigre",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 71,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111716": {
+   "name": "Unión",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 68,
+   "def": 66,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/111716/union"
+  },
+  "112689": {
+   "name": "Platense",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 70,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112713": {
+   "name": "Sarmiento",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112965": {
+   "name": "Central Córdoba",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113044": {
+   "name": "Barracas Central",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "115472": {
+   "name": "Dep. Riestra",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111707": {
+   "name": "Aldosivi",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112670": {
+   "name": "Talleres",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 75,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1013": {
+   "name": "San Lorenzo",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1876": {
+   "name": "River Plate",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 75,
+   "mid": 76,
+   "def": 76,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1876/river-plate"
+  },
+  "101083": {
+   "name": "Estudiantes",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 75,
+   "mid": 73,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111019": {
+   "name": "Argentinos Jrs.",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 73,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111022": {
+   "name": "Belgrano",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 75,
+   "mid": 74,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111710": {
+   "name": "Defensa",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 69,
+   "mid": 70,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110580": {
+   "name": "Rosario Central",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 76,
+   "mid": 72,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1877": {
+   "name": "Boca Juniors",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 73,
+   "mid": 75,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1877/boca-juniors"
+  },
+  "101085": {
+   "name": "Racing Club",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 73,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110395": {
+   "name": "Lanús",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 70,
+   "mid": 72,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/110395/lanus"
+  },
+  "113050": {
+   "name": "Club Atlético Gimnasia y Esgrima",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "115470": {
+   "name": "Asociación Atlética Estudiantes",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "57": {
+   "name": "AJ Auxerre",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 72,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "64": {
+   "name": "RC Lens",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 78,
+   "mid": 76,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "65": {
+   "name": "LOSC Lille",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 77,
+   "mid": 77,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "66": {
+   "name": "OL",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 76,
+   "mid": 78,
+   "def": 77,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "69": {
+   "name": "AS Monaco",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 77,
+   "mid": 77,
+   "def": 77,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "72": {
+   "name": "OGC Nice",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 74,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "73": {
+   "name": "Paris SG",
+   "stars": 5.0,
+   "ovr": 86,
+   "att": 87,
+   "mid": 85,
+   "def": 86,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "74": {
+   "name": "Stade Rennais FC",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 80,
+   "mid": 77,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "76": {
+   "name": "Strasbourg",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "217": {
+   "name": "FC Lorient",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 73,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "219": {
+   "name": "OM",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 76,
+   "mid": 77,
+   "def": 77,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "378": {
+   "name": "Stade Brestois 29",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 75,
+   "mid": 74,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1530": {
+   "name": "Angers SCO",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 73,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1738": {
+   "name": "Havre AC",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 71,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1809": {
+   "name": "Toulouse FC",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 72,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111817": {
+   "name": "Paris FC",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 76,
+   "mid": 75,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "294": {
+   "name": "ESTAC Troyes",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1739": {
+   "name": "Le Mans FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "62": {
+   "name": "En Avant Guingamp",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1805": {
+   "name": "Grenoble Foot 38",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1814": {
+   "name": "Laval MFC",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1815": {
+   "name": "Clermont Foot 63",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 65,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1823": {
+   "name": "AS Nancy Lorraine",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110321": {
+   "name": "Pau FC",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111273": {
+   "name": "Red Star FC",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111276": {
+   "name": "USL Dunkerque",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 69,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111659": {
+   "name": "Rodez AF",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 65,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131447": {
+   "name": "FC Annecy",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 66,
+   "mid": 69,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132680": {
+   "name": "US Boulogne",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 65,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "70": {
+   "name": "Montpellier",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 66,
+   "mid": 68,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "379": {
+   "name": "Stade de Reims",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 72,
+   "mid": 72,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1819": {
+   "name": "AS Saint-Étienne",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 72,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "68": {
+   "name": "FC Metz",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 71,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "71": {
+   "name": "FC Nantes",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 72,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "226": {
+   "name": "FC Sochaux-Montbéliard",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 66,
+   "mid": 65,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110569": {
+   "name": "Dijon Football Côte d’Or",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1874": {
+   "name": "Ferencvárosi TC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 71,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "687": {
+   "name": "Columbus Crew",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 74,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "688": {
+   "name": "D.C. United",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "689": {
+   "name": "Red Bulls",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 71,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "691": {
+   "name": "New England",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 74,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "693": {
+   "name": "Chicago Fire FC",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 78,
+   "mid": 71,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "694": {
+   "name": "Colorado Rapids",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 73,
+   "mid": 70,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "695": {
+   "name": "FC Dallas",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 72,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "696": {
+   "name": "Sporting KC",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 68,
+   "mid": 69,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "697": {
+   "name": "LA Galaxy",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 74,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "698": {
+   "name": "Houston Dynamo",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101112": {
+   "name": "Whitecaps FC",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 76,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111065": {
+   "name": "Real Salt Lake",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111138": {
+   "name": "Minnesota United",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111139": {
+   "name": "CF Montréal",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 73,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111140": {
+   "name": "Portland Timbers",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 73,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111144": {
+   "name": "Sounders FC",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 74,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111651": {
+   "name": "Toronto FC",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 70,
+   "mid": 72,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111928": {
+   "name": "SJ Earthquakes",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 72,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112134": {
+   "name": "Philadelphia",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 69,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112606": {
+   "name": "Orlando City",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 69,
+   "mid": 76,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112828": {
+   "name": "New York City FC",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112885": {
+   "name": "Atlanta United",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112893": {
+   "name": "Inter Miami CF",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 77,
+   "mid": 76,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/112893/inter-miami"
+  },
+  "112996": {
+   "name": "LAFC",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 73,
+   "mid": 74,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113018": {
+   "name": "St. Louis CITY SC",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 63,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113149": {
+   "name": "FC Cincinnati",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 72,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114161": {
+   "name": "Austin FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 72,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114162": {
+   "name": "Nashville SC",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 72,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114640": {
+   "name": "Charlotte FC",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 73,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131439": {
+   "name": "San Diego FC",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 74,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131359": {
+   "name": "Ajax",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 76,
+   "mid": 74,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132891": {
+   "name": "FC Twente",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 74,
+   "mid": 73,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/132891/fc-twente"
+  },
+  "132889": {
+   "name": "SK Brann",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116300": {
+   "name": "Seattle Reign",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 75,
+   "mid": 78,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116302": {
+   "name": "Portland Thorns",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 81,
+   "mid": 79,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116303": {
+   "name": "NC Courage",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 75,
+   "mid": 74,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116304": {
+   "name": "Washington Spirit",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 82,
+   "mid": 79,
+   "def": 77,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116305": {
+   "name": "Chicago Stars FC",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 78,
+   "mid": 75,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116306": {
+   "name": "Houston Dash",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 73,
+   "mid": 77,
+   "def": 77,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116307": {
+   "name": "Orlando Pride",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 82,
+   "mid": 78,
+   "def": 77,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116308": {
+   "name": "Rac. Louisville",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 76,
+   "mid": 74,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116309": {
+   "name": "KC Current",
+   "stars": 4.5,
+   "ovr": 80,
+   "att": 84,
+   "mid": 80,
+   "def": 76,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116310": {
+   "name": "Gotham FC",
+   "stars": 4.5,
+   "ovr": 81,
+   "att": 81,
+   "mid": 81,
+   "def": 81,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "116311": {
+   "name": "Angel City FC",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 77,
+   "mid": 79,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "116312": {
+   "name": "San Diego Wave",
+   "stars": 4.0,
+   "ovr": 79,
+   "att": 79,
+   "mid": 80,
+   "def": 77,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "131477": {
+   "name": "Bay FC",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 81,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131478": {
+   "name": "Utah Royals FC",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 77,
+   "mid": 76,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132698": {
+   "name": "Denver Summit FC",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 77,
+   "mid": 78,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132697": {
+   "name": "Boston Legacy FC",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 78,
+   "mid": 75,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "301": {
+   "name": "Widzew Łódź",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 71,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "420": {
+   "name": "Górnik Zabrze",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 71,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "873": {
+   "name": "Lech Poznań",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 74,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1871": {
+   "name": "Legia Warszawa",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110206": {
+   "name": "GKS Katowice",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110745": {
+   "name": "Jagiellonia",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 71,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110746": {
+   "name": "Pogoń Szczecin",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110747": {
+   "name": "Cracovia",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 69,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/110747/cracovia"
+  },
+  "110749": {
+   "name": "Zagłębie Lubin",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 68,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111083": {
+   "name": "Korona Kielce",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 70,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111086": {
+   "name": "Piast Gliwice",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111088": {
+   "name": "Radomiak Radom",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111092": {
+   "name": "Śląsk Wrocław",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111097": {
+   "name": "Motor Lublin",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114326": {
+   "name": "Raków",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1569": {
+   "name": "Wisła Płock",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1873": {
+   "name": "Wisła Kraków",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131464": {
+   "name": "KS Wieczysta Kraków",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 69,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1": {
+   "name": "Arsenal",
+   "stars": 5.0,
+   "ovr": 84,
+   "att": 85,
+   "mid": 84,
+   "def": 84,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "2": {
+   "name": "Aston Villa",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 79,
+   "mid": 78,
+   "def": 78,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "5": {
+   "name": "Chelsea",
+   "stars": 4.5,
+   "ovr": 81,
+   "att": 82,
+   "mid": 83,
+   "def": 79,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "7": {
+   "name": "Everton",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 76,
+   "mid": 79,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/7/everton"
+  },
+  "9": {
+   "name": "Liverpool",
+   "stars": 5.0,
+   "ovr": 83,
+   "att": 85,
+   "mid": 83,
+   "def": 81,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "10": {
+   "name": "Manchester City",
+   "stars": 5.0,
+   "ovr": 84,
+   "att": 86,
+   "mid": 82,
+   "def": 83,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "11": {
+   "name": "Man Utd",
+   "stars": 4.5,
+   "ovr": 82,
+   "att": 81,
+   "mid": 82,
+   "def": 80,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "13": {
+   "name": "Newcastle Utd",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 79,
+   "mid": 78,
+   "def": 81,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/13/newcastle-united"
+  },
+  "14": {
+   "name": "Nott'm Forest",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 79,
+   "mid": 78,
+   "def": 79,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/14/nottingham-forest"
+  },
+  "18": {
+   "name": "Spurs",
+   "stars": 4.5,
+   "ovr": 81,
+   "att": 80,
+   "mid": 80,
+   "def": 81,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "144": {
+   "name": "Fulham",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 75,
+   "mid": 76,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/144/fulham"
+  },
+  "1799": {
+   "name": "Crystal Palace",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 79,
+   "mid": 79,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/tools/compare/teams/1799/97"
+  },
+  "1808": {
+   "name": "Brighton",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 79,
+   "mid": 78,
+   "def": 78,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1925": {
+   "name": "Brentford",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 79,
+   "mid": 79,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1925/brentford"
+  },
+  "1943": {
+   "name": "AFC Bournemouth",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 79,
+   "mid": 78,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1943/afc-bournemouth"
+  },
+  "8": {
+   "name": "Leeds United",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 77,
+   "mid": 78,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "106": {
+   "name": "Sunderland",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 78,
+   "mid": 78,
+   "def": 79,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/106/sunderland"
+  },
+  "1800": {
+   "name": "Coventry City",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 74,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/1800/coventry-city"
+  },
+  "1952": {
+   "name": "Hull City",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 73,
+   "mid": 73,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "94": {
+   "name": "Ipswich",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 75,
+   "mid": 77,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/94/ipswich-town"
+  },
+  "605": {
+   "name": "Al Hilal",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 78,
+   "mid": 78,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/605/al-hilal"
+  },
+  "607": {
+   "name": "Al Ittihad",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 76,
+   "mid": 75,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/607/al-ittihad"
+  },
+  "111674": {
+   "name": "Al Shabab",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 78,
+   "mid": 75,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112096": {
+   "name": "Al Ettifaq",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 68,
+   "mid": 73,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112139": {
+   "name": "Al Nassr",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 82,
+   "mid": 78,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112387": {
+   "name": "Al Ahli",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 77,
+   "mid": 76,
+   "def": 77,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112390": {
+   "name": "Al Fateh",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 73,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112391": {
+   "name": "Al Qadsiah",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 80,
+   "mid": 79,
+   "def": 76,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112393": {
+   "name": "Al Taawoun",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 72,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112883": {
+   "name": "Al Khaleej",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113037": {
+   "name": "Al Riyadh",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 64,
+   "mid": 69,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113057": {
+   "name": "Al Fayha",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 72,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131735": {
+   "name": "Al Kholood",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113222": {
+   "name": "Al Hazem",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 73,
+   "mid": 67,
+   "def": 62,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131798": {
+   "name": "Neom",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 72,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112389": {
+   "name": "Al Faisaly",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 67,
+   "mid": 68,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113058": {
+   "name": "Abha Club",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 75,
+   "mid": 67,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113224": {
+   "name": "Al Diriyah",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 77,
+   "mid": 73,
+   "def": 75,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131361": {
+   "name": "FC Zürich",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "77": {
+   "name": "Aberdeen",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 70,
+   "mid": 67,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "78": {
+   "name": "Celtic",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 73,
+   "mid": 73,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/78/celtic"
+  },
+  "80": {
+   "name": "Hearts",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 69,
+   "def": 71,
+   "basis": "in-game",
+   "source": "https://allthings.how/fc-27-career-mode-the-best-teams-to-manage/ (identical table: gamerant.com 2026-09-19, games.gg 2026-09-21, keengamer 2026-09-28)"
+  },
+  "81": {
+   "name": "Hibernian",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "82": {
+   "name": "Kilmarnock",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "83": {
+   "name": "Motherwell",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 69,
+   "mid": 67,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "86": {
+   "name": "Rangers",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 67,
+   "mid": 73,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/86/rangers"
+  },
+  "180": {
+   "name": "Dundee FC",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "181": {
+   "name": "Dundee United",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100804": {
+   "name": "St. Johnstone",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 62,
+   "mid": 64,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100805": {
+   "name": "St. Mirren",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "79": {
+   "name": "Falkirk",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 63,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131363": {
+   "name": "Glasgow City FC",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 72,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "45": {
+   "name": "Juventus",
+   "stars": 4.5,
+   "ovr": 80,
+   "att": 78,
+   "mid": 78,
+   "def": 80,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "48": {
+   "name": "SSC Napoli",
+   "stars": 4.5,
+   "ovr": 81,
+   "att": 79,
+   "mid": 83,
+   "def": 79,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "50": {
+   "name": "Parma",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 72,
+   "mid": 73,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://fifaindex.com/leagues/31-italy-serie-a-1"
+  },
+  "52": {
+   "name": "AS Roma",
+   "stars": 4.5,
+   "ovr": 80,
+   "att": 84,
+   "mid": 78,
+   "def": 81,
+   "basis": "ea-officieel",
+   "source": "https://www.ldshop.gg/blog/ea-fc/fc-27-best-teams-clubs-top-16.html (corroborated: thespike.gg 2026-09-10, sportingtribune.com 2026-08-16, athlonsports, givemesport)"
+  },
+  "54": {
+   "name": "Torino",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 77,
+   "mid": 75,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://fifaindex.com/leagues/31-italy-serie-a-1"
+  },
+  "189": {
+   "name": "Bologna",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 77,
+   "mid": 76,
+   "def": 75,
+   "basis": "ovr-gemeten",
+   "source": "https://fifaindex.com/leagues/31-italy-serie-a-1"
+  },
+  "55": {
+   "name": "Udinese",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 73,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://sofifa.com/league/31"
+  },
+  "347": {
+   "name": "Lecce",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 71,
+   "mid": 71,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://sofifa.com/league/31"
+  },
+  "1745": {
+   "name": "Como",
+   "stars": 4.0,
+   "ovr": 78,
+   "att": 80,
+   "mid": 79,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/1745/como"
+  },
+  "1842": {
+   "name": "Cagliari",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 72,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://sofifa.com/league/31"
+  },
+  "110374": {
+   "name": "Fiorentina",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 73,
+   "mid": 76,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/clubs/110374-acf-fiorentina"
+  },
+  "110556": {
+   "name": "Genoa",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 74,
+   "mid": 74,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://sofifa.com/league/31"
+  },
+  "115841": {
+   "name": "SS Lazio",
+   "stars": 4.0,
+   "ovr": 77,
+   "att": 76,
+   "mid": 78,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://fifaindex.com/leagues/31-italy-serie-a-1"
+  },
+  "115845": {
+   "name": "Bergamo Calcio",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 79,
+   "mid": 78,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/115845/bergamo-calcio"
+  },
+  "131682": {
+   "name": "Lombardia FC",
+   "stars": 4.5,
+   "ovr": 82,
+   "att": 83,
+   "mid": 83,
+   "def": 81,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/131682/lombardia-fc"
+  },
+  "131681": {
+   "name": "Milano FC",
+   "stars": 4.5,
+   "ovr": 80,
+   "att": 80,
+   "mid": 80,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/131681/milano-fc"
+  },
+  "111974": {
+   "name": "Sassuolo",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 78,
+   "mid": 75,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://sofifa.com/league/31"
+  },
+  "111811": {
+   "name": "Monza",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 72,
+   "mid": 74,
+   "def": 72,
+   "basis": "ovr-gemeten",
+   "source": "https://sofifa.com/league/31"
+  },
+  "205": {
+   "name": "Venezia",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 75,
+   "mid": 74,
+   "def": 72,
+   "basis": "ovr-gemeten",
+   "source": "https://sofifa.com/league/31"
+  },
+  "111657": {
+   "name": "Frosinone",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 73,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/111657/frosinone"
+  },
+  "1744": {
+   "name": "Modena",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 68,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1837": {
+   "name": "Sampdoria",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 72,
+   "def": 71,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "1843": {
+   "name": "Palermo",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 75,
+   "mid": 73,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "110908": {
+   "name": "Catanzaro",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 69,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "110915": {
+   "name": "Cesena",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "111433": {
+   "name": "Mantova",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 69,
+   "def": 67,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "112124": {
+   "name": "SS Juve Stabia",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "112493": {
+   "name": "Carrarese Calcio",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 67,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "112494": {
+   "name": "Südtirol",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "2038": {
+   "name": "Avellino",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 68,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "110912": {
+   "name": "Padova",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 70,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "113147": {
+   "name": "Entella",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "1746": {
+   "name": "Empoli",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "206": {
+   "name": "Hellas Verona",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 72,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "1847": {
+   "name": "Ascoli",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 68,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "110738": {
+   "name": "Pisa",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 68,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/en/database/fc27/clubs/110738-pisa"
+  },
+  "110907": {
+   "name": "Arezzo",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 68,
+   "basis": "in-game",
+   "source": "https://allthings.how/fc-27-career-mode-the-best-teams-to-manage/ (identical table: gamerant.com 2026-09-19, games.gg 2026-09-21, keengamer 2026-09-28)"
+  },
+  "111434": {
+   "name": "Cremonese",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 71,
+   "def": 73,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "112026": {
+   "name": "Benevento",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 68,
+   "def": 69,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "112954": {
+   "name": "L. R. Vicenza",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 68,
+   "mid": 67,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://fctoolshub.com/es/database/fc27/leagues/serie-bkt"
+  },
+  "305": {
+   "name": "Bohemians",
+   "stars": 2.0,
+   "ovr": 62,
+   "att": 63,
+   "mid": 65,
+   "def": 62,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "306": {
+   "name": "Shamrock Rovers",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 63,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "423": {
+   "name": "St. Pats",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 66,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "445": {
+   "name": "Derry City",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 65,
+   "def": 64,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "563": {
+   "name": "Sligo Rovers",
+   "stars": 2.0,
+   "ovr": 60,
+   "att": 59,
+   "mid": 65,
+   "def": 61,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "753": {
+   "name": "Waterford",
+   "stars": 1.5,
+   "ovr": 59,
+   "att": 61,
+   "mid": 61,
+   "def": 61,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "834": {
+   "name": "Shelbourne",
+   "stars": 2.0,
+   "ovr": 61,
+   "att": 62,
+   "mid": 63,
+   "def": 63,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "837": {
+   "name": "Dundalk",
+   "stars": 1.5,
+   "ovr": 59,
+   "att": 60,
+   "mid": 60,
+   "def": 60,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1571": {
+   "name": "Galway United",
+   "stars": 1.5,
+   "ovr": 59,
+   "att": 60,
+   "mid": 61,
+   "def": 60,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "1572": {
+   "name": "Drogheda United",
+   "stars": 1.5,
+   "ovr": 59,
+   "att": 59,
+   "mid": 61,
+   "def": 61,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "308": {
+   "name": "Univ. Craiova",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 70,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "310": {
+   "name": "FC Rapid 1923",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100757": {
+   "name": "FC Dinamo 1948",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 67,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100761": {
+   "name": "FCSB",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110072": {
+   "name": "SC Oțelul Galați",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110075": {
+   "name": "Farul Constanța",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 65,
+   "mid": 67,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110078": {
+   "name": "FC Petrolul",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 64,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110750": {
+   "name": "UTA Arad",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110751": {
+   "name": "FC Univ. Cluj",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110752": {
+   "name": "FC Botoșani",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 68,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113378": {
+   "name": "Sepsi OSK",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114385": {
+   "name": "CFR 1907 Cluj",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 69,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "100759": {
+   "name": "FC Argeș",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 67,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "114546": {
+   "name": "FK Csíkszereda",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 63,
+   "mid": 64,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113182": {
+   "name": "FC Voluntari",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113449": {
+   "name": "FC Corvinul 1921 Hunedoara",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 65,
+   "mid": 66,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "131362": {
+   "name": "FC Rosengård",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132816": {
+   "name": "BK Hcken",
+   "stars": 3.5,
+   "ovr": 73,
+   "att": 75,
+   "mid": 74,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "112638": {
+   "name": "Buriram United",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 72,
+   "mid": 70,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "325": {
+   "name": "Galatasaray",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 85,
+   "mid": 79,
+   "def": 78,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26091500/325/galatasaray"
+  },
+  "326": {
+   "name": "Fenerbahçe",
+   "stars": 4.5,
+   "ovr": 79,
+   "att": 81,
+   "mid": 79,
+   "def": 77,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/326/fenerbahce"
+  },
+  "327": {
+   "name": "Beşiktaş",
+   "stars": 4.0,
+   "ovr": 76,
+   "att": 78,
+   "mid": 76,
+   "def": 74,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/327/besiktas"
+  },
+  "436": {
+   "name": "Trabzonspor",
+   "stars": 4.0,
+   "ovr": 75,
+   "att": 75,
+   "mid": 75,
+   "def": 72,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/436/trabzonspor"
+  },
+  "748": {
+   "name": "Samsunspor",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 71,
+   "mid": 67,
+   "def": 70,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/26100600/748/samsunspor"
+  },
+  "101014": {
+   "name": "Başakşehir",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 73,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101026": {
+   "name": "Göztepe",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 68,
+   "def": 64,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/101026/goztepe"
+  },
+  "101033": {
+   "name": "Konyaspor",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 68,
+   "mid": 72,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101037": {
+   "name": "Çaykur Rizespor",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 68,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110776": {
+   "name": "Gaziantep",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 67,
+   "mid": 69,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/110776/gaziantep-fk"
+  },
+  "111339": {
+   "name": "Kasımpaşa",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 71,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113142": {
+   "name": "Alanyaspor",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 70,
+   "def": 68,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/113142/corendon-alanyaspor"
+  },
+  "131174": {
+   "name": "Eyüpspor",
+   "stars": 2.5,
+   "ovr": 66,
+   "att": 65,
+   "mid": 68,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101025": {
+   "name": "Gençlerbirliği",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 71,
+   "mid": 70,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101032": {
+   "name": "Kocaelispor",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 69,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "749": {
+   "name": "Erzurumspor Futbol Kulübü",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 69,
+   "mid": 71,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132392": {
+   "name": "Amed Sportif Faaliyetler",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 72,
+   "mid": 69,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132868": {
+   "name": "Çorum Futbol Kulübü",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 72,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101047": {
+   "name": "Dynamo Kyiv",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 71,
+   "mid": 75,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "101059": {
+   "name": "Shakhtar Donetsk",
+   "stars": 3.0,
+   "ovr": 71,
+   "att": 71,
+   "mid": 71,
+   "def": 73,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111701": {
+   "name": "Al Ain FC",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 74,
+   "mid": 74,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "132890": {
+   "name": "Breidablik",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 65,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "191": {
+   "name": "RB Salzburg",
+   "stars": 3.0,
+   "ovr": 70,
+   "att": 73,
+   "mid": 71,
+   "def": 71,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "209": {
+   "name": "SK Sturm Graz",
+   "stars": 3.0,
+   "ovr": 68,
+   "att": 70,
+   "mid": 70,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "252": {
+   "name": "LASK",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 70,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "254": {
+   "name": "SK Rapid",
+   "stars": 3.0,
+   "ovr": 69,
+   "att": 69,
+   "mid": 70,
+   "def": 70,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "256": {
+   "name": "FK Austria Wien",
+   "stars": 2.5,
+   "ovr": 67,
+   "att": 69,
+   "mid": 68,
+   "def": 69,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "2017": {
+   "name": "TSV Hartberg",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15009": {
+   "name": "SCR Altach",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 63,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "15040": {
+   "name": "WSG Tirol",
+   "stars": 2.0,
+   "ovr": 63,
+   "att": 64,
+   "mid": 65,
+   "def": 65,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "111822": {
+   "name": "Wolfsberger AC",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 67,
+   "mid": 65,
+   "def": 68,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "113616": {
+   "name": "Grazer AK",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 66,
+   "mid": 66,
+   "def": 67,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "780": {
+   "name": "SV Oberbank Ried",
+   "stars": 2.5,
+   "ovr": 65,
+   "att": 63,
+   "mid": 65,
+   "def": 64,
+   "basis": "ovr-gemeten",
+   "source": "https://cmtracker.net/en/teams/fc27/780/sv-ried"
+  },
+  "781": {
+   "name": "SC Austria",
+   "stars": 2.5,
+   "ovr": 64,
+   "att": 64,
+   "mid": 66,
+   "def": 66,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "266": {
+   "name": "Slavia Praha",
+   "stars": 3.5,
+   "ovr": 74,
+   "att": 74,
+   "mid": 75,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "267": {
+   "name": "Sparta Praha",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 74,
+   "mid": 72,
+   "def": 72,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  },
+  "110468": {
+   "name": "Viktoria Plzeň",
+   "stars": 3.5,
+   "ovr": 72,
+   "att": 72,
+   "mid": 73,
+   "def": 74,
+   "basis": "model",
+   "source": "model: EA FC 27-spelersratings (ea.com/games/ea-sports-fc/ratings)"
+  }
+ }
+}

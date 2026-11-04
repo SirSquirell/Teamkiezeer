@@ -540,7 +540,7 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
     log(f"RESULTAAT: {len(teams)} teams, {matched} met league")
 
     from audit import run_audit
-    run_audit(teams, log, game.get("auditMinStarLevels", 8))
+    run_audit(teams, log, game.get("auditMinStarLevels", 8), game.get("auditAnchors"))
 
     payload = {
         "schemaVersion": 1,
