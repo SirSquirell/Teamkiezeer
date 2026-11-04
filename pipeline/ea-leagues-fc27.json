@@ -1,0 +1,270 @@
+{
+  "_uitleg": [
+    "FC 27: koppeling van EA's competitiegroepen (ratingsFilters.teamGroups op",
+    "https://www.ea.com/games/ea-sports-fc/ratings) aan onze league-ids. EA is de bron",
+    "voor welke club in welke competitie zit. Groepen met maar een paar clubs zijn",
+    "EA's 'Rest of World'-clubs onder hun thuisland; die komen in 'row.m' / 'row.w'.",
+    "Een EA-groep die hier niet staat laat de build bewust falen."
+  ],
+  "groups": {
+    "13": {
+      "id": "eng.1",
+      "name": "Premier League",
+      "country": "ENG",
+      "defaultWhitelist": true
+    },
+    "14": {
+      "id": "eng.2",
+      "name": "EFL Championship",
+      "country": "ENG",
+      "defaultWhitelist": false
+    },
+    "60": {
+      "id": "eng.3",
+      "name": "League One",
+      "country": "ENG",
+      "defaultWhitelist": false
+    },
+    "61": {
+      "id": "eng.4",
+      "name": "League Two",
+      "country": "ENG",
+      "defaultWhitelist": false
+    },
+    "19": {
+      "id": "ger.1",
+      "name": "Bundesliga",
+      "country": "GER",
+      "defaultWhitelist": true
+    },
+    "20": {
+      "id": "ger.2",
+      "name": "2. Bundesliga",
+      "country": "GER",
+      "defaultWhitelist": false
+    },
+    "2076": {
+      "id": "ger.3",
+      "name": "3. Liga",
+      "country": "GER",
+      "defaultWhitelist": false
+    },
+    "10": {
+      "id": "ned.1",
+      "name": "Eredivisie",
+      "country": "NED",
+      "defaultWhitelist": true
+    },
+    "53": {
+      "id": "esp.1",
+      "name": "LaLiga",
+      "country": "ESP",
+      "defaultWhitelist": true
+    },
+    "54": {
+      "id": "esp.2",
+      "name": "LaLiga Hypermotion",
+      "country": "ESP",
+      "defaultWhitelist": false
+    },
+    "16": {
+      "id": "fra.1",
+      "name": "Ligue 1",
+      "country": "FRA",
+      "defaultWhitelist": true
+    },
+    "17": {
+      "id": "fra.2",
+      "name": "Ligue 2",
+      "country": "FRA",
+      "defaultWhitelist": false
+    },
+    "39": {
+      "id": "usa.1",
+      "name": "MLS",
+      "country": "USA",
+      "defaultWhitelist": true
+    },
+    "350": {
+      "id": "sau.1",
+      "name": "Saudi Pro League",
+      "country": "KSA",
+      "defaultWhitelist": true
+    },
+    "308": {
+      "id": "por.1",
+      "name": "Primeira Liga",
+      "country": "POR",
+      "defaultWhitelist": true
+    },
+    "4": {
+      "id": "bel.1",
+      "name": "Pro League",
+      "country": "BEL",
+      "defaultWhitelist": false
+    },
+    "31": {
+      "id": "ita.1",
+      "name": "Serie A",
+      "country": "ITA",
+      "defaultWhitelist": true
+    },
+    "32": {
+      "id": "ita.2",
+      "name": "Serie B",
+      "country": "ITA",
+      "defaultWhitelist": false
+    },
+    "68": {
+      "id": "tur.1",
+      "name": "Süper Lig",
+      "country": "TUR",
+      "defaultWhitelist": true
+    },
+    "65": {
+      "id": "irl.1",
+      "name": "Airtricity League",
+      "country": "IRL",
+      "defaultWhitelist": false
+    },
+    "351": {
+      "id": "aus.1",
+      "name": "A-League",
+      "country": "AUS",
+      "defaultWhitelist": false
+    },
+    "56": {
+      "id": "swe.1",
+      "name": "Allsvenskan",
+      "country": "SWE",
+      "defaultWhitelist": false
+    },
+    "2012": {
+      "id": "chn.1",
+      "name": "Chinese Super League",
+      "country": "CHN",
+      "defaultWhitelist": false
+    },
+    "41": {
+      "id": "nor.1",
+      "name": "Eliteserien",
+      "country": "NOR",
+      "defaultWhitelist": false
+    },
+    "66": {
+      "id": "pol.1",
+      "name": "Ekstraklasa",
+      "country": "POL",
+      "defaultWhitelist": false
+    },
+    "2149": {
+      "id": "ind.1",
+      "name": "Indian Super League",
+      "country": "IND",
+      "defaultWhitelist": false
+    },
+    "83": {
+      "id": "kor.1",
+      "name": "K League",
+      "country": "KOR",
+      "defaultWhitelist": false
+    },
+    "330": {
+      "id": "rou.1",
+      "name": "Liga I",
+      "country": "ROU",
+      "defaultWhitelist": false
+    },
+    "353": {
+      "id": "arg.1",
+      "name": "Liga Profesional",
+      "country": "ARG",
+      "defaultWhitelist": false
+    },
+    "80": {
+      "id": "aut.1",
+      "name": "Bundesliga (AUT)",
+      "country": "AUT",
+      "defaultWhitelist": false
+    },
+    "189": {
+      "id": "sui.1",
+      "name": "Super League (SUI)",
+      "country": "SUI",
+      "defaultWhitelist": false
+    },
+    "50": {
+      "id": "sco.1",
+      "name": "Scottish Premiership",
+      "country": "SCO",
+      "defaultWhitelist": false
+    },
+    "1": {
+      "id": "den.1",
+      "name": "Superliga",
+      "country": "DEN",
+      "defaultWhitelist": false
+    },
+    "341": {
+      "id": "mex.1",
+      "name": "Liga MX",
+      "country": "MEX",
+      "defaultWhitelist": false
+    },
+    "1003": {
+      "id": "sam.1",
+      "name": "CONMEBOL Libertadores",
+      "country": "SAM",
+      "defaultWhitelist": false
+    },
+    "1014": {
+      "id": "sam.2",
+      "name": "CONMEBOL Sudamericana",
+      "country": "SAM",
+      "defaultWhitelist": false
+    },
+    "2215": {
+      "id": "ger.w1",
+      "name": "Frauen-Bundesliga",
+      "country": "GER",
+      "defaultWhitelist": false
+    },
+    "2218": {
+      "id": "fra.w1",
+      "name": "Arkema Première Ligue",
+      "country": "FRA",
+      "defaultWhitelist": false
+    },
+    "2222": {
+      "id": "esp.w1",
+      "name": "Liga F",
+      "country": "ESP",
+      "defaultWhitelist": false
+    },
+    "2221": {
+      "id": "usa.w1",
+      "name": "NWSL",
+      "country": "USA",
+      "defaultWhitelist": false
+    },
+    "2216": {
+      "id": "eng.w1",
+      "name": "Women's Super League",
+      "country": "ENG",
+      "defaultWhitelist": false
+    }
+  },
+  "restOfWorld": {
+    "men": {
+      "id": "row.m",
+      "name": "Rest of World",
+      "country": "INT"
+    },
+    "women": {
+      "id": "row.w",
+      "name": "Rest of World (v)",
+      "country": "INT"
+    },
+    "maxTeams": 9
+  }
+}

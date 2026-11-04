@@ -461,17 +461,8 @@ def load_national_teams(game: dict | None = None):
     return teams
 
 
-def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
-          out_path: Path | None = None, game_id: str | None = None) -> None:
-    game_id, game = resolve_game(game_id)
-    out_path = out_path or ROOT / game["out"]
-    # --out mag buiten de repo wijzen (tests, losse export), dus relative_to
-    # is hier geen zekerheid.
-    try:
-        toon = out_path.relative_to(ROOT)
-    except ValueError:
-        toon = out_path
-    log(f"GAME: {game_id} ({game['label']}) -> {toon}")
+def collect_scrape(offline: bool, game: dict):
+    """FC 26: sterren van fifagamenews, leagues en ratings van fifauteam."""
     stars_html, best_html = load_html(offline, game)
     star_rows = parse_stars(stars_html)
     league_rows = parse_best_teams(best_html)
@@ -496,7 +487,51 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
     except Exception as e:  # noqa: BLE001
         # Een signaal naast de build, geen poortwachter.
         log(f"TEAMLIJST: check overgeslagen ({e})")
-    upgrade_crests(teams, skip_crest_check)
+    leagues = [
+        {
+            "id": m["id"],
+            "name": m["name"],
+            "countryCode": m["country"],
+            "womens": m["womens"],
+            "defaultWhitelist": m["defaultWhitelist"],
+        }
+        for title, m in league_meta.items()
+        if title in by_title
+    ]
+    return teams, leagues
+
+
+def collect_ea(offline: bool, game: dict):
+    """FC 27: clubs en competities van EA's ratingsite, sterren uit het
+    gecommitte sterrenbestand (zie pipeline/ea_source.py)."""
+    from ea_source import build_ea_teams, parse_ea_groups
+
+    html = ((SNAPSHOTS / "ea-ratings-fc27.html").read_text(encoding="utf-8")
+            if offline else fetch(game["eaRatingsURL"]))
+    groups = parse_ea_groups(html)
+    log(f"PARSE: {len(groups)} EA-groepen, {sum(len(g['teams']) for g in groups)} clubs")
+    mapping = json.loads((ROOT / game["eaLeagues"]).read_text(encoding="utf-8"))
+    stars = json.loads((ROOT / game["starsFile"]).read_text(encoding="utf-8"))
+    return build_ea_teams(groups, mapping, stars, log)
+
+
+def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
+          out_path: Path | None = None, game_id: str | None = None) -> None:
+    game_id, game = resolve_game(game_id)
+    out_path = out_path or ROOT / game["out"]
+    # --out mag buiten de repo wijzen (tests, losse export), dus relative_to
+    # is hier geen zekerheid.
+    try:
+        toon = out_path.relative_to(ROOT)
+    except ValueError:
+        toon = out_path
+    log(f"GAME: {game_id} ({game['label']}) -> {toon}")
+    if game.get("source") == "ea":
+        teams, leagues = collect_ea(offline, game)
+    else:
+        teams, leagues = collect_scrape(offline, game)
+    if game.get("source") != "ea":
+        upgrade_crests(teams, skip_crest_check)
     dominant_colors(teams, skip_colors)
     teams += load_national_teams(game)
     apply_overrides(teams, ROOT / game["overrides"])
@@ -515,17 +550,7 @@ def build(offline: bool, skip_colors: bool, skip_crest_check: bool,
         # hard deze set is.
         "note": game.get("note", ""),
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "leagues": [
-            {
-                "id": m["id"],
-                "name": m["name"],
-                "countryCode": m["country"],
-                "womens": m["womens"],
-                "defaultWhitelist": m["defaultWhitelist"],
-            }
-            for title, m in league_meta.items()
-            if title in by_title
-        ],
+        "leagues": leagues,
         "teams": teams,
     }
 

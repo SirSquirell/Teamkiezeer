@@ -18,6 +18,11 @@
     "'note' komt als veld mee in teams.json en toont de webapp onder de",
     "titelkeuze. Leegmaken zodra de bron echte data levert.",
     "",
+    "'source': 'ea' (FC 27) bouwt clubs en competities uit EA's eigen",
+    "ratingsite (eaRatingsURL, koppeling in eaLeagues) met sterren uit",
+    "starsFile; zie pipeline/ea_source.py. Zonder 'source' gelden de",
+    "scrape-bronnen starsURL/bestTeamsURL.",
+    "",
     "'nationalTeams' is de handmatige landenteam-seed van die titel; welke",
     "landen erin zitten verschilt per jaar. null = geen landenteams: FC 27",
     "heeft online geen bron voor hun sterren, en schatten doen we niet. 'auditMinStarLevels' (standaard 8)",
@@ -45,11 +50,14 @@
       "starsURL": "https://fifagamenews.com/fc-27-team-star-ratings/",
       "bestTeamsURL": "https://fifauteam.com/best-teams-fc-27/",
       "leaguesClubsURL": "https://fifauteam.com/fc-27-leagues-clubs-national-teams/",
+      "source": "ea",
+      "eaRatingsURL": "https://www.ea.com/games/ea-sports-fc/ratings",
+      "eaLeagues": "pipeline/ea-leagues-fc27.json",
+      "starsFile": "pipeline/stars-fc27.json",
       "out": "data/teams-fc27.json",
       "overrides": "pipeline/overrides-fc27.json",
       "nationalTeams": null,
       "auditMinStarLevels": 7,
-      "rosterDrop": true,
       "note": "Geen landenteams: er is online geen bron voor hun FC 27-sterren. Liga MX en de Frauen-Bundesliga ontbreken om dezelfde reden."
     }
   }
