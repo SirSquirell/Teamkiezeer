@@ -443,6 +443,9 @@ def load_national_teams(game: dict | None = None):
                 raise SystemExit(f"FOUT: national team mist '{field}': {t}")
         t.setdefault("kind", "national")
         t.setdefault("womens", False)
+        # Herkomstvelden van de seed (basis, bron) horen niet in teams.json.
+        for field in ("basis", "bron"):
+            t.pop(field, None)
         for field in ("attack", "midfield", "defence", "leagueId", "leagueName",
                       "countryCode", "crestURL", "primaryColor", "secondaryColor"):
             t.setdefault(field, None)

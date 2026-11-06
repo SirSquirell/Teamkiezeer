@@ -30,7 +30,7 @@ const store = {
   del(k){ try{ localStorage.removeItem(k); }catch{} },
 };
 
-const APP_VERSION = "0.04.1";   // bump bij elke release; historie in CHANGELOG.md
+const APP_VERSION = "0.04.2";   // bump bij elke release; historie in CHANGELOG.md
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
 const defaults = () => ({ cooldown:6, pinned:4, kind:"mixed", womens:false,
@@ -546,6 +546,12 @@ function syncFilters(){
   $("gameNote").hidden = !note;
   seg($("kindSeg"), [["clubs","Clubs"],["nats","Landen"],["mixed","Mix"]], rules.kind,
       v => { rules.kind = v; saveRules(); syncFilters(); renderLeagues(); });
+  // Een set zonder landenteams geeft op "Landen" alleen een lege pool; zeg dat
+  // op de knop zelf in plaats van na de draw.
+  const hasNats = DATA.teams.some(t => t.kind === "national");
+  const natsBtn = $("kindSeg").children[1];
+  natsBtn.disabled = !hasNats;
+  natsBtn.title = hasNats ? "" : "Deze set heeft geen landenteams";
   $("womens").checked = rules.womens;
   const mode = rules.pinned == null ? "any" : "fixed";
   seg($("starSeg"), [["any","Verras ons"],["fixed","Vaste ster"]], mode, v => {

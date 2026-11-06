@@ -5,6 +5,19 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
+## 0.04.2 — 2026-11-06
+
+- **FC 27 heeft weer landenteams.** De 51 mannenteams van de officiële FC 27-lijst
+  staan in `data/national-teams-fc27.json`, met team-OVR uit de gamedatabase
+  (sofifa, db 3 november; Nederland 82 klopt ook bij cmtracker) en sterren via
+  dezelfde grenzen als de clubs. Landen die alleen in FC 26 zaten (China,
+  Canada mannen) staan er bewust niet in. Vrouwenteams volgen zodra er gemeten
+  OVR's zijn. Of EA voor landen dezelfde sterrengrenzen hanteert als voor clubs
+  is nog niet in-game gecheckt; zie docs/data-audit-fc27.md.
+- **"Landen" staat uit bij een set zonder landenteams.** Voorheen leverde die
+  knop een lege pool op zonder te zeggen waarom; in Mix-stand kwamen er stil
+  alleen clubs.
+
 ## 0.04.1 — 2026-10-09
 
 - **De sync voegt samen in plaats van de langste lijst te laten winnen.**
