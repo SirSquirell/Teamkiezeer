@@ -1,6 +1,6 @@
 # Data-audit FC 27
 
-Datum: 2026-11-04 · Dataset: `data/teams-fc27.json`, 754 clubs in 43 competities plus Rest of World, geen landenteams
+Datum: 2026-11-06 · Dataset: `data/teams-fc27.json`, 754 clubs in 43 competities plus Rest of World, 51 landenteams (mannen)
 
 ## Aanleiding
 
@@ -34,7 +34,13 @@ Twee agents bouwden onafhankelijk een model (een op de bekende teamrating-method
 
 ## Landenteams
 
-Niet in de FC 27-set: geen enkele bron publiceert FC 27-sterren voor landenteams, en EA's ratingsite toont ze niet. De filter "Landen" geeft bij FC 27 een lege pool.
+`data/national-teams-fc27.json`: de 51 mannenteams van de officiële FC 27-lijst (fifauteam fc-27-leagues-clubs-national-teams, gecheckt 2026-11-06), geen team dat alleen in FC 26 zat (China m/v, Canada m). Team-OVR/ATT/MID/DEF komen uit de FC 27-gamedatabase (sofifa, db-update 2026-11-03; Nederland 82/80/84/82 klopt ook bij cmtracker), dus basis `ovr-gemeten`, harder dan de 433 clubs op `model`. Sterren via dezelfde grenzen als de clubs.
+
+Open punten:
+
+- Of EA voor landenteams dezelfde sterrengrenzen hanteert als voor clubs is niet bewezen. Met de clubgrenzen staan zes landen op 5★ (Frankrijk, Spanje, Engeland, Portugal, Duitsland, Brazilië) en vijf op 4,5★ (Italië, Nederland, Argentinië, België, Kroatië). Een ongesourcede lijst (gamermovil, okt 2026) zet alle tien op 5★. In-game check nodig; afwijkingen in `pipeline/overrides-fc27.json`.
+- Oekraïne staat op de officiële lijst én in de database, maar een in-game check van 2026-10-16 zag het team niet. Staat erin tot dat opnieuw gecheckt is.
+- De 18 vrouwenteams ontbreken nog: pas toevoegen met gemeten OVR, niet geschat.
 
 ## Uitbreiden
 

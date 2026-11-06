@@ -265,11 +265,20 @@ def test_fc27_set_bevat_de_gepubliceerde_vijfsterrenclubs():
     assert vijf == mannen | vrouwen, f"onverwacht op 5.0: {sorted(vijf - mannen - vrouwen)}"
 
 
-def test_fc27_heeft_geen_geschatte_landenteams():
-    """De set moet kloppen met wat online staat. Voor FC 27-landenteams
-    publiceert geen bron sterren, dus ze zitten er niet in."""
+def test_fc27_landenteams_op_gemeten_ovr():
+    """FC 27-landenteams komen uit data/national-teams-fc27.json: alleen de 51
+    mannenteams van de officiële FC 27-lijst, met team-OVR uit de gamedatabase
+    (basis ovr-gemeten). Vrouwenteams pas als er gemeten OVR's zijn; schatten
+    doen we niet."""
+    seed = json.loads((ROOT / "data" / "national-teams-fc27.json").read_text(encoding="utf-8"))
+    assert len(seed["teams"]) == 51
+    assert all(t["basis"] == "ovr-gemeten" and not t["womens"] for t in seed["teams"])
     doc = json.loads((ROOT / "data" / "teams-fc27.json").read_text(encoding="utf-8"))
-    assert not [t for t in doc["teams"] if t["kind"] == "national"]
+    nats = [t for t in doc["teams"] if t["kind"] == "national"]
+    assert len(nats) == 51
+    assert all("basis" not in t and t["crestURL"].startswith("https://flagcdn.com/") for t in nats)
+    ned = next(t for t in nats if t["id"] == "nat.netherlands")
+    assert ned["squadRating"] == 82 and ned["starRating"] == 4.5
 
 
 def test_crest_key_negeert_het_placeholderplaatje():

@@ -24,8 +24,8 @@
     "scrape-bronnen starsURL/bestTeamsURL.",
     "",
     "'nationalTeams' is de handmatige landenteam-seed van die titel; welke",
-    "landen erin zitten verschilt per jaar. null = geen landenteams: FC 27",
-    "heeft online geen bron voor hun sterren, en schatten doen we niet. 'auditMinStarLevels' (standaard 8)",
+    "landen erin zitten verschilt per jaar. null = geen landenteams voor die",
+    "titel. 'auditMinStarLevels' (standaard 8)",
     "is het minimum aantal sterniveaus dat de audit eist: FC 27 loopt van 2.0",
     "tot 5.0, dus 7 niveaus. 'rosterDrop' haalt clubs weg die niet op de",
     "officiële teamlijst (leaguesClubsURL) staan; zonder die vlag logt de build",
@@ -56,14 +56,14 @@
       "starsFile": "pipeline/stars-fc27.json",
       "out": "data/teams-fc27.json",
       "overrides": "pipeline/overrides-fc27.json",
-      "nationalTeams": null,
+      "nationalTeams": "data/national-teams-fc27.json",
       "auditMinStarLevels": 7,
       "auditAnchors": [
         ["fra.paris-sg", 5.0, 4.0], ["esp.real-madrid", 5.0, 4.0], ["esp.fc-barcelona", 5.0, 4.0],
         ["eng.arsenal", 5.0, 4.0], ["eng.liverpool", 5.0, 4.0], ["ger.fc-bayern-munchen", 5.0, 4.0],
         ["ger.borussia-dortmund", 4.5, 4.0], ["eng.aston-villa", 4.0, 3.5]
       ],
-      "note": "Clubs en competities komen van EA. Sterren: EA-lijst of gemeten waar online te vinden, anders berekend uit EA's spelersratings. Geen landenteams."
+      "note": "Clubs en competities komen van EA. Sterren: EA-lijst of gemeten waar online te vinden, anders berekend uit EA's spelersratings. Landenteams: mannen op gemeten team-OVR uit de gamedatabase, vrouwen nog niet."
     }
   }
 }
