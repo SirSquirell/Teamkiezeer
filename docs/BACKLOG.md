@@ -507,4 +507,33 @@ keer in `recentDraws`. Niet in scope: andere trekkingsregels, de ceremony.
 **Test.** `node --test`; handmatig tien draws in de demo met een vaste
 ster.
 
-**Volgend vrij nummer: TK-23**
+## TK-23 Link terug naar prulwerk.nl in de footer
+
+*(gebouwd, 0.04.3)*
+
+**Waarom.** prulwerk.nl linkt naar Even Match, maar andersom niet: Asteria,
+Leto en Prijswacht hebben die link wel. De portfolio-manager van prulwerk.nl
+(`docs/PORTFOLIO.md` in die repo, punt 8) vraagt hem voor elk eigen project.
+
+**Scope / niet in scope.** In scope: de zin "Een project van prulwerk.nl." aan
+het eind van de footer van de webapp, met een gewone link die de footerkleur
+erft. De footer staat onderin het Filters-paneel, dus op een telefoon zie je
+hem pas als Filters open is. Niet in scope: de iOS-app (die heeft geen
+footer), en een tweede link in de kop.
+
+**Acceptatiecriteria.**
+- [x] De footer bevat precies één `a` met `href="https://prulwerk.nl/"`.
+- [x] De link wordt als element toegevoegd, niet via `innerHTML`.
+- [x] Geen overflow op 320 en 1280px; de link is met het toetsenbord te bereiken.
+- [x] `pytest` en `node --test` groen, inclusief de versietest.
+
+**Afhankelijkheden.** Geen.
+
+**Test.** Headless Chromium tegen een lokale server op de repo-root, op 320
+(met Filters open) en 1280px: `scrollWidth <= innerWidth`, één `footer a` met
+de juiste `href`, zichtbaar en in de tabvolgorde. De console is niet leeg te
+krijgen over http: `connect-src https:` blokkeert daar het ophalen van de
+dataset, en dat staat los van deze wijziging. `pytest` 25 groen, `node --test`
+18 groen, op 11 november.
+
+**Volgend vrij nummer: TK-24**

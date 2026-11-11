@@ -5,6 +5,12 @@ fixes. De webapp toont zijn versie onderin de Filters-sheet; de iOS-app
 volgt hetzelfde nummer via `MARKETING_VERSION` in het Xcode-project.
 Releasen = versie bumpen op beide plekken + regel hieronder + push naar main.
 
+## 0.04.3 — 2026-11-11
+
+- **De footer linkt terug naar prulwerk.nl.** Even Match stond op de indexpagina,
+  maar wie hier binnenkwam kon er niet naartoe. Alleen de webapp; de iOS-app
+  volgt het versienummer en verandert verder niet.
+
 ## 0.04.2 — 2026-11-06
 
 - **FC 27 heeft weer landenteams.** De 51 mannenteams van de officiële FC 27-lijst

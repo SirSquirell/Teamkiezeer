@@ -30,7 +30,7 @@ const store = {
   del(k){ try{ localStorage.removeItem(k); }catch{} },
 };
 
-const APP_VERSION = "0.04.2";   // bump bij elke release; historie in CHANGELOG.md
+const APP_VERSION = "0.04.3";   // bump bij elke release; historie in CHANGELOG.md
 
 const DEFAULT_WHITELIST = DATA.leagues.map(l => l.id);   // klantwens: alles standaard aan
 const defaults = () => ({ cooldown:6, pinned:4, kind:"mixed", womens:false,
@@ -891,7 +891,14 @@ function renderMeta(){
 $("meta").innerHTML = `EA ${esc(DATA.game)}<span class="date"> · data laden… · app v${APP_VERSION}</span>`;
 $("footer").textContent = "Even Match v" + APP_VERSION +
   " · Dataset ververst dagelijks. Rolls van vanavond worden niet bewaard." +
-  " Klopt een ster niet? Meld het — correcties gaan mee in de volgende dataset.";
+  " Klopt een ster niet? Meld het — correcties gaan mee in de volgende dataset." +
+  " Een project van ";
+{ /* link terug naar de indexpagina; als element, niet via innerHTML */
+  const home = document.createElement("a");
+  home.href = "https://prulwerk.nl/";
+  home.textContent = "prulwerk.nl";
+  $("footer").append(home, ".");
+}
 ghost($("cardA"), duos.a); ghost($("cardB"), duos.b);
 syncFilters(); renderLeagues(); renderStand(); renderFinal();
 
