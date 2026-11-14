@@ -27,6 +27,7 @@ engine.js      pure stand-logica: normalisatie en merge, getest met node --test
 - Squad rating + league: fifauteam.com best teams
 - Landenteams: handmatig, per titel een seed (`nationalTeams` in pipeline/games.json); FC 27: mannenteams op gemeten team-OVR uit de gamedatabase, vrouwen nog niet
 - Crests: runtime gefetcht via URL, nooit gecommit (EA/club-IP)
+- In-game vorm FC 27: wekelijks (za) alle selecties van EA's ratingsite, team-OVR per club berekend (`pipeline/team_rating.py`) en vergeleken met de vorige meting in `data/form-fc27.json` (workflow `form.yml`)
 
 De GitHub Action draait de scraper dagelijks (08:00 Europe/Amsterdam) en commit `data/teams.json` alleen
 bij een non-empty diff. De app haalt dat bestand bij launch op via
