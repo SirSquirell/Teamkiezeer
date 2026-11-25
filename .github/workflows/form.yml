@@ -1,0 +1,49 @@
+name: In-game vorm
+
+# Wekelijks alle FC 27-selecties van EA's ratingsite, team-OVR per club en de
+# vorm (verschil met de vorige meting). Zie pipeline/ea_form.py.
+on:
+  schedule:
+    # Zaterdag 06:23 UTC: na EA's gebruikelijke live-update op donderdag/vrijdag.
+    - cron: "23 6 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Zelfde groep als de dagelijkse databuild: nooit gelijktijdig naar main pushen.
+concurrency:
+  group: data-build
+  cancel-in-progress: false
+
+jobs:
+  form:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Selecties ophalen en vorm berekenen
+        run: python pipeline/ea_form.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/form-fc27.json pipeline/squads/
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen"
+          else
+            git commit -m "Update in-game vorm (wekelijks)"
+            git pull --rebase origin main
+            git push
+          fi
